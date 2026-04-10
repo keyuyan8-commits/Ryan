@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我的食谱</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0e0c;
+    --card: #1a1916;
+    --card2: #201e1b;
+    --accent: #e8a830;
+    --accent2: #c4763a;
+    --text: #f0ebe2;
+    --muted: #8a8070;
+    --border: #2e2b26;
+    --tag-bg: #2a2620;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans SC', sans-serif;
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1a1510 0%, #0f0e0c 60%);
+    border-bottom: 1px solid var(--border);
+    padding: 36px 24px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '食';
+    position: absolute;
+    right: -10px;
+    top: -20px;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 160px;
+    color: rgba(232,168,48,0.05);
+    line-height: 1;
+    pointer-events: none;
+  }
+  .header h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 2px;
+  }
+  .header p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 6px;
+    letter-spacing: 1px;
+  }
+
+  /* Category tabs */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    padding: 16px 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    padding: 7px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+  .tab.active, .tab:hover {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+  }
+
+  /* Recipe grid */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1px;
+    background: var(--border);
+    margin-top: 1px;
+  }
+
+  /* Recipe card */
+  .recipe {
+    background: var(--card);
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: none;
+  }
+  .recipe.visible { display: block; }
+  .recipe:hover { background: var(--card2); }
+
+  .recipe-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 20px 0;
+  }
+  .recipe-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .recipe-emoji { font-size: 22px; }
+  .recipe-meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .tag {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 10px;
+    background: var(--tag-bg);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .tag.time { color: var(--accent); border-color: rgba(232,168,48,0.3); }
+  .chevron {
+    color: var(--muted);
+    font-size: 16px;
+    transition: transform 0.25s;
+  }
+  .recipe.open .chevron { transform: rotate(90deg); }
+
+  .recipe-summary {
+    padding: 8px 20px 16px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* Expanded content */
+  .recipe-body {
+    display: none;
+    padding: 0 20px 24px;
+    border-top: 1px solid var(--border);
+  }
+  .recipe.open .recipe-body { display: block; }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--accent2);
+    text-transform: uppercase;
+    margin: 18px 0 10px;
+    font-weight: 500;
+  }
+
+  .ingredients {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .ingredient {
+    font-size: 13px;
+    padding: 5px 12px;
+    border-radius: 6px;
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .ingredient span {
+    color: var(--muted);
+    font-size: 11px;
+    margin-left: 4px;
+  }
+
+  .steps { counter-reset: step; }
+  .step {
+    display: flex;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(232,168,48,0.15);
+    border: 1px solid rgba(232,168,48,0.3);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+  .step-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+  .step-text em {
+    color: var(--accent);
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  .tip {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: rgba(232,168,48,0.07);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .tip strong { color: var(--accent); }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🍳 我的食谱</h1>
+  <p>简单 · 健康 · 肠胃友好</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="filter('all')">全部</div>
+  <div class="tab" onclick="filter('主食')">主食/面</div>
+  <div class="tab" onclick="filter('牛肉')">牛肉菜</div>
+  <div class="tab" onclick="filter('蔬菜')">蔬菜</div>
+  <div class="tab" onclick="filter('汤')">汤</div>
+  <div class="tab" onclick="filter('早餐')">早餐</div>
+</div>
+
+<div class="grid" id="grid">
+
+  <!-- 番茄牛肉炖 -->
+  <div class="recipe visible" data-cat="牛肉" onclick="toggle(this)">
+    <div class="recipe-header">
+      <div class="recipe-title"><span class="recipe-emoji">🥩</span>番茄牛肉炖</div>
+      <div class="recipe-meta"><span class="tag time">⏱ 30分钟</span><span class="chevron">›</span></div>
+    </div>
+    <div class="recipe-summary">下饭神菜，牛肉软烂，汤汁拌饭绝了</div>
+    <div class="recipe-body">
+      <div class="section-label">食材</div>
+      <div class="ingredients">
+        <div class="ingredient">牛肉<span>300g</span></div>
+        <div class="ingredient">番茄<span>2个</span></div>
+        <div class="ingredient">姜<span>3片</span></div>
+        <div class="ingredient">生抽<span>1勺</span></div>
+        <div class="ingredient">淀粉<span>少许</span></div>
+        <div class="ingredient">盐<span>适量</span></div>
+      </div>
+      <div class="section-label">步骤</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text">牛肉切薄片，加<em>生抽+淀粉+少许盐</em>抓匀，腌10分钟</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">番茄切块，锅热后加油，放姜片爆香</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">放番茄翻炒出汁，加<em>半碗水</em>，大火煮开</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">放入腌好的牛肉，<em>用筷子快速拨散</em>，变色后加盐调味，2分钟出锅</div></div>
+      </div>
+      <div class="tip"><strong>💡 技巧：</strong>牛肉变色就可以出锅，炒太久会变老；番茄多放汤汁更多更好喝</div>
+    </div>
+  </div>
+
+  <!-- 牛肉炒菠菜 -->
+  <div class="recipe visible" data-cat="牛肉" onclick="toggle(this)">
+    <div class="recipe-header">
+      <div class="recipe-title"><span class="recipe-emoji">🥬</span>牛肉炒菠菜</div>
+      <div class="recipe-meta"><span class="tag time">⏱ 15分钟</span><span class="chevron">›</span></div>
+    </div>
+    <div class="recipe-summary">高蛋白低脂，健身必备，超级简单</div>
+    <div class="recipe-body">
+      <div class="section-label">食材</div>
+      <div class="ingredients">
+        <div class="ingredient">牛肉<span>200g</span></div>
+        <div class="ingredient">菠菜<span>1把</span></div>
+        <div class="ingredient">姜<span>2片</span></div>
+        <div class="ingredient">生抽<span>1勺</span></div>
+        <div class="ingredient">淀粉<span>少许</span></div>
+        <div class="ingredient">盐<span>适量</span></div>
+      </div>
+      <div class="section-label">步骤</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text">牛肉切薄片，加生抽+淀粉腌5分钟</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">菠菜洗净切段，锅热油，姜片爆香</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">先下牛肉大火翻炒，变色后推到锅边</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">下菠菜翻炒30秒，与牛肉混合，加盐出锅</div></div>
+      </div>
+      <div class="tip"><strong>💡 技巧：</strong>菠菜容易出水，大火快炒，不要盖锅盖</div>
+    </div>
+  </div>
+
+  <!-- 白菜炖牛肉 -->
+  <div class="recipe visible" data-cat="牛肉" onclick="toggle(this)">
+    <div class="recipe-header">
+      <div class="recipe-title"><span class="recipe-emoji">🥩</span>白菜炖牛肉</div>
+      <div class="recipe-meta"><span class="tag time">⏱ 35分钟</span><span class="chevron">›</span></div>
+    </div>
+    <div class="recipe-summary">暖胃又好消化，汤鲜味美</div>
+    <div class="recipe-body">
+      <div class="section-label">食材</div>
+      <div class="ingredients">
+        <div class="ingredient">牛肉<span>300g</span></div>
+        <div class="ingredient">白菜<span>半颗</span></div>
+        <div class="ingredient">姜<span>3片</span></div>
+        <div class="ingredient">生抽<span>1勺</span></div>
+        <div class="ingredient">盐<span>适量</span></div>
+      </div>
+      <div class="section-label">步骤</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text">牛肉切块，冷水下锅焯水，水开后撇去浮沫，捞出备用</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">锅中加油，姜片爆香，放牛肉翻炒1分钟</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">加<em>足量热水</em>，生抽，大火烧开后转小火炖<em>20分钟</em></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">放白菜，继续炖5分钟至软，加盐出锅</div></div>
+      </div>
+      <div class="tip"><strong>💡 技巧：</strong>焯水步骤不能省，去腥味；加热水炖汤更白更鲜</div>
+    </div>
+  </div>
+
+  <!-- 胡萝卜炖牛肉 -->
+  <div class="recipe visible" data-cat="牛肉" onclick="toggle(this)">
+    <div class="recipe-header">
+      <div class="recipe-title"><span class="recipe-emoji">🥕</span>胡萝卜炖牛肉</div>
+      <div class="recipe-meta"><span class="tag time">⏱ 40分钟</span><span class="chevron">›</span></div>
+    </div>
+    <div class="recipe-summary">护胃暖身，牛肉软烂入味</div>
+    <div class="recipe-body">
+      <div class="section-label">食材</div>
+      <div class="ingredients">
+        <div class="ingredient">牛肉<span>300g</span></div>
+        <div class="ingredient">胡萝卜<span>1根</span></div>
+        <div class="ingredient">土豆<span>1个（可选）</span></div>
+        <div class="ingredient">姜<span>3片</span></div>
+        <div class="ingredient">生抽<span>2勺</span></div>
+        <div class="ingredient">盐<span>适量</span></div>
+      </div>
+      <div class="section-label">步骤</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text">牛肉切块焯水，胡萝卜/土豆切滚刀块</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">热锅加油，姜片爆香，下牛肉翻炒上色</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">加热水没过食材，生抽，大火烧开转小火炖<em>20分钟</em></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">放胡萝卜和土豆，继续炖10分钟至熟软，加盐出锅</div></div>
+      </div>
+      <div class="tip"><strong>💡 技巧：</strong>喜欢更软烂的口感可以再多炖10分钟，胡萝卜炖久了更甜</div>
+    </div>
+  </div>
+
+  <!-- 蒜苔炒牛肉 -->
+  <div class="recipe visible" data-cat="牛肉" onclick="toggle(this)">
+    <div class="recipe-header">
+      <div class="recipe-title"><span class="recipe-emoji">🌿</span>蒜苔炒牛肉</div>
+      <div class="recipe-meta"><span class="tag time">⏱ 15分钟</span><span class="chevron">›</span></div>
+    </div>
+    <div class="recipe-summary">香气十足，超级下饭，周末最爱</div>
+    <div class="recipe-body">
+      <div class="section-label">食材</div>
+      <div class="ingredients">
+        <div class="ingredient">牛肉<span>200g</span></div>
+        <div class="ingredient">蒜苔<span>1把</span></div>
+        <div class="ingredient">姜<span>2片</span></div>
+        <div class="ingredient">生抽<span>1勺</span></div>
+        <div class="ingredient">淀粉<span>少许</span></div>
+        <div class="ingredient">盐<span>适量</span></div>
+      </div>
+      <div class="section-label">步骤</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text">牛肉切薄片，加生抽+淀粉腌10分钟；蒜苔切段</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">热锅热油，先下蒜苔大火翻炒<em>2分钟</em>，炒到有点焦边，盛出</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">同锅下牛肉，大火炒至变色</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">倒入蒜苔，加盐翻炒均匀，出锅</div></div>
+      </div>
+      <div class="tip"><strong>💡 技巧：</strong>蒜苔要先炒，炒出焦香味更好吃；胃不好的话蒜苔炒软一点</div>
+    </div>
+  </div>
+
+  <!-- 芹菜炒牛肉 -->
+  <div class="recipe visible" data-cat="牛肉" onclick="toggle(this)">
+    <div class="recipe-header">
+      <div class="recipe-title"><span class="recipe-emoji">🌱</span>芹菜炒牛肉</div>
+      <div class="recipe-meta"><span class="tag time">⏱ 15分钟</span><span class="chevron">›</span></div>
+    </div>
+    <div class="recipe-summary">清香爽口，补铁高蛋白</div>
+    <div class="recipe-body">
+      <div class="section-label">食材</div>
+      <div class="ingredients">
+        <div class="ingredient">牛肉<span>200g</span></div>
+        <div class="ingredient">芹菜<span>2根</span></div>
+        <div class="ingredient">姜<span>2片</span></div>
+        <div class="ingredient">生抽<span>1勺</span></div>
+        <div class="ingredient">淀粉<span>少许</span></div>
+        <div class="ingredient">盐<span>适量</span></div>
+      </div>
+      <div class="section-label">步骤</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text">牛肉切薄片腌制；芹菜去叶切斜段</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">热锅热油，姜片爆香，下牛肉大火炒至变色盛出</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">同锅下芹菜，大火翻炒<em>1-2分钟</em></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">倒入牛肉，加盐、生抽翻炒均匀出锅</div></div>
+      </div>
+      <div class="tip"><strong>💡 技巧：</strong>芹菜不要炒太久，保持脆感；胃不好的话可以先焯水30秒再炒</div>
+    </div>
+  </div>
+
+  <!-- 蚝油生菜 -->
+  <div class="recipe visible" data-cat="蔬菜" onclick="toggle(this)">
+    <div class="recipe-header">
+      <div class="recipe-title"><span class="recipe-emoji">🥗</span>蚝油生菜</div>
+      <div class="recipe-meta"><span class="tag time">⏱ 8分钟</span><span class="chevron">›</span></div>
+    </div>
+    <div class="recipe-summary">最简单的一道菜，5分钟搞定，鲜嫩好吃</div>
+    <div class="recipe-body">
+      <div class="section-label">食材</div>
+      <div class="ingredients">
+        <div class="ingredient">生菜<span>1颗</span></div>
+        <div class="ingredient">蚝油<span>2勺</span></div>
+        <div class="ingredient">生抽<span>1勺</span></div>
+        <div class="ingredient">蒜<span>2瓣（可选）</span></div>
+        <div class="ingredient">香油<span>几滴</span></div>
+      </div>
+      <div class="section-label">步骤</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text">生菜洗净掰开，锅中烧水加盐，水开后放生菜<em>焯30秒</em>捞出摆盘</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">调酱汁：蚝油+生抽+少许热水混合</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">小锅热油，蒜末爆香（没有蒜直接用热油），浇在生菜上</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">淋上酱汁+几滴香油，完成</div></div>
+      </div>
+      <div class="tip"><strong>💡 技巧：</strong>生菜焯水时间不能超过1分钟，太软就不好吃了</div>
+    </div>
+  </div>
+
+  <!-- 豆腐白菜汤 -->
+  <div class="recipe visible" data-cat="汤" onclick="toggle(this)">
+    <div class="recipe-header">
+      <div class="recipe-title"><span class="recipe-emoji">🍲</span>豆腐白菜汤</div>
+      <div class="recipe-meta"><span class="tag time">⏱ 15分钟</span><span class="chevron">›</span></div>
+    </div>
+    <div class="recipe-summary">清淡暖胃，特别适合肠胃不好的时候</div>
+    <div class="recipe-body">
+      <div class="section-label">食材</div>
+      <div class="ingredients">
+        <div class="ingredient">豆腐<span>1块</span></div>
+        <div class="ingredient">白菜<span>几片</span></div>
+        <div class="ingredient">姜<span>2片</span></div>
+        <div class="ingredient">盐<span>适量</span></div>
+        <div class="ingredient">香油<span>几滴</span></div>
+      </div>
+      <div class="section-label">步骤</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text">豆腐切块，白菜切片</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">锅中加水烧开，放姜片、白菜，煮3分钟</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">放入豆腐，继续煮<em>3-5分钟</em></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">加盐调味，滴几滴香油出锅</div></div>
+      </div>
+      <div class="tip"><strong>💡 技巧：</strong>豆腐选嫩豆腐更好消化；汤里加一个鸡蛋打散下去也很好</div>
+    </div>
+  </div>
+
+  <!-- 番茄蛋花汤 -->
+  <div class="recipe visible" data-cat="汤" onclick="toggle(this)">
+    <div class="recipe-header">
+      <div class="recipe-title"><span class="recipe-emoji">🍅</span>番茄蛋花汤</div>
+      <div class="recipe-meta"><span class="tag time">⏱ 10分钟</span><span class="chevron">›</span></div>
+    </div>
+    <div class="recipe-summary">酸甜开胃，简单零失败</div>
+    <div class="recipe-body">
+      <div class="section-label">食材</div>
+      <div class="ingredients">
+        <div class="ingredient">番茄<span>2个</span></div>
+        <div class="ingredient">鸡蛋<span>2个</span></div>
+        <div class="ingredient">盐<span>适量</span></div>
+        <div class="ingredient">香油<span>几滴</span></div>
+        <div class="ingredient">葱花<span>可选</span></div>
+      </div>
+      <div class="section-label">步骤</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text">番茄切块，鸡蛋打散备用</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">锅热油，番茄翻炒出汁，加<em>两碗水</em>大火烧开</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">转小火，<em>边搅汤边缓缓倒入蛋液</em>，形成蛋花</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">加盐、香油，出锅</div></div>
+      </div>
+      <div class="tip"><strong>💡 技巧：</strong>倒蛋液时要用勺子搅动汤，这样蛋花才好看；喜欢酸一点可以多放番茄</div>
+    </div>
+  </div>
+
+  <!-- 番茄牛腩面 -->
+  <div class="recipe visible" data-cat="主食" onclick="toggle(this)">
+    <div class="recipe-header">
+      <div class="recipe-title"><span class="recipe-emoji">🍜</span>番茄牛腩面</div>
+      <div class="recipe-meta"><span class="tag time">⏱ 20分钟</span><span class="chevron">›</span></div>
+    </div>
+    <div class="recipe-summary">一碗满足，汤浓味鲜，午饭首选</div>
+    <div class="recipe-body">
+      <div class="section-label">食材</div>
+      <div class="ingredients">
+        <div class="ingredient">挂面<span>1把</span></div>
+        <div class="ingredient">番茄<span>2个</span></div>
+        <div class="ingredient">牛肉<span>200g</span></div>
+        <div class="ingredient">姜<span>2片</span></div>
+        <div class="ingredient">生抽<span>1勺</span></div>
+        <div class="ingredient">盐<span>适量</span></div>
+      </div>
+      <div class="section-label">步骤</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text">牛肉切片腌制；番茄切块</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">热锅炒番茄出汁，加两碗水+生抽烧开，放牛肉煮熟，加盐调味做成汤底</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">另起锅煮面，水开下面，<em>煮3-4分钟</em>至熟，捞出放碗里</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">浇上番茄牛肉汤底，完成</div></div>
+      </div>
+      <div class="tip"><strong>💡 技巧：</strong>面和汤分开煮，面不会变糊；汤底可以多做一点，第二天还能用</div>
+    </div>
+  </div>
+
+  <!-- 番茄蛋花汤面 -->
+  <div class="recipe visible" data-cat="主食" onclick="toggle(this)">
+    <div class="recipe-header">
+      <div class="recipe-title"><span class="recipe-emoji">🍝</span>番茄蛋花汤面</div>
+      <div class="recipe-meta"><span class="tag time">⏱ 12分钟</span><span class="chevron">›</span></div>
+    </div>
+    <div class="recipe-summary">最快手的一碗面，忙碌时的救星</div>
+    <div class="recipe-body">
+      <div class="section-label">食材</div>
+      <div class="ingredients">
+        <div class="ingredient">挂面<span>1把</span></div>
+        <div class="ingredient">番茄<span>1个</span></div>
+        <div class="ingredient">鸡蛋<span>1个</span></div>
+        <div class="ingredient">盐<span>适量</span></div>
+        <div class="ingredient">香油<span>几滴</span></div>
+      </div>
+      <div class="section-label">步骤</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text">锅中加水烧开，番茄切块下锅，煮2分钟</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">下挂面，煮3分钟</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">打入鸡蛋，<em>用筷子搅散</em>成蛋花</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">加盐、香油，出锅</div></div>
+      </div>
+      <div class="tip"><strong>💡 技巧：</strong>一锅到底，连碗都省了；想更有营养加把菠菜进去</div>
+    </div>
+  </div>
+
+  <!-- 煎鸡蛋 -->
+  <div class="recipe visible" data-cat="早餐" onclick="toggle(this)">
+    <div class="recipe-header">
+      <div class="recipe-title"><span class="recipe-emoji">🍳</span>煎鸡蛋</div>
+      <div class="recipe-meta"><span class="tag time">⏱ 5分钟</span><span class="chevron">›</span></div>
+    </div>
+    <div class="recipe-summary">早餐必备，简单但要煎好也有技巧</div>
+    <div class="recipe-body">
+      <div class="section-label">食材</div>
+      <div class="ingredients">
+        <div class="ingredient">鸡蛋<span>1-2个</span></div>
+        <div class="ingredient">油<span>少许</span></div>
+        <div class="ingredient">盐<span>少许</span></div>
+      </div>
+      <div class="section-label">步骤</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text">锅烧热，加少许油，<em>转小火</em></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">磕入鸡蛋，撒少许盐</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">小火煎至蛋白凝固，喜欢全熟就翻面再煎30秒</div></div>
+      </div>
+      <div class="tip"><strong>💡 技巧：</strong>一定要小火，大火蛋白焦了蛋黄还生；锅里加几滴水盖盖子可以让蛋黄表面熟透</div>
+    </div>
+  </div>
+
+  <!-- 燕麦片 -->
+  <div class="recipe visible" data-cat="早餐" onclick="toggle(this)">
+    <div class="recipe-header">
+      <div class="recipe-title"><span class="recipe-emoji">🥣</span>燕麦片早餐</div>
+      <div class="recipe-meta"><span class="tag time">⏱ 5分钟</span><span class="chevron">›</span></div>
+    </div>
+    <div class="recipe-summary">高蛋白早餐，健身增肌好搭档</div>
+    <div class="recipe-body">
+      <div class="section-label">食材</div>
+      <div class="ingredients">
+        <div class="ingredient">燕麦片<span>50g</span></div>
+        <div class="ingredient">热水/热牛奶<span>适量</span></div>
+        <div class="ingredient">香蕉/蓝莓<span>适量</span></div>
+      </div>
+      <div class="section-label">步骤</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text">燕麦片放碗里，倒入<em>热水或热牛奶</em>，稍微没过即可</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">等2分钟让燕麦吸水膨胀</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">放上香蕉片或蓝莓，搭配酸奶更好</div></div>
+      </div>
+      <div class="tip"><strong>💡 技巧：</strong>选即食燕麦片，不用煮；加酸奶一起吃蛋白质更高，对肠胃也好</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function toggle(el) {
+    el.classList.toggle('open');
+  }
+
+  function filter(cat) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+
+    document.querySelectorAll('.recipe').forEach(r => {
+      if (cat === 'all' || r.dataset.cat === cat) {
+        r.classList.add('visible');
+      } else {
+        r.classList.remove('visible');
+        r.classList.remove('open');
+      }
+    });
+  }
+</script>
+</body>
+</html>
