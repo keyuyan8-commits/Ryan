@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Ryan 生活助手</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{font-size:16px;scroll-behavior:smooth}
@@ -13,8 +13,8 @@ html{font-size:16px;scroll-behavior:smooth}
   --bg:#faf6f0;--bg1:#fff9f3;--bg2:#f5ede1;--bg3:#ede0cf;
   --line:#e8d9c4;--line2:#d9c5a8;
   --text0:#2c1f0e;--text1:#4a3520;--text2:#7a6148;--text3:#a8906f;
-  --gold:#c08040;--gold-l:#e8a050;
-  --gold-faint:rgba(192,128,64,0.10);--gold-glow:rgba(192,128,64,0.18);
+  --gold:#c08040;--gold-l:#e8a050;--gold-d:#9a6030;
+  --gold-faint:rgba(192,128,64,0.10);--gold-glow:rgba(192,128,64,0.20);
   --red:#b85040;--red-faint:rgba(184,80,64,0.10);
   --green:#4a7a50;--green-faint:rgba(74,122,80,0.10);
   --blue:#3a6890;--blue-faint:rgba(58,104,144,0.10);
@@ -22,35 +22,37 @@ html{font-size:16px;scroll-behavior:smooth}
   --orange:#c07030;--orange-faint:rgba(192,112,48,0.10);
   --teal:#3a8888;--teal-faint:rgba(58,136,136,0.10);
   --radius:14px;--radius-sm:9px;--trans:0.2s ease;
-  --shadow:0 4px 20px rgba(100,60,20,0.10);--shadow-lg:0 12px 40px rgba(100,60,20,0.15);
+  --shadow:0 4px 20px rgba(100,60,20,0.09);--shadow-lg:0 12px 40px rgba(100,60,20,0.14);
 }
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:var(--bg2)}
 ::-webkit-scrollbar-thumb{background:var(--line2);border-radius:4px}
 body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text1);min-height:100vh}
-.sidebar{width:230px;flex-shrink:0;background:var(--bg1);border-right:1px solid var(--line);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:50;transition:transform var(--trans);box-shadow:2px 0 12px rgba(100,60,20,0.06)}
-.sidebar-logo{padding:26px 22px 18px;border-bottom:1px solid var(--line);background:linear-gradient(160deg,#fff5ea,var(--bg1))}
+
+/* ── SIDEBAR ── */
+.sidebar{width:235px;flex-shrink:0;background:var(--bg1);border-right:1px solid var(--line);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:50;transition:transform var(--trans);box-shadow:2px 0 14px rgba(100,60,20,0.07)}
+.sidebar-logo{padding:26px 22px 18px;border-bottom:1px solid var(--line);background:linear-gradient(160deg,#fff8ee,var(--bg1))}
 .logo-icon{font-size:26px;margin-bottom:5px}
-.logo-title{font-family:'Noto Serif SC',serif;font-size:18px;font-weight:700;color:var(--text0);line-height:1.2;letter-spacing:1px}
+.logo-title{font-family:'Noto Serif SC',serif;font-size:18px;font-weight:700;color:var(--text0);letter-spacing:1px}
 .logo-sub{font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:2px}
 .sidebar-nav{flex:1;padding:14px 10px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;cursor:pointer;transition:all var(--trans);color:var(--text2);font-size:13px;font-weight:400;user-select:none;position:relative}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;cursor:pointer;transition:all var(--trans);color:var(--text2);font-size:13px;user-select:none;position:relative}
 .nav-item:hover{background:var(--bg2);color:var(--text0)}
-.nav-item.active{background:linear-gradient(135deg,var(--gold-faint),rgba(192,128,64,0.06));color:var(--gold);font-weight:600;border:1px solid rgba(192,128,64,0.25)}
+.nav-item.active{background:linear-gradient(135deg,var(--gold-faint),rgba(192,128,64,0.05));color:var(--gold);font-weight:600;border:1px solid rgba(192,128,64,0.22)}
 .nav-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
-.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;font-weight:700}
-.sidebar-footer{padding:14px 20px 20px;border-top:1px solid var(--line);font-size:11px;color:var(--text3);letter-spacing:1px;line-height:1.7}
-.topbar{display:none;position:fixed;top:0;left:0;right:0;height:54px;background:var(--bg1);border-bottom:1px solid var(--line);z-index:60;align-items:center;padding:0 16px;gap:12px;box-shadow:0 2px 8px rgba(100,60,20,0.08)}
+.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;font-weight:700;min-width:18px;text-align:center}
+.sidebar-footer{padding:14px 20px 20px;border-top:1px solid var(--line);font-size:11px;color:var(--text3);letter-spacing:1px;line-height:1.9}
+.topbar{display:none;position:fixed;top:0;left:0;right:0;height:54px;background:var(--bg1);border-bottom:1px solid var(--line);z-index:60;align-items:center;padding:0 16px;gap:12px;box-shadow:0 2px 8px rgba(100,60,20,0.07)}
 .topbar-logo{display:flex;align-items:center;gap:8px;flex:1}
 .topbar-icon{font-size:20px}
 .topbar-title{font-family:'Noto Serif SC',serif;font-size:16px;font-weight:700;color:var(--text0)}
 .menu-btn{background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer;padding:4px;line-height:1}
 .overlay{display:none;position:fixed;inset:0;background:rgba(60,30,10,0.35);z-index:40;backdrop-filter:blur(2px)}
 .overlay.open{display:block}
-.main{margin-left:230px;flex:1;min-height:100vh}
-.page{display:none;padding:32px 32px 60px;animation:fadeUp 0.3s ease}
+.main{margin-left:235px;min-height:100vh}
+.page{display:none;padding:32px 32px 80px;animation:fadeUp 0.3s ease}
 .page.active{display:block}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .page-header{margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--line)}
 .page-title{font-family:'Noto Serif SC',serif;font-size:32px;font-weight:700;color:var(--text0);line-height:1.1;letter-spacing:1px}
 .page-title span{color:var(--gold)}
@@ -61,34 +63,48 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
 
 /* ── DASHBOARD ── */
 .dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
-.dash-card{background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);transition:all var(--trans);cursor:default}
-.dash-card:hover{border-color:var(--line2);box-shadow:var(--shadow-lg)}
+.dash-card{background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);transition:all var(--trans);cursor:default;position:relative;overflow:hidden}
+.dash-card::before{content:'';position:absolute;top:0;right:0;width:60px;height:60px;background:var(--gold-faint);border-radius:0 var(--radius) 0 60px;pointer-events:none}
+.dash-card:hover{border-color:var(--line2);box-shadow:var(--shadow-lg);transform:translateY(-1px)}
 .dash-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600}
 .dash-val{font-family:'Noto Serif SC',serif;font-size:28px;font-weight:700;line-height:1;margin-bottom:3px}
 .dash-sub{font-size:11px;color:var(--text3)}
 .dash-meals{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:24px}
-.dash-meal{background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
-.dash-meal-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600;display:flex;align-items:center;gap:6px}
+.dash-meal{background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);transition:all var(--trans)}
+.dash-meal:hover{border-color:var(--gold-l);box-shadow:var(--shadow-lg)}
+.dash-meal-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600;display:flex;align-items:center;gap:5px}
 .dash-meal-name{font-family:'Noto Serif SC',serif;font-size:16px;font-weight:600;color:var(--text0);margin-bottom:3px;cursor:pointer;transition:color var(--trans)}
 .dash-meal-name:hover{color:var(--gold)}
 .dash-meal-note{font-size:11px;color:var(--text3)}
-.warn-box{background:linear-gradient(135deg,var(--red-faint),rgba(184,80,64,0.05));border:1px solid rgba(184,80,64,0.25);border-radius:var(--radius);padding:16px 20px;margin-bottom:24px}
+.warn-box{background:linear-gradient(135deg,var(--red-faint),rgba(184,80,64,0.04));border:1px solid rgba(184,80,64,0.25);border-radius:var(--radius);padding:16px 20px;margin-bottom:22px}
 .warn-title{font-size:12px;font-weight:700;color:var(--red);margin-bottom:8px;display:flex;align-items:center;gap:6px}
 .warn-items{display:flex;flex-wrap:wrap;gap:6px}
 .warn-tag{background:var(--bg1);border:1px solid rgba(184,80,64,0.2);color:var(--red);font-size:11px;padding:3px 10px;border-radius:12px}
 
+/* ── BUDGET BAR ── */
+.budget-bars{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.bbar{background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
+.bbar-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+.bbar-name{font-size:12px;font-weight:600;color:var(--text1)}
+.bbar-nums{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
+.bbar-track{height:7px;background:var(--bg3);border-radius:10px;overflow:hidden}
+.bbar-fill{height:100%;border-radius:10px;transition:width 0.6s cubic-bezier(.34,1.2,.64,1)}
+.bbar-fill.ok{background:linear-gradient(90deg,var(--green),#6aaa70)}
+.bbar-fill.warn{background:linear-gradient(90deg,var(--gold),var(--gold-l))}
+.bbar-fill.over{background:linear-gradient(90deg,var(--red),#d06050)}
+
 /* ── MEAL TABLE ── */
 .week-scroller{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.week-table{width:100%;border-collapse:separate;border-spacing:0;min-width:680px}
+.week-table{width:100%;border-collapse:separate;border-spacing:0;min-width:700px}
 .week-table th{background:var(--bg2);padding:12px 10px;text-align:center;font-size:11px;letter-spacing:2px;color:var(--text3);border-bottom:1px solid var(--line);font-weight:500}
-.week-table th.dh{font-family:'Noto Serif SC',serif;font-size:19px;font-weight:600;color:var(--text0);letter-spacing:0}
+.week-table th.dh{font-family:'Noto Serif SC',serif;font-size:20px;font-weight:600;color:var(--text0);letter-spacing:0}
 .week-table th .wd{font-family:'Noto Sans SC',sans-serif;font-size:10px;letter-spacing:2px;color:var(--text3);display:block;margin-top:2px;font-weight:400}
-.week-table td{padding:10px 9px;vertical-align:top;border-bottom:1px solid var(--line);border-right:1px solid var(--line);background:var(--bg1);transition:background var(--trans);min-width:92px}
-.week-table td.row-label{background:var(--bg2);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);text-align:center;font-weight:600;width:50px;min-width:50px;vertical-align:middle}
+.week-table td{padding:10px 9px;vertical-align:top;border-bottom:1px solid var(--line);border-right:1px solid var(--line);background:var(--bg1);transition:background var(--trans);min-width:96px}
+.week-table td.row-label{background:var(--bg2);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);text-align:center;font-weight:600;width:48px;min-width:48px;vertical-align:middle}
 .week-table td:last-child{border-right:none}
 .week-table tr:last-child td{border-bottom:none}
-.week-table tbody tr:hover td:not(.row-label){background:#fffaf4}
-.mc{cursor:pointer}.mc:hover .mn{color:var(--gold);text-decoration:underline;text-decoration-color:var(--gold-l)}
+.week-table tbody tr:hover td:not(.row-label){background:#fffaf5}
+.mc{cursor:pointer}.mc:hover .mn{color:var(--gold)}
 .mn{font-size:12px;font-weight:600;color:var(--text0);line-height:1.4;margin-bottom:2px;transition:color var(--trans)}
 .mnt{font-size:10px;color:var(--text3);line-height:1.4;margin-bottom:3px}
 .mbadge{display:inline-block;font-size:9px;padding:2px 6px;border-radius:20px;letter-spacing:1px;font-weight:600}
@@ -96,11 +112,19 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
 .b-veg{background:var(--green-faint);color:var(--green);border:1px solid rgba(74,122,80,0.2)}
 .b-noodle{background:var(--orange-faint);color:var(--orange);border:1px solid rgba(192,112,48,0.2)}
 .b-quick{background:var(--blue-faint);color:var(--blue);border:1px solid rgba(58,104,144,0.2)}
+.today-col{background:linear-gradient(180deg,rgba(192,128,64,0.04),rgba(192,128,64,0.01)) !important}
 
 /* ── RECIPES ── */
-.recipe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.recipe-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.rfbtn{padding:6px 13px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--text2);transition:all var(--trans);font-family:'Noto Sans SC',sans-serif}
+.rfbtn:hover{border-color:var(--line2);color:var(--text0);background:var(--bg2)}
+.rfbtn.active{background:var(--gold-faint);border-color:rgba(192,128,64,0.35);color:var(--gold);font-weight:600}
+.recipe-search{width:100%;margin-bottom:14px;padding:10px 14px;background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius-sm);font-family:'Noto Sans SC',sans-serif;font-size:13px;color:var(--text0);outline:none;transition:border-color var(--trans)}
+.recipe-search:focus{border-color:var(--gold-l)}
+.recipe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:14px}
 .rc{background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all 0.22s ease;box-shadow:var(--shadow)}
 .rc:hover{border-color:var(--gold-l);transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.rc.hidden{display:none}
 .rc-head{padding:16px 18px 12px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,#fffaf4,var(--bg1));display:flex;justify-content:space-between;align-items:flex-start}
 .rc-emoji{font-size:32px;line-height:1}
 .rc-name{font-family:'Noto Serif SC',serif;font-size:18px;font-weight:700;color:var(--text0);margin-bottom:4px;line-height:1.2}
@@ -112,10 +136,10 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
 /* ── MODAL ── */
 .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(60,30,10,0.55);z-index:200;justify-content:center;align-items:flex-start;padding:20px 14px;overflow-y:auto;backdrop-filter:blur(5px)}
 .modal-backdrop.open{display:flex}
-.modal{background:var(--bg1);border:1px solid var(--line);border-radius:18px;width:100%;max-width:600px;overflow:hidden;animation:modalIn 0.3s cubic-bezier(.34,1.5,.64,1);box-shadow:0 24px 80px rgba(60,30,10,0.2)}
+.modal{background:var(--bg1);border:1px solid var(--line);border-radius:18px;width:100%;max-width:620px;overflow:hidden;animation:modalIn 0.3s cubic-bezier(.34,1.5,.64,1);box-shadow:0 28px 90px rgba(60,30,10,0.22)}
 @keyframes modalIn{from{opacity:0;transform:scale(0.93)}to{opacity:1;transform:scale(1)}}
 .m-head{padding:22px 26px 18px;border-bottom:1px solid var(--line);background:linear-gradient(160deg,#fffaf3,var(--bg1));display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.m-emoji{font-size:32px;margin-bottom:5px}
+.m-emoji{font-size:34px;margin-bottom:5px}
 .m-title{font-family:'Noto Serif SC',serif;font-size:26px;font-weight:700;color:var(--text0);line-height:1.2}
 .m-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
 .m-meta span{font-size:11px;color:var(--text3)}
@@ -125,23 +149,29 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
 .m-sec{margin-bottom:22px}.m-sec:last-child{margin-bottom:0}
 .m-sec-title{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--line);font-weight:700}
 .ing-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
-.ing-row{display:flex;justify-content:space-between;padding:7px 9px;background:var(--bg);border-radius:4px;font-size:13px}
+.ing-row{display:flex;justify-content:space-between;align-items:center;padding:7px 9px;background:var(--bg);border-radius:4px;font-size:13px;gap:8px}
 .ing-row:nth-child(odd){background:var(--bg2)}
-.ing-name{color:var(--text1)}
-.ing-qty{color:var(--text3);font-family:'DM Mono',monospace;font-size:11px}
+.ing-name{color:var(--text1);flex:1}
+.ing-qty{color:var(--text3);font-family:'DM Mono',monospace;font-size:11px;white-space:nowrap}
+.ing-warn{display:inline-block;width:7px;height:7px;background:var(--orange);border-radius:50%;margin-left:5px;vertical-align:middle;title:'库存偏少'}
 .steps{list-style:none}
-.step{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;line-height:1.75;color:var(--text1)}
+.step{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px;line-height:1.8;color:var(--text1)}
 .step:last-child{border-bottom:none}
-.snum{flex-shrink:0;width:25px;height:25px;background:linear-gradient(135deg,#ffecd8,#ffd4a8);border:1px solid var(--gold-l);color:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-top:1px}
+.snum{flex-shrink:0;width:26px;height:26px;background:linear-gradient(135deg,#ffecd8,#ffd4a8);border:1px solid var(--gold-l);color:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-top:2px}
 .step-txt{flex:1}
-.m-tip{background:linear-gradient(135deg,#fffaed,#fff3d8);border:1px solid rgba(192,128,64,0.25);border-left:3px solid var(--gold);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 14px;font-size:13px;color:var(--text2);line-height:1.65}
+/* timer in step */
+.step-timer{display:inline-flex;align-items:center;gap:5px;background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:2px 10px;font-size:11px;color:var(--text2);cursor:pointer;margin-top:5px;transition:all var(--trans);user-select:none}
+.step-timer:hover{background:var(--gold-faint);border-color:var(--gold-l);color:var(--gold)}
+.step-timer.running{background:var(--gold-faint);border-color:var(--gold-l);color:var(--gold)}
+.step-timer.done{background:var(--green-faint);border-color:rgba(74,122,80,0.3);color:var(--green)}
+.m-tip{background:linear-gradient(135deg,#fffaed,#fff3d8);border:1px solid rgba(192,128,64,0.25);border-left:3px solid var(--gold);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 14px;font-size:13px;color:var(--text2);line-height:1.7}
 .m-tip strong{color:var(--gold);font-weight:600}
 
 /* ── CALENDAR ── */
 .cal-wrap{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
 .cal-hdr{text-align:center;font-size:10px;letter-spacing:3px;color:var(--text3);text-transform:uppercase;padding:7px 0;font-weight:600}
-.cal-cell{background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius-sm);padding:9px;min-height:84px;box-shadow:0 2px 6px rgba(100,60,20,0.05)}
-.cal-cell.today{border-color:var(--gold);background:linear-gradient(160deg,#fffbf3,var(--bg1));box-shadow:0 2px 12px var(--gold-faint)}
+.cal-cell{background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius-sm);padding:9px;min-height:86px;box-shadow:0 2px 6px rgba(100,60,20,0.04)}
+.cal-cell.today{border-color:var(--gold);background:linear-gradient(160deg,#fffbf3,var(--bg1));box-shadow:0 2px 14px var(--gold-faint)}
 .cal-cell.today .cal-n{color:var(--gold)}
 .cal-cell.empty{background:transparent;border-color:transparent;box-shadow:none}
 .cal-n{font-family:'Noto Serif SC',serif;font-size:17px;font-weight:700;color:var(--text1);margin-bottom:4px;line-height:1}
@@ -149,9 +179,28 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
 .cal-m.link{cursor:pointer;transition:background var(--trans)}.cal-m.link:hover{background:var(--bg3)}
 .cal-m.bf{border-left:2px solid var(--blue)}.cal-m.lun{border-left:2px solid var(--green)}.cal-m.din{border-left:2px solid var(--gold)}
 
+/* ── SHOPPING LIST ── */
+.shop-btn{display:flex;align-items:center;gap:7px;padding:10px 20px;background:linear-gradient(135deg,#fff3e0,#ffe8c0);border:1px solid var(--gold-l);color:var(--gold);border-radius:var(--radius-sm);font-family:'Noto Sans SC',sans-serif;font-size:13px;cursor:pointer;transition:all var(--trans);font-weight:600;box-shadow:0 2px 8px var(--gold-faint);margin-bottom:18px}
+.shop-btn:hover{background:linear-gradient(135deg,#ffe8c0,#ffd89a);box-shadow:0 4px 14px var(--gold-glow)}
+.shop-list{background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);margin-bottom:24px}
+.shop-list.hidden{display:none}
+.shop-section{margin-bottom:14px}
+.shop-section:last-child{margin-bottom:0}
+.shop-sec-name{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);font-weight:600;margin-bottom:7px;display:flex;align-items:center;gap:8px}
+.shop-sec-name::after{content:'';flex:1;height:1px;background:var(--line)}
+.shop-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:5px}
+.shop-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--radius-sm);background:var(--bg);font-size:12px;cursor:pointer;transition:all var(--trans);border:1px solid transparent;user-select:none}
+.shop-item:hover{background:var(--bg2);border-color:var(--line)}
+.shop-item.checked{opacity:.5;text-decoration:line-through;background:var(--bg2)}
+.shop-cb{width:15px;height:15px;border:1.5px solid var(--line2);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all var(--trans);font-size:10px}
+.shop-item.checked .shop-cb{background:var(--green);border-color:var(--green);color:#fff}
+.shop-item-name{color:var(--text1);flex:1}
+.shop-item-note{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace}
+
 /* ── EXPENSE ── */
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}
-.stat-card{background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);transition:all var(--trans);cursor:default}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.stat-card{background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);transition:all var(--trans);cursor:default;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;right:0;width:48px;height:48px;background:var(--gold-faint);border-radius:0 var(--radius) 0 48px;pointer-events:none}
 .stat-card:hover{box-shadow:var(--shadow-lg);border-color:var(--line2)}
 .stat-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600}
 .stat-val{font-family:'Noto Serif SC',serif;font-size:24px;font-weight:700;line-height:1;margin-bottom:3px}
@@ -159,12 +208,17 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
 .c-gold{color:var(--gold)}.c-green{color:var(--green)}.c-purple{color:var(--purple)}
 .c-blue{color:var(--blue)}.c-red{color:var(--red)}.c-orange{color:var(--orange)}.c-teal{color:var(--teal)}
 
+/* month nav */
+.month-nav{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.mnav-btn{background:var(--bg2);border:1px solid var(--line);color:var(--text2);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all var(--trans);line-height:1}
+.mnav-btn:hover{background:var(--bg3);color:var(--text0)}
+.mnav-label{font-family:'Noto Serif SC',serif;font-size:16px;font-weight:600;color:var(--text0);min-width:100px;text-align:center}
+
 /* ── CHART ── */
-.chart-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px}
+.chart-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
 .chart-box{background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
 .chart-title{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:1px;margin-bottom:14px}
 canvas{max-width:100%}
-/* pie chart legend */
 .pie-legend{display:flex;flex-direction:column;gap:5px;margin-top:12px}
 .pie-leg-item{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text2)}
 .pie-leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
@@ -177,13 +231,15 @@ canvas{max-width:100%}
 .exp-controls{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .btn-add{display:flex;align-items:center;gap:6px;padding:8px 16px;background:linear-gradient(135deg,#fff3e0,#ffe8c0);border:1px solid var(--gold-l);color:var(--gold);border-radius:var(--radius-sm);font-family:'Noto Sans SC',sans-serif;font-size:12px;cursor:pointer;transition:all var(--trans);font-weight:600;box-shadow:0 2px 8px var(--gold-faint)}
 .btn-add:hover{background:linear-gradient(135deg,#ffe8c0,#ffd89a)}
+.btn-export{display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--bg2);border:1px solid var(--line);color:var(--text2);border-radius:var(--radius-sm);font-family:'Noto Sans SC',sans-serif;font-size:12px;cursor:pointer;transition:all var(--trans)}
+.btn-export:hover{background:var(--bg3);color:var(--text0)}
 .add-panel{display:none;background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:16px}
 .add-panel.open{display:block}
 .fg{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;align-items:end}
 .ff label{display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:5px;font-weight:600}
 .ff input,.ff select{width:100%;background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius-sm);padding:8px 12px;font-family:'Noto Sans SC',sans-serif;font-size:13px;color:var(--text0);outline:none;transition:border-color var(--trans)}
 .ff input:focus,.ff select:focus{border-color:var(--gold-l)}
-.btn-sub{padding:8px 18px;background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#fff;border:none;border-radius:var(--radius-sm);font-family:'Noto Sans SC',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity var(--trans);white-space:nowrap}
+.btn-sub{padding:9px 18px;background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#fff;border:none;border-radius:var(--radius-sm);font-family:'Noto Sans SC',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity var(--trans);white-space:nowrap}
 .btn-sub:hover{opacity:.88}
 .exp-list{display:flex;flex-direction:column;gap:2px}
 .exp-div{padding:8px 14px 3px;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;gap:10px;font-weight:600}
@@ -195,7 +251,8 @@ canvas{max-width:100%}
 .exp-note{font-size:11px;color:var(--text3);margin-top:1px;cursor:pointer}
 .exp-note:hover{color:var(--text2)}
 .exp-date{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;white-space:nowrap}
-.exp-cat-badge{font-size:10px;padding:2px 8px;border-radius:10px;cursor:pointer;white-space:nowrap;font-weight:500}
+.exp-cat-badge{font-size:10px;padding:2px 8px;border-radius:10px;cursor:pointer;white-space:nowrap;font-weight:500;border:1px solid transparent;transition:opacity var(--trans)}
+.exp-cat-badge:hover{opacity:.75}
 .exp-amt{font-family:'DM Mono',monospace;font-size:13px;text-align:right;white-space:nowrap;cursor:pointer;font-weight:500}
 .exp-amt:hover{color:var(--gold)}
 .del-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;padding:2px;border-radius:4px;transition:color var(--trans);line-height:1}
@@ -203,28 +260,56 @@ canvas{max-width:100%}
 .subtotal-row{text-align:right;padding:4px 14px 2px;font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
 
 /* ── STOCK ── */
-.stock-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:9px}
+.stock-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:9px}
 .sc{background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius-sm);padding:11px 14px;transition:all var(--trans);position:relative}
 .sc:hover{border-color:var(--line2);box-shadow:var(--shadow)}
-.sc.used{opacity:0.4;background:var(--bg2)}
-.sdot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:6px;cursor:pointer;transition:transform var(--trans)}
-.sdot:hover{transform:scale(1.4)}
+.sdot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;cursor:pointer;transition:transform var(--trans);vertical-align:middle}
+.sdot:hover{transform:scale(1.5)}
 .dot-h{background:#5aaa65;box-shadow:0 0 5px rgba(90,170,100,0.4)}
 .dot-m{background:var(--gold);box-shadow:0 0 5px rgba(192,128,64,0.3)}
 .dot-l{background:var(--red);box-shadow:0 0 5px rgba(184,80,64,0.4)}
-.sn{font-size:12px;color:var(--text0);margin-bottom:3px;font-weight:500;cursor:pointer}
-.sn:hover{color:var(--gold)}
-.sq{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;cursor:pointer}
+.sn{font-size:12px;color:var(--text0);margin-bottom:4px;font-weight:500;cursor:pointer;display:flex;align-items:center}
+.sn:hover span:last-child{color:var(--gold)}
+.sq{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;cursor:pointer;padding-left:14px}
 .sq:hover{color:var(--text2)}
 .sc-del{position:absolute;top:6px;right:8px;background:none;border:none;color:var(--text3);font-size:13px;cursor:pointer;opacity:0;transition:opacity var(--trans),color var(--trans);line-height:1;padding:2px}
 .sc:hover .sc-del{opacity:1}
 .sc-del:hover{color:var(--red)}
 .stock-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
-.btn-stock{padding:7px 15px;border-radius:var(--radius-sm);font-family:'Noto Sans SC',sans-serif;font-size:12px;cursor:pointer;border:1px solid;transition:all var(--trans)}
+.btn-stock{padding:7px 16px;border-radius:var(--radius-sm);font-family:'Noto Sans SC',sans-serif;font-size:12px;cursor:pointer;border:1px solid;transition:all var(--trans)}
 .btn-stock-add{background:var(--gold-faint);border-color:var(--gold-l);color:var(--gold);font-weight:600}
 .btn-stock-add:hover{background:rgba(192,128,64,0.15)}
 .btn-stock-reset{background:var(--red-faint);border-color:rgba(184,80,64,0.3);color:var(--red)}
 .btn-stock-reset:hover{background:rgba(184,80,64,0.15)}
+.stock-legend{display:flex;gap:16px;margin-bottom:14px;font-size:12px;color:var(--text2)}
+.stock-legend span{display:flex;align-items:center;gap:5px}
+
+/* ── FLOAT BTN (quick add expense) ── */
+.fab{position:fixed;bottom:28px;right:28px;width:52px;height:52px;background:linear-gradient(135deg,var(--gold),var(--gold-l));border:none;border-radius:50%;color:#fff;font-size:24px;cursor:pointer;box-shadow:0 6px 22px rgba(192,128,64,0.45);z-index:100;display:flex;align-items:center;justify-content:center;transition:all 0.22s cubic-bezier(.34,1.5,.64,1);line-height:1}
+.fab:hover{transform:scale(1.12);box-shadow:0 8px 28px rgba(192,128,64,0.55)}
+.fab:active{transform:scale(0.95)}
+.fab-tooltip{position:fixed;bottom:90px;right:28px;background:var(--text0);color:#fff;font-size:11px;padding:5px 10px;border-radius:8px;z-index:100;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity var(--trans)}
+.fab:hover + .fab-tooltip{opacity:1}
+
+/* quick-add modal */
+.qa-backdrop{display:none;position:fixed;inset:0;background:rgba(60,30,10,0.5);z-index:180;justify-content:center;align-items:center;backdrop-filter:blur(4px)}
+.qa-backdrop.open{display:flex}
+.qa-box{background:var(--bg1);border:1px solid var(--line);border-radius:18px;width:360px;max-width:94vw;padding:24px 26px;box-shadow:0 24px 80px rgba(60,30,10,0.22);animation:modalIn 0.28s cubic-bezier(.34,1.5,.64,1)}
+.qa-title{font-family:'Noto Serif SC',serif;font-size:20px;font-weight:700;color:var(--text0);margin-bottom:18px;display:flex;align-items:center;justify-content:space-between}
+.qa-grid{display:flex;flex-direction:column;gap:11px}
+.qa-row{display:flex;flex-direction:column;gap:5px}
+.qa-row label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-weight:600}
+.qa-row input,.qa-row select{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-sm);padding:9px 12px;font-family:'Noto Sans SC',sans-serif;font-size:13px;color:var(--text0);outline:none;transition:border-color var(--trans)}
+.qa-row input:focus,.qa-row select:focus{border-color:var(--gold-l)}
+.qa-actions{display:flex;gap:8px;margin-top:18px}
+.qa-ok{flex:1;padding:10px;background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#fff;border:none;border-radius:var(--radius-sm);font-family:'Noto Sans SC',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:opacity var(--trans)}
+.qa-ok:hover{opacity:.88}
+.qa-cancel{padding:10px 16px;background:var(--bg2);border:1px solid var(--line);color:var(--text2);border-radius:var(--radius-sm);font-family:'Noto Sans SC',sans-serif;font-size:13px;cursor:pointer;transition:all var(--trans)}
+.qa-cancel:hover{background:var(--bg3)}
+
+/* toast */
+.toast{position:fixed;bottom:92px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text0);color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;z-index:300;opacity:0;transition:all 0.3s ease;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* ── MOBILE ── */
 @media(max-width:768px){
@@ -232,12 +317,13 @@ canvas{max-width:100%}
   .sidebar.open{transform:translateX(0)}
   .topbar{display:flex}
   .main{margin-left:0;padding-top:54px}
-  .page{padding:16px 14px 48px}
+  .page{padding:16px 14px 80px}
   .page-title{font-size:26px}
   .dash-grid{grid-template-columns:1fr 1fr;gap:8px}
   .dash-card{padding:14px}
   .dash-val{font-size:22px}
   .dash-meals{grid-template-columns:1fr}
+  .budget-bars{grid-template-columns:1fr}
   .stats-row{grid-template-columns:1fr 1fr;gap:8px}
   .stat-card{padding:12px 14px}
   .stat-val{font-size:20px}
@@ -256,13 +342,16 @@ canvas{max-width:100%}
   .m-body{padding:16px}
   .ing-grid{grid-template-columns:1fr}
   .week-table{font-size:11px}
-  .week-table td{padding:7px 5px;min-width:78px}
+  .week-table td{padding:7px 5px;min-width:80px}
   .stock-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+  .shop-items{grid-template-columns:1fr 1fr}
+  .fab{bottom:20px;right:20px}
 }
 @media(max-width:480px){
   .dash-grid{grid-template-columns:1fr}
   .stats-row{grid-template-columns:1fr}
   .ctab{padding:5px 9px;font-size:11px}
+  .shop-items{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -272,19 +361,20 @@ canvas{max-width:100%}
   <div class="sidebar-logo">
     <div class="logo-icon">🏠</div>
     <div class="logo-title">Ryan 生活助手</div>
-    <div class="logo-sub">My Life · 我的生活</div>
+    <div class="logo-sub">My Life · Melbourne 🇦🇺</div>
   </div>
   <nav class="sidebar-nav">
     <div class="nav-item active" onclick="switchPage('dash',this)"><span class="nav-icon">⚡</span> 今日总览</div>
     <div class="nav-item" onclick="switchPage('plan',this)"><span class="nav-icon">📅</span> 饮食计划</div>
     <div class="nav-item" onclick="switchPage('calendar',this)"><span class="nav-icon">🗓</span> 日历视图</div>
     <div class="nav-item" onclick="switchPage('recipes',this)"><span class="nav-icon">📖</span> 菜谱详情</div>
+    <div class="nav-item" onclick="switchPage('shopping',this)"><span class="nav-icon">🛒</span> 购物清单</div>
     <div class="nav-item" onclick="switchPage('expense',this)"><span class="nav-icon">💰</span> 账单记录</div>
     <div class="nav-item" onclick="switchPage('stock',this)"><span class="nav-icon">🥬</span> 食材库存 <span class="nav-badge" id="lowBadge" style="display:none">!</span></div>
   </nav>
   <div class="sidebar-footer">
-    <div>Ryan · Melbourne 🇦🇺</div>
-    <div id="sidebarDate" style="margin-top:2px"></div>
+    <div id="sidebarDate"></div>
+    <div style="margin-top:3px;font-size:10px">Melbourne ☀️</div>
   </div>
 </aside>
 
@@ -296,82 +386,49 @@ canvas{max-width:100%}
 
 <main class="main">
 
-<!-- ══ 今日总览 DASHBOARD ══ -->
+<!-- ══ DASHBOARD ══ -->
 <div class="page active" id="page-dash">
   <div class="page-header">
     <div class="page-title">今日<span>总览</span></div>
     <div class="page-desc" id="dashDate"></div>
   </div>
-
   <div class="sec-label">今日三餐</div>
   <div class="dash-meals" id="dashMeals"></div>
-
   <div class="sec-label">本月支出</div>
   <div class="dash-grid" id="dashStats"></div>
-
+  <div class="sec-label">预算进度</div>
+  <div class="budget-bars" id="budgetBars"></div>
   <div id="dashWarn"></div>
-
   <div class="sec-label">库存预警</div>
-  <div class="stock-grid" id="dashLowStock" style="margin-bottom:0"></div>
+  <div class="stock-grid" id="dashLowStock"></div>
 </div>
 
 <!-- ══ 饮食计划 ══ -->
 <div class="page" id="page-plan">
   <div class="page-header">
     <div class="page-title">下周<span>饮食</span>规划</div>
-    <div class="page-desc">4月14日—4月20日 · 所有餐名均可点击 🔗 跳转查看详细菜谱</div>
+    <div class="page-desc">4月14日—4月20日 · 点击餐名查看菜谱 · 当天列高亮显示</div>
   </div>
   <div class="sec-label">三餐总览</div>
   <div class="card" style="margin-bottom:20px">
     <div class="week-scroller">
-      <table class="week-table">
-        <thead><tr>
+      <table class="week-table" id="weekTable">
+        <thead><tr id="weekHead">
           <th></th>
-          <th><span class="dh">14<span class="wd">周一</span></span></th>
-          <th><span class="dh">15<span class="wd">周二</span></span></th>
-          <th><span class="dh">16<span class="wd">周三</span></span></th>
-          <th><span class="dh">17<span class="wd">周四</span></span></th>
-          <th><span class="dh">18<span class="wd">周五</span></span></th>
-          <th><span class="dh">19<span class="wd">周六</span></span></th>
-          <th><span class="dh">20<span class="wd">周日</span></span></th>
+          <th id="th-1"><span class="dh">14<span class="wd">周一</span></span></th>
+          <th id="th-2"><span class="dh">15<span class="wd">周二</span></span></th>
+          <th id="th-3"><span class="dh">16<span class="wd">周三</span></span></th>
+          <th id="th-4"><span class="dh">17<span class="wd">周四</span></span></th>
+          <th id="th-5"><span class="dh">18<span class="wd">周五</span></span></th>
+          <th id="th-6"><span class="dh">19<span class="wd">周六</span></span></th>
+          <th id="th-0"><span class="dh">20<span class="wd">周日</span></span></th>
         </tr></thead>
-        <tbody>
-          <tr>
-            <td class="row-label">早</td>
-            <td class="mc" onclick="jumpToRecipe('燕麦粥')"><div class="mn">燕麦粥 🔗</div><div class="mnt">蓝莓＋牛奶</div><span class="mbadge b-veg">素食</span></td>
-            <td class="mc" onclick="jumpToRecipe('鸡蛋饼')"><div class="mn">鸡蛋饼 🔗</div><div class="mnt">酸奶＋苹果</div><span class="mbadge b-quick">快手</span></td>
-            <td class="mc" onclick="jumpToRecipe('燕麦粥')"><div class="mn">燕麦粥 🔗</div><div class="mnt">蓝莓＋煮蛋</div><span class="mbadge b-veg">素食</span></td>
-            <td class="mc" onclick="jumpToRecipe('燕麦粥')"><div class="mn">牛奶燕麦 🔗</div><div class="mnt">苹果</div><span class="mbadge b-quick">快手</span></td>
-            <td class="mc" onclick="jumpToRecipe('煎蛋吐司')"><div class="mn">煎蛋吐司 🔗</div><div class="mnt">牛奶</div><span class="mbadge b-quick">快手</span></td>
-            <td class="mc" onclick="jumpToRecipe('手抓饼配排骨酱')"><div class="mn">手抓饼 🔗</div><div class="mnt">鸡蛋＋排骨酱</div><span class="mbadge b-meat">荤食</span></td>
-            <td class="mc" onclick="jumpToRecipe('手抓饼配排骨酱')"><div class="mn">手抓饼 🔗</div><div class="mnt">火腿肠＋排骨酱</div><span class="mbadge b-meat">荤食</span></td>
-          </tr>
-          <tr>
-            <td class="row-label">午</td>
-            <td class="mc" onclick="jumpToRecipe('酸菜牛肉面')"><div class="mn">酸菜牛肉面 🔗</div><div class="mnt">＋蒜苔</div><span class="mbadge b-noodle">面食</span></td>
-            <td class="mc" onclick="jumpToRecipe('猪肉酸菜饺子')"><div class="mn">猪肉酸菜饺子 🔗</div><div class="mnt">番茄蛋汤</div><span class="mbadge b-meat">荤食</span></td>
-            <td class="mc" onclick="jumpToRecipe('手打拉面')"><div class="mn">手打拉面 🔗</div><div class="mnt">胡萝卜＋菠菜</div><span class="mbadge b-noodle">面食</span></td>
-            <td class="mc" onclick="jumpToRecipe('酸菜牛肉面')"><div class="mn">酸菜牛肉面 🔗</div><div class="mnt">蒜苔炒蛋</div><span class="mbadge b-noodle">面食</span></td>
-            <td class="mc" onclick="jumpToRecipe('猪肉酸菜饺子')"><div class="mn">猪肉酸菜饺子 🔗</div><div class="mnt">白菜汤</div><span class="mbadge b-meat">荤食</span></td>
-            <td class="mc" onclick="jumpToRecipe('手打拉面')"><div class="mn">手打拉面 🔗</div><div class="mnt">火腿肉＋蘑菇</div><span class="mbadge b-noodle">面食</span></td>
-            <td class="mc" onclick="jumpToRecipe('清冰箱蛋炒饭')"><div class="mn">清冰箱炒饭 🔗</div><div class="mnt">鸡蛋＋剩菜</div><span class="mbadge b-quick">快手</span></td>
-          </tr>
-          <tr>
-            <td class="row-label">晚</td>
-            <td class="mc" onclick="jumpToRecipe('慢炖牛肉')"><div class="mn">慢炖牛肉 🔗</div><div class="mnt">胡萝卜土豆芹菜</div><span class="mbadge b-meat">荤食</span></td>
-            <td class="mc" onclick="jumpToRecipe('麻婆豆腐')"><div class="mn">麻婆豆腐 🔗</div><div class="mnt">豆腐＋火腿丁</div><span class="mbadge b-veg">素食</span></td>
-            <td class="mc" onclick="jumpToRecipe('牛肉烤饭')"><div class="mn">牛肉烤饭 🔗</div><div class="mnt">烤肉块＋大白菜</div><span class="mbadge b-meat">荤食</span></td>
-            <td class="mc" onclick="jumpToRecipe('蒜苔炒火腿猪肉')"><div class="mn">蒜苔炒火腿 🔗</div><div class="mnt">蒸蛋＋白米饭</div><span class="mbadge b-meat">荤食</span></td>
-            <td class="mc" onclick="jumpToRecipe('菠菜豆腐蛋花汤')"><div class="mn">菠菜豆腐汤 🔗</div><div class="mnt">蘑菇炒蛋</div><span class="mbadge b-veg">素食</span></td>
-            <td class="mc" onclick="jumpToRecipe('慢炖牛肉')"><div class="mn">慢炖牛肉 🔗</div><div class="mnt">周一剩菜加热</div><span class="mbadge b-meat">荤食</span></td>
-            <td class="mc" onclick="jumpToRecipe('白菜豆腐锅')"><div class="mn">白菜豆腐锅 🔗</div><div class="mnt">白米饭</div><span class="mbadge b-veg">素食</span></td>
-          </tr>
-        </tbody>
+        <tbody id="weekBody"></tbody>
       </table>
     </div>
   </div>
   <div style="background:linear-gradient(135deg,#fffbf0,#fff5e0);border:1px solid rgba(192,128,64,0.2);border-left:3px solid var(--gold);border-radius:0 var(--radius) var(--radius) 0;padding:14px 18px;font-size:13px;color:var(--text2);line-height:1.9">
-    💡 <strong style="color:var(--gold)">提示：</strong>所有餐名均可点击跳转菜谱。慢炖牛肉周一下午提前炖，周六加热即可。
+    💡 <strong style="color:var(--gold)">提示：</strong>所有餐名可点击查看菜谱。慢炖牛肉周一下午提前炖好，周六加热即可。牛肉烤饭腌制时间越长越好。
   </div>
 </div>
 
@@ -379,33 +436,14 @@ canvas{max-width:100%}
 <div class="page" id="page-calendar">
   <div class="page-header">
     <div class="page-title">日历<span>视图</span></div>
-    <div class="page-desc">2026年4月 · 点击任意餐名跳转菜谱</div>
+    <div class="page-desc">2026年4月 · 今天自动高亮 · 点击餐名跳转菜谱</div>
   </div>
-  <div class="cal-wrap" style="margin-bottom:7px">
-    <div class="cal-hdr">周六</div><div class="cal-hdr">周日</div>
-    <div class="cal-hdr">周一</div><div class="cal-hdr">周二</div>
-    <div class="cal-hdr">周三</div><div class="cal-hdr">周四</div>
-    <div class="cal-hdr">周五</div>
-  </div>
-  <div class="cal-wrap">
-    <div class="cal-cell today"><div class="cal-n">12</div><div class="cal-m bf">🛒 Coles到货</div><div class="cal-m lun">🛒 中式超市</div></div>
-    <div class="cal-cell"><div class="cal-n">13</div><div class="cal-m bf">整理食材</div><div class="cal-m din">备餐日</div></div>
-    <div class="cal-cell"><div class="cal-n">14</div><div class="cal-m bf link" onclick="jumpToRecipe('燕麦粥')">🌅 燕麦粥</div><div class="cal-m lun link" onclick="jumpToRecipe('酸菜牛肉面')">酸菜牛肉面</div><div class="cal-m din link" onclick="jumpToRecipe('慢炖牛肉')">慢炖牛肉</div></div>
-    <div class="cal-cell"><div class="cal-n">15</div><div class="cal-m bf link" onclick="jumpToRecipe('鸡蛋饼')">🌅 鸡蛋饼</div><div class="cal-m lun link" onclick="jumpToRecipe('猪肉酸菜饺子')">猪肉酸菜饺子</div><div class="cal-m din link" onclick="jumpToRecipe('麻婆豆腐')">麻婆豆腐</div></div>
-    <div class="cal-cell"><div class="cal-n">16</div><div class="cal-m bf link" onclick="jumpToRecipe('燕麦粥')">🌅 燕麦粥</div><div class="cal-m lun link" onclick="jumpToRecipe('手打拉面')">手打拉面</div><div class="cal-m din link" onclick="jumpToRecipe('牛肉烤饭')">牛肉烤饭</div></div>
-    <div class="cal-cell"><div class="cal-n">17</div><div class="cal-m bf link" onclick="jumpToRecipe('燕麦粥')">🌅 牛奶燕麦</div><div class="cal-m lun link" onclick="jumpToRecipe('酸菜牛肉面')">酸菜牛肉面</div><div class="cal-m din link" onclick="jumpToRecipe('蒜苔炒火腿猪肉')">蒜苔炒火腿</div></div>
-    <div class="cal-cell"><div class="cal-n">18</div><div class="cal-m bf link" onclick="jumpToRecipe('煎蛋吐司')">🌅 煎蛋吐司</div><div class="cal-m lun link" onclick="jumpToRecipe('猪肉酸菜饺子')">猪肉酸菜饺子</div><div class="cal-m din link" onclick="jumpToRecipe('菠菜豆腐蛋花汤')">菠菜豆腐汤</div></div>
-  </div>
-  <div class="cal-wrap" style="margin-top:7px">
-    <div class="cal-cell"><div class="cal-n">19</div><div class="cal-m bf link" onclick="jumpToRecipe('手抓饼配排骨酱')">🌅 手抓饼</div><div class="cal-m lun link" onclick="jumpToRecipe('手打拉面')">手打拉面</div><div class="cal-m din link" onclick="jumpToRecipe('慢炖牛肉')">慢炖牛肉(剩)</div></div>
-    <div class="cal-cell"><div class="cal-n">20</div><div class="cal-m bf link" onclick="jumpToRecipe('手抓饼配排骨酱')">🌅 手抓饼</div><div class="cal-m lun link" onclick="jumpToRecipe('清冰箱蛋炒饭')">清冰箱炒饭</div><div class="cal-m din link" onclick="jumpToRecipe('白菜豆腐锅')">白菜豆腐锅</div></div>
-    <div class="cal-cell empty"></div><div class="cal-cell empty"></div><div class="cal-cell empty"></div><div class="cal-cell empty"></div><div class="cal-cell empty"></div>
-  </div>
+  <div class="cal-wrap" style="margin-bottom:7px" id="calHeaders"></div>
+  <div id="calGrid"></div>
   <div style="display:flex;gap:16px;margin-top:12px;font-size:11px;color:var(--text3)">
     <span><span style="display:inline-block;width:10px;height:3px;background:var(--blue);border-radius:2px;vertical-align:middle;margin-right:5px"></span>早</span>
     <span><span style="display:inline-block;width:10px;height:3px;background:var(--green);border-radius:2px;vertical-align:middle;margin-right:5px"></span>午</span>
     <span><span style="display:inline-block;width:10px;height:3px;background:var(--gold);border-radius:2px;vertical-align:middle;margin-right:5px"></span>晚</span>
-    <span>· 点击跳转菜谱</span>
   </div>
 </div>
 
@@ -413,16 +451,34 @@ canvas{max-width:100%}
 <div class="page" id="page-recipes">
   <div class="page-header">
     <div class="page-title">本周<span>菜谱</span></div>
-    <div class="page-desc">全部单人份 · 点击卡片查看完整步骤</div>
+    <div class="page-desc">全部单人份 · 食材标橙色 = 库存偏少</div>
   </div>
+  <input class="recipe-search" type="text" placeholder="🔍 搜索菜谱名称或食材…" oninput="filterRecipes(this.value)">
+  <div class="recipe-filter" id="recipeFilter"></div>
   <div class="recipe-grid" id="recipeGrid"></div>
+</div>
+
+<!-- ══ 购物清单 ══ -->
+<div class="page" id="page-shopping">
+  <div class="page-header">
+    <div class="page-title">购物<span>清单</span></div>
+    <div class="page-desc">根据本周菜谱 vs 当前库存自动生成 · 点击勾选已购</div>
+  </div>
+  <button class="shop-btn" onclick="generateShopList()">🔄 重新生成本周购物清单</button>
+  <div class="shop-list hidden" id="shopList"></div>
+  <div id="shopEmpty" style="color:var(--text3);font-size:14px;padding:20px 0;display:none">🎉 库存充足，本周无需特别采购！</div>
 </div>
 
 <!-- ══ 账单 ══ -->
 <div class="page" id="page-expense">
   <div class="page-header">
     <div class="page-title">账单<span>记录</span></div>
-    <div class="page-desc">点击金额/名称/备注直接编辑 · 自动保存</div>
+    <div class="page-desc">点击金额/名称/备注编辑 · 自动保存 · 支持月份切换</div>
+  </div>
+  <div class="month-nav">
+    <button class="mnav-btn" onclick="changeMonth(-1)">‹</button>
+    <div class="mnav-label" id="monthLabel"></div>
+    <button class="mnav-btn" onclick="changeMonth(1)">›</button>
   </div>
   <div class="stats-row" id="statsRow"></div>
   <div class="chart-wrap">
@@ -432,7 +488,7 @@ canvas{max-width:100%}
       <div class="pie-legend" id="pieLegend"></div>
     </div>
     <div class="chart-box">
-      <div class="chart-title">每日支出趋势（本月）</div>
+      <div class="chart-title">每日支出趋势</div>
       <canvas id="lineChart" height="180"></canvas>
     </div>
   </div>
@@ -440,6 +496,7 @@ canvas{max-width:100%}
   <div class="cat-tabs" id="catTabs"></div>
   <div class="exp-controls">
     <button class="btn-add" onclick="toggleAddForm()">＋ 添加记录</button>
+    <button class="btn-export" onclick="exportCSV()">📥 导出 CSV</button>
   </div>
   <div class="add-panel" id="addPanel">
     <div class="fg">
@@ -468,13 +525,12 @@ canvas{max-width:100%}
 <div class="page" id="page-stock">
   <div class="page-header">
     <div class="page-title">食材<span>库存</span></div>
-    <div class="page-desc">点击名称/数量编辑 · 点击圆点切换状态 · ✕ 直接删除用完的食材</div>
+    <div class="page-desc">点击名称/数量编辑 · 点击圆点切换状态 · 悬停显示删除</div>
   </div>
-  <div style="display:flex;gap:14px;margin-bottom:14px;font-size:12px;color:var(--text2)">
-    <span><span class="sdot dot-h" style="margin-right:5px"></span>充足</span>
-    <span><span class="sdot dot-m" style="margin-right:5px"></span>适量</span>
-    <span><span class="sdot dot-l" style="margin-right:5px"></span>偏少</span>
-    <span style="margin-left:8px;color:var(--text3)">鼠标悬停显示删除按钮</span>
+  <div class="stock-legend">
+    <span><span class="sdot dot-h"></span>充足</span>
+    <span><span class="sdot dot-m"></span>适量</span>
+    <span><span class="sdot dot-l"></span>偏少</span>
   </div>
   <div class="stock-grid" id="stockGrid"></div>
   <div class="stock-actions">
@@ -485,7 +541,7 @@ canvas{max-width:100%}
 
 </main>
 
-<!-- RECIPE MODAL -->
+<!-- ── RECIPE MODAL ── -->
 <div class="modal-backdrop" id="recipeModal" onclick="modalBgClick(event)">
   <div class="modal">
     <div class="m-head">
@@ -500,73 +556,181 @@ canvas{max-width:100%}
   </div>
 </div>
 
+<!-- ── QUICK ADD EXPENSE ── -->
+<div class="qa-backdrop" id="qaBackdrop" onclick="qaBackdropClick(event)">
+  <div class="qa-box">
+    <div class="qa-title">快速记账 <button class="m-close" onclick="closeQA()" style="width:30px;height:30px;font-size:14px">✕</button></div>
+    <div class="qa-grid">
+      <div class="qa-row"><label>项目名称</label><input type="text" id="qa-name" placeholder="如：Coles 买菜"></div>
+      <div class="qa-row"><label>金额 ($)</label><input type="number" id="qa-amount" placeholder="0.00" step="0.01" min="0"></div>
+      <div class="qa-row"><label>分类</label>
+        <select id="qa-cat">
+          <option value="groceries">🛒 食材采购</option>
+          <option value="ai">🤖 AI订阅</option>
+          <option value="entertainment">🎮 娱乐</option>
+          <option value="dining">🍜 餐饮外出</option>
+          <option value="bills">💡 账单水电</option>
+          <option value="transport">🚗 交通</option>
+          <option value="other">📦 其他</option>
+        </select>
+      </div>
+      <div class="qa-row"><label>备注</label><input type="text" id="qa-note" placeholder="可选"></div>
+    </div>
+    <div class="qa-actions">
+      <button class="qa-cancel" onclick="closeQA()">取消</button>
+      <button class="qa-ok" onclick="submitQA()">记录</button>
+    </div>
+  </div>
+</div>
+
+<!-- FAB -->
+<button class="fab" onclick="openQA()" title="快速记账">＋</button>
+<div class="fab-tooltip">快速记账</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
 <script>
 // ══════════════════════════════════════════════
-// RECIPES
+// DATA
 // ══════════════════════════════════════════════
 const R = [
-  {name:"燕麦粥",emoji:"🥣",time:"5分钟",servings:"1人份",diff:"简单",
+  {name:"燕麦粥",emoji:"🥣",time:"5分钟",servings:"1人份",diff:"简单",tags:["素食","快手","早餐"],
    ing:[{n:"即食燕麦片",q:"50g"},{n:"牛奶",q:"200ml"},{n:"新鲜蓝莓",q:"一小把"},{n:"蜂蜜（可选）",q:"1茶匙"},{n:"鸡蛋（可选）",q:"1个，另煮"}],
-   steps:["锅中倒牛奶，中火加热至边缘冒小泡（约60°C，不要沸腾），倒入燕麦片。","转小火，不停搅拌2–3分钟至燕麦吸收牛奶变浓稠。","倒入碗中，铺上蓝莓，淋蜂蜜。","配溏心蛋做法：冷水下蛋，水开后计时7分钟，过冷水1分钟剥壳。"],
+   steps:[
+     {t:"加热牛奶",d:"锅中倒牛奶，中火加热至边缘冒小泡（约60°C，不要沸腾），倒入燕麦片。"},
+     {t:"煮粥",d:"转小火，不停搅拌2–3分钟至燕麦吸收牛奶变浓稠。",timer:150},
+     {t:"装碗",d:"倒入碗中，铺上蓝莓，淋蜂蜜。"},
+     {t:"溏心蛋（可选）",d:"冷水下蛋，水开后计时7分钟，过冷水1分钟剥壳。",timer:420}
+   ],
    tip:"牛奶煮燕麦比清水香浓很多。蓝莓也可换成香蕉片或苹果丁。"},
-  {name:"鸡蛋饼",emoji:"🍳",time:"8分钟",servings:"1人份",diff:"简单",
+  {name:"鸡蛋饼",emoji:"🍳",time:"8分钟",servings:"1人份",diff:"简单",tags:["快手","早餐"],
    ing:[{n:"鸡蛋",q:"2个"},{n:"面粉",q:"3汤匙"},{n:"牛奶或清水",q:"2汤匙"},{n:"盐",q:"一小撮"},{n:"葱花（可选）",q:"少许"},{n:"食用油",q:"少量"}],
-   steps:["鸡蛋打入碗，加面粉、牛奶和盐，搅拌成无颗粒顺滑面糊，静置2分钟。","平底锅小火热锅，刷薄油。","倒入面糊，转动锅铺成圆饼，撒葱花。","中小火煎2分钟至底面金黄，翻面再煎1分钟，出锅搭配酸奶和苹果。"],
+   steps:[
+     {t:"调面糊",d:"鸡蛋打入碗，加面粉、牛奶和盐，搅拌成无颗粒顺滑面糊，静置2分钟。",timer:120},
+     {t:"热锅",d:"平底锅小火热锅，刷薄油。"},
+     {t:"煎饼",d:"倒入面糊，转动锅铺成圆饼，撒葱花，中小火煎2分钟至底面金黄。",timer:120},
+     {t:"翻面",d:"翻面再煎1分钟，出锅搭配酸奶和苹果。",timer:60}
+   ],
    tip:"面糊要完全顺滑，饼才嫩。中小火慢煎，加葱花香味更好。"},
-  {name:"煎蛋吐司",emoji:"🍞",time:"6分钟",servings:"1人份",diff:"简单",
+  {name:"煎蛋吐司",emoji:"🍞",time:"6分钟",servings:"1人份",diff:"简单",tags:["快手","早餐"],
    ing:[{n:"吐司面包",q:"2片"},{n:"鸡蛋",q:"1个"},{n:"黄油或食用油",q:"少量"},{n:"盐/黑胡椒",q:"适量"},{n:"牛奶（搭配）",q:"1杯"}],
-   steps:["平底锅中火热锅，放小块黄油融化。","吐司放入锅中，两面各煎30秒至金黄酥脆，取出。","原锅打入鸡蛋，撒少量盐，中小火煎至蛋白凝固、蛋黄流心（约2分钟）。","煎蛋放在吐司上，撒黑胡椒，搭配牛奶。"],
+   steps:[
+     {t:"烤吐司",d:"平底锅中火热锅，放小块黄油融化，吐司两面各煎30秒至金黄酥脆取出。",timer:60},
+     {t:"煎蛋",d:"原锅打入鸡蛋，撒少量盐，中小火煎至蛋白凝固蛋黄流心（约2分钟）。",timer:120},
+     {t:"装盘",d:"煎蛋放在吐司上，撒黑胡椒，搭配牛奶。"}
+   ],
    tip:"黄油煎香味更好。蛋黄流心口感最佳；加盖焖30秒可让蛋黄凝固。"},
-  {name:"手抓饼配排骨酱",emoji:"🥞",time:"10分钟",servings:"1人份",diff:"简单",
+  {name:"手抓饼配排骨酱",emoji:"🥞",time:"10分钟",servings:"1人份",diff:"简单",tags:["荤食","快手","早餐"],
    ing:[{n:"思念手抓饼（冷冻）",q:"1片"},{n:"李锦记排骨酱",q:"1–1.5汤匙"},{n:"鸡蛋",q:"1个"},{n:"力诚火腿肠（可选）",q:"1/3根切片"},{n:"生菜（可选）",q:"1片"}],
-   steps:["平底锅不放油，中火预热1分钟，直接放入冷冻手抓饼（无需解冻）。","煎约90秒至底面金黄，翻面，用铲子从中心向外轻压使层次蓬松。","在饼中央打入鸡蛋，轻戳蛋黄稍摊开，等蛋白凝固蛋黄流心时折叠包住鸡蛋。","出锅前薄薄涂一层排骨酱，可加火腿片和生菜，切段趁热食用。"],
-   tip:"排骨酱薄薄一层即可，太多会咸。蛋黄半流心最好吃。全程无需放油，干煎更香脆。"},
-  {name:"酸菜牛肉面",emoji:"🍜",time:"8分钟",servings:"1人份",diff:"简单",
+   steps:[
+     {t:"干煎手抓饼",d:"平底锅不放油，中火预热1分钟，直接放入冷冻手抓饼（无需解冻），煎约90秒至底面金黄。",timer:90},
+     {t:"翻面蓬层",d:"翻面，用铲子从中心向外轻压使层次蓬松，继续煎60秒。",timer:60},
+     {t:"加蛋",d:"在饼中央打入鸡蛋，轻戳蛋黄稍摊开，等蛋白凝固蛋黄流心时折叠包住鸡蛋。"},
+     {t:"涂酱",d:"出锅前薄薄涂一层排骨酱，可加火腿片和生菜，切段趁热食用。"}
+   ],
+   tip:"排骨酱薄薄一层即可，太多会咸。全程无需放油，干煎更香脆。"},
+  {name:"酸菜牛肉面",emoji:"🍜",time:"8分钟",servings:"1人份",diff:"简单",tags:["面食","荤食","午餐"],
    ing:[{n:"康师傅酸菜牛肉面",q:"1包"},{n:"蒜苔",q:"2根切段"},{n:"鸡蛋",q:"1个"},{n:"葱花",q:"少许"},{n:"辣椒油（可选）",q:"少许"}],
-   steps:["锅中烧足量水，水开后下面饼，煮2分30秒（比包装少30秒，保持弹性）。","煮面同时旁边煎一个荷包蛋：蛋白凝固、蛋黄流心。","面条捞入碗，加全部调料包，倒适量热水调成汤底。","蒜苔段放入面汤烫10秒捞出，连同荷包蛋摆在面上，撒葱花。"],
+   steps:[
+     {t:"煮面",d:"锅中烧足量水，水开后下面饼，比包装少煮30秒（保持弹性）。",timer:150},
+     {t:"煎荷包蛋",d:"同时旁边煎荷包蛋：蛋白凝固蛋黄流心。",timer:120},
+     {t:"调汤",d:"面条捞入碗，加全部调料包，倒适量热水调成汤底。"},
+     {t:"烫蒜苔",d:"蒜苔段放入面汤烫10秒捞出，连同荷包蛋摆在面上，撒葱花。",timer:10}
+   ],
    tip:"少煮30秒口感更弹牙。蒜苔只烫10秒保持脆嫩翠绿。"},
-  {name:"猪肉酸菜饺子",emoji:"🥟",time:"12分钟",servings:"1人份（约12个）",diff:"简单",
-   ing:[{n:"我爱饺子猪肉酸菜饺子",q:"约12个（冷冻）"},{n:"生抽",q:"1汤匙"},{n:"香醋",q:"半汤匙"},{n:"辣椒油",q:"少许"},{n:"葱花",q:"少许"}],
-   steps:["锅中加足量水烧开，加少许盐，冷冻饺子直接下锅（不用解冻）。","用木勺轻推防止粘底，保持水沸腾状态。","水再次大开后加入半碗冷水（「点水」），重复共3次。","饺子全部浮起、皮透亮时捞出，调蘸汁：生抽+香醋+辣椒油+葱花。"],
+  {name:"猪肉酸菜饺子",emoji:"🥟",time:"12分钟",servings:"1人份（约12个）",diff:"简单",tags:["荤食","午餐"],
+   ing:[{n:"我爱饺子猪肉酸菜饺子（冷冻）",q:"约12个"},{n:"生抽",q:"1汤匙"},{n:"香醋",q:"半汤匙"},{n:"辣椒油",q:"少许"},{n:"葱花",q:"少许"}],
+   steps:[
+     {t:"煮水",d:"锅中加足量水烧开，加少许盐，冷冻饺子直接下锅（无需解冻）。"},
+     {t:"点水三次",d:"水再次大开后加入半碗冷水（「点水」），重复共3次，每次间隔约2分钟。",timer:120},
+     {t:"捞出",d:"饺子全部浮起皮透亮时捞出，调蘸汁：生抽+香醋+辣椒油+葱花。"}
+   ],
    tip:"「点水」3次是让饺子皮熟透不破皮的秘诀。"},
-  {name:"手打拉面",emoji:"🍝",time:"10分钟",servings:"1人份",diff:"简单",
+  {name:"手打拉面",emoji:"🍝",time:"10分钟",servings:"1人份",diff:"简单",tags:["面食","午餐","晚餐"],
    ing:[{n:"今麦郎手打拉面",q:"约100g"},{n:"梅林火腿猪肉",q:"2–3片"},{n:"蘑菇片",q:"一小把"},{n:"菠菜",q:"一小把"},{n:"鸡蛋",q:"1个"},{n:"生抽",q:"半汤匙"},{n:"盐",q:"适量"},{n:"香油",q:"几滴"}],
-   steps:["锅中加约500ml水烧开，放入蘑菇片中火煮2分钟出鲜味。","加生抽和盐调成汤底，放入面条大火煮3分钟。","加入菠菜，煮30秒变软后关火。","面和汤盛入碗，打入生蛋，铺上火腿猪肉片，滴几滴香油。"],
+   steps:[
+     {t:"煮蘑菇汤底",d:"锅中加约500ml水烧开，放蘑菇片中火煮2分钟出鲜味。",timer:120},
+     {t:"煮面",d:"加生抽和盐调成汤底，放入面条大火煮3分钟。",timer:180},
+     {t:"加菠菜",d:"加入菠菜煮30秒变软后关火。",timer:30},
+     {t:"装碗",d:"面和汤盛入碗，打入生蛋，铺上火腿猪肉片，滴几滴香油。"}
+   ],
    tip:"蘑菇先煮出鲜味比清水好很多。菠菜只煮30秒，久煮发黄。"},
-  {name:"清冰箱蛋炒饭",emoji:"🍚",time:"10分钟",servings:"1人份",diff:"简单",
+  {name:"清冰箱蛋炒饭",emoji:"🍚",time:"10分钟",servings:"1人份",diff:"简单",tags:["快手","午餐","素食"],
    ing:[{n:"隔夜米饭",q:"1碗（约200g）"},{n:"鸡蛋",q:"2个"},{n:"冰箱剩余蔬菜",q:"随意"},{n:"火腿肠或火腿肉",q:"少量切丁"},{n:"生抽",q:"1汤匙"},{n:"盐/白胡椒",q:"适量"},{n:"葱花",q:"少许"},{n:"食用油",q:"适量"}],
-   steps:["隔夜米饭提前用手抓散，蔬菜切丁，鸡蛋打散备用。","热锅多放一点油，倒蛋液快速搅散炒成嫩碎蛋，盛出备用。","原锅加少许油，大火炒蔬菜丁和火腿丁2分钟。","倒入米饭，铲子压散，大火翻炒2分钟。","倒入鸡蛋翻炒均匀，沿锅边淋生抽，加盐和白胡椒，撒葱花出锅。"],
+   steps:[
+     {t:"备料",d:"隔夜米饭提前用手抓散，蔬菜切丁，鸡蛋打散备用。"},
+     {t:"炒蛋",d:"热锅多放一点油，倒蛋液快速搅散炒成嫩碎蛋，盛出备用。"},
+     {t:"炒配料",d:"原锅加少许油，大火炒蔬菜丁和火腿丁2分钟。",timer:120},
+     {t:"炒饭",d:"倒入米饭，铲子压散，大火翻炒2分钟。",timer:120},
+     {t:"调味出锅",d:"倒入鸡蛋翻炒均匀，沿锅边淋生抽，加盐和白胡椒，撒葱花出锅。"}
+   ],
    tip:"隔夜冷藏米饭炒出来粒粒分明。鸡蛋先炒好再回锅保持嫩滑。全程大火快炒。"},
-  {name:"慢炖牛肉",emoji:"🥩",time:"3小时",servings:"1人份（建议多做存冰箱）",diff:"中等",
+  {name:"慢炖牛肉",emoji:"🥩",time:"约3小时",servings:"1–2人份（建议多做）",diff:"中等",tags:["荤食","晚餐"],
    ing:[{n:"Coles慢炖牛肉块",q:"200g"},{n:"胡萝卜",q:"半根"},{n:"金薯仔",q:"1个"},{n:"芹菜",q:"半根"},{n:"生姜",q:"2片"},{n:"酱油",q:"1汤匙"},{n:"料酒",q:"1汤匙"},{n:"八角",q:"1颗"},{n:"盐",q:"适量"}],
-   steps:["牛肉切3–4cm块，冷水下锅加姜片和少许料酒，大火烧开撇去浮沫，焯水2分钟捞出冲洗。","热锅少量油，中大火炒牛肉至表面金黄（约4分钟），淋料酒，加酱油翻炒，放入八角。","加热水没过牛肉约3cm，大火烧开后转最小火，盖盖慢炖1.5–2小时。","加入切块的胡萝卜和土豆，加盐，继续炖30分钟。","揭盖大火收汁3分钟至汤汁浓稠，出锅配米饭。"],
-   tip:"建议多做几份存冰箱，第二天加热味道更浓郁。"},
-  {name:"麻婆豆腐",emoji:"🍲",time:"18分钟",servings:"1人份",diff:"简单",
+   steps:[
+     {t:"焯水",d:"牛肉切3–4cm块，冷水下锅加姜片和料酒，大火烧开撇去浮沫，焯水2分钟捞出冲洗。",timer:120},
+     {t:"煎至上色",d:"热锅少量油，中大火炒牛肉至表面金黄（约4分钟），淋料酒，加酱油翻炒，放八角。",timer:240},
+     {t:"慢炖",d:"加热水没过牛肉约3cm，大火烧开后转最小火，盖盖慢炖1.5–2小时。",timer:5400},
+     {t:"加蔬菜",d:"加入切块的胡萝卜和土豆，加盐，继续炖30分钟。",timer:1800},
+     {t:"收汁",d:"揭盖大火收汁3分钟至汤汁浓稠，出锅配米饭。",timer:180}
+   ],
+   tip:"建议周一多做，存冰箱，周六加热味道更浓郁。❄️ 记得周日晚上从冷冻移到冷藏解冻。"},
+  {name:"麻婆豆腐",emoji:"🍲",time:"18分钟",servings:"1人份",diff:"简单",tags:["素食","晚餐"],
    ing:[{n:"Pureland嫩豆腐",q:"半盒（约200g）"},{n:"力诚火腿肠",q:"1/3根切小丁"},{n:"郫县豆瓣酱",q:"半汤匙"},{n:"生姜末",q:"半茶匙"},{n:"蒜末",q:"半茶匙"},{n:"生抽",q:"半汤匙"},{n:"水淀粉",q:"半茶匙淀粉+1汤匙水"},{n:"葱花",q:"少许"}],
-   steps:["豆腐切2cm小块，盐水浸泡5分钟，沥干备用。","锅中少量油，中小火加入豆瓣酱炒出红油（约1分钟）。","加姜蒜末爆香30秒，加火腿丁翻炒2分钟出香气。","加生抽和80ml清水烧开，将豆腐轻推入锅，中火炖3分钟。","淋入水淀粉轻推至汤汁浓稠，出锅撒葱花。"],
+   steps:[
+     {t:"泡豆腐",d:"豆腐切2cm小块，盐水浸泡5分钟，沥干备用。",timer:300},
+     {t:"炒红油",d:"锅中少量油，中小火加入豆瓣酱炒出红油（约1分钟）。",timer:60},
+     {t:"爆香",d:"加姜蒜末爆香30秒，加火腿丁翻炒2分钟出香气。",timer:150},
+     {t:"炖豆腐",d:"加生抽和80ml清水烧开，将豆腐轻推入锅，中火炖3分钟。",timer:180},
+     {t:"勾芡",d:"淋入水淀粉轻推至汤汁浓稠，出锅撒葱花。"}
+   ],
    tip:"推锅代替翻炒可保持豆腐完整不碎。"},
-  {name:"牛肉烤饭",emoji:"🍖",time:"50分钟",servings:"1人份",diff:"中等",
+  {name:"牛肉烤饭",emoji:"🍖",time:"50分钟",servings:"1人份",diff:"中等",tags:["荤食","晚餐"],
    ing:[{n:"Coles牛肉烤肉块",q:"约150–200g"},{n:"大白菜",q:"约1/8颗"},{n:"蘑菇片",q:"一小把"},{n:"生抽",q:"1汤匙"},{n:"蚝油",q:"半汤匙"},{n:"黑胡椒",q:"半茶匙"},{n:"橄榄油",q:"半汤匙"},{n:"蒜末",q:"1瓣"},{n:"白米饭",q:"1碗"}],
-   steps:["牛肉切3cm块，用生抽、蚝油、黑胡椒、蒜末、橄榄油抓匀，腌制至少20分钟。","烤箱预热至200°C。","大白菜切大块铺在烤盘底部撒少许盐，蘑菇散放其上。","腌好牛肉均匀铺在蔬菜上，将剩余腌汁淋上。","放入烤箱烤25分钟，取出翻面，继续烤10分钟至表面焦香。","出炉静置3分钟，配米饭，将烤盘肉汁淋在饭上。"],
-   tip:"白菜垫底吸收肉汁非常入味。腌制时间越长越好。"},
-  {name:"蒜苔炒火腿猪肉",emoji:"🥬",time:"12分钟",servings:"1人份",diff:"简单",
+   steps:[
+     {t:"腌制牛肉",d:"牛肉切3cm块，用生抽、蚝油、黑胡椒、蒜末、橄榄油抓匀，腌制至少20分钟。",timer:1200},
+     {t:"预热烤箱",d:"烤箱预热至200°C。",timer:600},
+     {t:"铺烤盘",d:"大白菜切大块铺在烤盘底部撒少许盐，蘑菇散放其上，腌好牛肉均匀铺在蔬菜上，淋上剩余腌汁。"},
+     {t:"烤第一阶段",d:"放入烤箱烤25分钟。",timer:1500},
+     {t:"翻面继续烤",d:"取出翻面，继续烤10分钟至表面焦香。",timer:600},
+     {t:"静置出锅",d:"出炉静置3分钟，配米饭，将烤盘肉汁淋在饭上。",timer:180}
+   ],
+   tip:"白菜垫底吸收肉汁非常入味。❄️ 牛肉块需提前从冷冻移到冷藏解冻一夜。腌制时间越长越好。"},
+  {name:"蒜苔炒火腿猪肉",emoji:"🥬",time:"12分钟",servings:"1人份",diff:"简单",tags:["荤食","晚餐"],
    ing:[{n:"蒜苔",q:"约80g（小把）"},{n:"梅林火腿猪肉",q:"约80g切薄片"},{n:"生姜",q:"2片"},{n:"生抽",q:"半汤匙"},{n:"料酒",q:"半茶匙"},{n:"食用油",q:"少量"}],
-   steps:["蒜苔洗净斜切5cm段，开水加盐焯烫1分钟，捞出立刻放冷水过凉沥干。","火腿猪肉切5mm厚薄片备用。","热锅少量油，中火爆香姜片1分钟后捞出。","转大火，放火腿猪肉片煎至两面微焦香（约2分钟）。","加入蒜苔大火翻炒2分钟，淋料酒，加生抽炒匀出锅。"],
+   steps:[
+     {t:"焯蒜苔",d:"蒜苔洗净斜切5cm段，开水加盐焯烫1分钟，捞出立刻放冷水过凉沥干。",timer:60},
+     {t:"爆香",d:"热锅少量油，中火爆香姜片1分钟后捞出。",timer:60},
+     {t:"煎火腿",d:"转大火，放火腿猪肉片煎至两面微焦香（约2分钟）。",timer:120},
+     {t:"炒蒜苔",d:"加入蒜苔大火翻炒2分钟，淋料酒，加生抽炒匀出锅。",timer:120}
+   ],
    tip:"蒜苔焯水过凉保持脆绿不发黄。"},
-  {name:"菠菜豆腐蛋花汤",emoji:"🥗",time:"12分钟",servings:"1人份",diff:"简单",
+  {name:"菠菜豆腐蛋花汤",emoji:"🥗",time:"12分钟",servings:"1人份",diff:"简单",tags:["素食","晚餐"],
    ing:[{n:"菠菜",q:"约80g"},{n:"Pureland豆腐",q:"1/4盒"},{n:"蘑菇片",q:"一小把"},{n:"鸡蛋",q:"1个"},{n:"生姜",q:"1片"},{n:"盐",q:"适量"},{n:"白胡椒粉",q:"少许"},{n:"香油",q:"几滴"}],
-   steps:["豆腐切小块，蘑菇备好，菠菜洗净切5cm段。","锅中加约400ml水，放姜片大火烧开，加蘑菇中火煮3分钟出鲜味。","放入豆腐，加盐调味，继续煮2分钟。","加入菠菜，大火烧滚1分钟。","鸡蛋打散，沿顺时针缓缓细流淋入，等5秒后轻划圈形成蛋花，加白胡椒和香油出锅。"],
+   steps:[
+     {t:"备料",d:"豆腐切小块，菠菜洗净切5cm段。"},
+     {t:"煮汤底",d:"锅中加约400ml水，放姜片大火烧开，加蘑菇中火煮3分钟出鲜味。",timer:180},
+     {t:"加豆腐",d:"放入豆腐，加盐调味，继续煮2分钟。",timer:120},
+     {t:"加菠菜",d:"加入菠菜，大火烧滚1分钟。",timer:60},
+     {t:"蛋花",d:"鸡蛋打散，沿顺时针缓缓细流淋入，等5秒后轻划圈形成蛋花，加白胡椒和香油出锅。",timer:5}
+   ],
    tip:"菠菜只煮1分钟，久煮发黄失去营养。"},
-  {name:"白菜豆腐锅",emoji:"🫕",time:"20分钟",servings:"1人份",diff:"简单",
+  {name:"白菜豆腐锅",emoji:"🫕",time:"20分钟",servings:"1人份",diff:"简单",tags:["素食","晚餐"],
    ing:[{n:"大白菜",q:"约1/8颗"},{n:"Pureland豆腐",q:"1/4盒"},{n:"力诚火腿肠",q:"1/3根切片"},{n:"生姜",q:"2片"},{n:"生抽",q:"半汤匙"},{n:"盐",q:"适量"},{n:"白米饭",q:"1碗"}],
-   steps:["大白菜切3–4cm宽块，豆腐切大块，火腿肠切斜片备用。","锅中少量油，爆香姜片，加入火腿片略炒至微焦出香气。","加入白菜翻炒2分钟至略变软，加入约300ml热水。","大火烧开后加入豆腐，加生抽和盐调味，转中小火炖8–10分钟。","白菜软烂、豆腐吸满汤汁即可，配白米饭。"],
+   steps:[
+     {t:"备料",d:"大白菜切3–4cm宽块，豆腐切大块，火腿肠切斜片备用。"},
+     {t:"爆香炒菜",d:"锅中少量油，爆香姜片，加入火腿片略炒至微焦出香气，加入白菜翻炒2分钟至略变软。",timer:120},
+     {t:"加水炖",d:"加入约300ml热水大火烧开后，加入豆腐，加生抽和盐调味，转中小火炖8–10分钟。",timer:540},
+     {t:"出锅",d:"白菜软烂、豆腐吸满汤汁即可，配白米饭。"}
+   ],
    tip:"白菜先炒软再加水甜味更足。豆腐多炖一会儿充分吸收汤汁。"},
 ];
 
 const recipeMap = {};
-R.forEach((r,i) => { recipeMap[r.name] = i; });
+R.forEach((r,i) => recipeMap[r.name] = i);
 
-// ══ 今日菜单（按星期几） ══
+// week menu indexed by JS getDay() (0=Sun)
 const WEEK_MENU = {
   1:[{meal:"早",name:"燕麦粥",note:"蓝莓＋牛奶"},{meal:"午",name:"酸菜牛肉面",note:"＋蒜苔"},{meal:"晚",name:"慢炖牛肉",note:"胡萝卜土豆芹菜"}],
   2:[{meal:"早",name:"鸡蛋饼",note:"酸奶＋苹果"},{meal:"午",name:"猪肉酸菜饺子",note:"番茄蛋汤"},{meal:"晚",name:"麻婆豆腐",note:"豆腐＋火腿丁"}],
@@ -577,52 +741,64 @@ const WEEK_MENU = {
   0:[{meal:"早",name:"手抓饼配排骨酱",note:"火腿肠＋排骨酱"},{meal:"午",name:"清冰箱蛋炒饭",note:"鸡蛋＋剩菜"},{meal:"晚",name:"白菜豆腐锅",note:"白米饭"}],
 };
 
-// ══ EXPENSE ══
+// plan data (col order: Mon-Sun = 1..6,0)
+const PLAN_COLS = [1,2,3,4,5,6,0];
+const PLAN_LABELS = ['14\n周一','15\n周二','16\n周三','17\n周四','18\n周五','19\n周六','20\n周日'];
+
+// ── CAT config ──
 const CAT = {
-  groceries:{lbl:"🛒 食材采购",cls:"c-green",color:"#4a7a50"},
-  ai:       {lbl:"🤖 AI订阅",  cls:"c-purple",color:"#7a5898"},
-  entertainment:{lbl:"🎮 娱乐",cls:"c-blue",color:"#3a6890"},
-  dining:   {lbl:"🍜 餐饮外出",cls:"c-orange",color:"#c07030"},
-  bills:    {lbl:"💡 账单水电",cls:"c-teal",color:"#3a8888"},
-  transport:{lbl:"🚗 交通",    cls:"c-gold",color:"#c08040"},
-  other:    {lbl:"📦 其他",    cls:"c-red",color:"#b85040"},
+  groceries:{lbl:"🛒 食材采购",cls:"c-green",color:"#4a7a50",budget:200},
+  ai:       {lbl:"🤖 AI订阅",  cls:"c-purple",color:"#7a5898",budget:50},
+  entertainment:{lbl:"🎮 娱乐",cls:"c-blue",color:"#3a6890",budget:60},
+  dining:   {lbl:"🍜 餐饮外出",cls:"c-orange",color:"#c07030",budget:80},
+  bills:    {lbl:"💡 账单水电",cls:"c-teal",color:"#3a8888",budget:120},
+  transport:{lbl:"🚗 交通",    cls:"c-gold",color:"#c08040",budget:60},
+  other:    {lbl:"📦 其他",    cls:"c-red",color:"#b85040",budget:50},
 };
 
-let expenses = [
-  {id:1, name:"梅林火腿猪肉 340g",       cat:"groceries",amount:4.49, note:"中式超市",date:"04/12"},
-  {id:2, name:"力诚火腿肠 600g",          cat:"groceries",amount:6.89, note:"中式超市",date:"04/12"},
-  {id:3, name:"李锦记排骨酱 397g",        cat:"groceries",amount:8.89, note:"中式超市",date:"04/12"},
-  {id:4, name:"思念手抓饼 450g",          cat:"groceries",amount:4.49, note:"中式超市",date:"04/12"},
-  {id:5, name:"康师傅酸菜牛肉面 ×5",     cat:"groceries",amount:7.49, note:"中式超市",date:"04/12"},
-  {id:6, name:"猪肉酸菜饺子 480g",        cat:"groceries",amount:7.49, note:"中式超市",date:"04/12"},
-  {id:7, name:"蒜苔 1捆",                cat:"groceries",amount:2.29, note:"中式超市",date:"04/12"},
-  {id:8, name:"今麦郎手打拉面 1kg",       cat:"groceries",amount:2.89, note:"中式超市",date:"04/12"},
-  {id:9, name:"Coles 散养鸡蛋 12个",     cat:"groceries",amount:5.70, note:"Coles",   date:"04/12"},
-  {id:10,name:"a2全脂牛奶 UHT",          cat:"groceries",amount:3.90, note:"Coles",   date:"04/12"},
-  {id:11,name:"Coles 芹菜",              cat:"groceries",amount:4.10, note:"Coles",   date:"04/12"},
-  {id:12,name:"Coles 牛肉烤肉块",        cat:"groceries",amount:24.00,note:"Coles",   date:"04/12"},
-  {id:13,name:"Coles 慢炖牛肉",          cat:"groceries",amount:24.70,note:"Coles",   date:"04/12"},
-  {id:14,name:"Coles 蘑菇片",            cat:"groceries",amount:4.00, note:"Coles",   date:"04/12"},
-  {id:15,name:"Coles 蓝莓",              cat:"groceries",amount:6.00, note:"Coles",   date:"04/12"},
-  {id:16,name:"Coles 小宝石生菜",        cat:"groceries",amount:4.70, note:"Coles",   date:"04/12"},
-  {id:17,name:"Coles 金薯仔",            cat:"groceries",amount:1.59, note:"Coles",   date:"04/12"},
-  {id:18,name:"Coles 皇家嘎啦苹果 1kg", cat:"groceries",amount:7.90, note:"Coles",   date:"04/12"},
-  {id:19,name:"Coles 生姜",              cat:"groceries",amount:4.29, note:"Coles",   date:"04/12"},
-  {id:20,name:"Coles 胡萝卜",            cat:"groceries",amount:0.88, note:"Coles",   date:"04/12"},
-  {id:21,name:"Coles 大白菜半颗",        cat:"groceries",amount:4.20, note:"Coles",   date:"04/12"},
-  {id:22,name:"Coles 菠菜",              cat:"groceries",amount:3.00, note:"Coles",   date:"04/12"},
-  {id:23,name:"Pureland 豆腐",           cat:"groceries",amount:8.60, note:"Coles",   date:"04/12"},
-  {id:24,name:"Red Tractor 燕麦",        cat:"groceries",amount:5.00, note:"Coles",   date:"04/12"},
-  {id:25,name:"Coles 番茄",              cat:"groceries",amount:6.18, note:"Coles",   date:"04/12"},
-  {id:26,name:"Gippsland 芒果酸奶",      cat:"groceries",amount:3.00, note:"Coles",   date:"04/12"},
-  {id:27,name:"Coles Better Bags",       cat:"groceries",amount:1.50, note:"Coles",   date:"04/12"},
-  {id:28,name:"Claude Pro",              cat:"ai",        amount:20.00,note:"Anthropic",date:"04/01"},
-  {id:29,name:"Spotify Premium",         cat:"ai",        amount:11.99,note:"月付",   date:"04/05"},
-  {id:30,name:"Netflix",                 cat:"entertainment",amount:18.99,note:"月付",date:"04/03"},
-];
-let nextId = 31, activeCat = "all";
+// ALL expenses keyed by "YYYY-MM"
+let allExpenses = {
+  "2026-04": [
+    {id:1, name:"梅林火腿猪肉 340g",       cat:"groceries",amount:4.49, note:"中式超市",date:"04/12"},
+    {id:2, name:"力诚火腿肠 600g",          cat:"groceries",amount:6.89, note:"中式超市",date:"04/12"},
+    {id:3, name:"李锦记排骨酱 397g",        cat:"groceries",amount:8.89, note:"中式超市",date:"04/12"},
+    {id:4, name:"思念手抓饼 450g",          cat:"groceries",amount:4.49, note:"中式超市",date:"04/12"},
+    {id:5, name:"康师傅酸菜牛肉面 ×5",     cat:"groceries",amount:7.49, note:"中式超市",date:"04/12"},
+    {id:6, name:"猪肉酸菜饺子 480g",        cat:"groceries",amount:7.49, note:"中式超市",date:"04/12"},
+    {id:7, name:"蒜苔 1捆",                cat:"groceries",amount:2.29, note:"中式超市",date:"04/12"},
+    {id:8, name:"今麦郎手打拉面 1kg",       cat:"groceries",amount:2.89, note:"中式超市",date:"04/12"},
+    {id:9, name:"Coles 散养鸡蛋 12个",     cat:"groceries",amount:5.70, note:"Coles",   date:"04/12"},
+    {id:10,name:"a2全脂牛奶 UHT",          cat:"groceries",amount:3.90, note:"Coles",   date:"04/12"},
+    {id:11,name:"Coles 芹菜",              cat:"groceries",amount:4.10, note:"Coles",   date:"04/12"},
+    {id:12,name:"Coles 牛肉烤肉块",        cat:"groceries",amount:24.00,note:"Coles",   date:"04/12"},
+    {id:13,name:"Coles 慢炖牛肉",          cat:"groceries",amount:24.70,note:"Coles",   date:"04/12"},
+    {id:14,name:"Coles 蘑菇片",            cat:"groceries",amount:4.00, note:"Coles",   date:"04/12"},
+    {id:15,name:"Coles 蓝莓",              cat:"groceries",amount:6.00, note:"Coles",   date:"04/12"},
+    {id:16,name:"Coles 小宝石生菜",        cat:"groceries",amount:4.70, note:"Coles",   date:"04/12"},
+    {id:17,name:"Coles 金薯仔",            cat:"groceries",amount:1.59, note:"Coles",   date:"04/12"},
+    {id:18,name:"Coles 皇家嘎啦苹果 1kg", cat:"groceries",amount:7.90, note:"Coles",   date:"04/12"},
+    {id:19,name:"Coles 生姜",              cat:"groceries",amount:4.29, note:"Coles",   date:"04/12"},
+    {id:20,name:"Coles 胡萝卜",            cat:"groceries",amount:0.88, note:"Coles",   date:"04/12"},
+    {id:21,name:"Coles 大白菜半颗",        cat:"groceries",amount:4.20, note:"Coles",   date:"04/12"},
+    {id:22,name:"Coles 菠菜",              cat:"groceries",amount:3.00, note:"Coles",   date:"04/12"},
+    {id:23,name:"Pureland 豆腐",           cat:"groceries",amount:8.60, note:"Coles",   date:"04/12"},
+    {id:24,name:"Red Tractor 燕麦",        cat:"groceries",amount:5.00, note:"Coles",   date:"04/12"},
+    {id:25,name:"Coles 番茄",              cat:"groceries",amount:6.18, note:"Coles",   date:"04/12"},
+    {id:26,name:"Gippsland 芒果酸奶",      cat:"groceries",amount:3.00, note:"Coles",   date:"04/12"},
+    {id:27,name:"Coles Better Bags",       cat:"groceries",amount:1.50, note:"Coles",   date:"04/12"},
+    {id:28,name:"Claude Pro",              cat:"ai",        amount:20.00,note:"Anthropic",date:"04/01"},
+    {id:29,name:"Spotify Premium",         cat:"ai",        amount:11.99,note:"月付",   date:"04/05"},
+    {id:30,name:"Netflix",                 cat:"entertainment",amount:18.99,note:"月付",date:"04/03"},
+  ]
+};
+let nextId = 31;
+let activeCat = "all";
+let viewMonth = "2026-04"; // "YYYY-MM"
 
-// ══ STOCK ══
+// get expenses for current viewMonth
+function curExp(){ return allExpenses[viewMonth] || []; }
+
+// ── STOCK ──
 const DEFAULT_STOCK = [
   {n:"慢炖牛肉",q:"约800g",l:"h"},{n:"牛肉烤肉块",q:"约400g",l:"h"},
   {n:"猪肉酸菜饺子",q:"480g 冷冻",l:"h"},{n:"火腿猪肉罐头",q:"340g",l:"h"},
@@ -638,26 +814,50 @@ const DEFAULT_STOCK = [
   {n:"芹菜",q:"1棵",l:"h"},{n:"生姜",q:"适量",l:"h"},
   {n:"燕麦",q:"1袋",l:"h"},{n:"排骨酱",q:"397g 刚开",l:"h"},
 ];
-let STOCK = [...DEFAULT_STOCK.map(s=>({...s}))];
+let STOCK = DEFAULT_STOCK.map(s=>({...s}));
+
+// ── SHOPPING CHECKED ──
+let shopChecked = {};
 
 // ══════════════════════════════════════════════
 // localStorage
 // ══════════════════════════════════════════════
-const LS = {EXP:'ryan_exp_v3',ID:'ryan_id_v3',STK:'ryan_stk_v3'};
+const LS = {EXP:'ryan_exp_v4',ID:'ryan_id_v4',STK:'ryan_stk_v4',SHOP:'ryan_shop_v4'};
+let saveTimer = null;
 function save(){
-  try{
-    localStorage.setItem(LS.EXP, JSON.stringify(expenses));
-    localStorage.setItem(LS.ID, String(nextId));
-    localStorage.setItem(LS.STK, JSON.stringify(STOCK));
-  }catch(e){}
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=>{
+    try{
+      localStorage.setItem(LS.EXP, JSON.stringify(allExpenses));
+      localStorage.setItem(LS.ID, String(nextId));
+      localStorage.setItem(LS.STK, JSON.stringify(STOCK));
+      localStorage.setItem(LS.SHOP, JSON.stringify(shopChecked));
+    }catch(e){}
+  }, 200);
 }
 function load(){
   try{
-    const e=localStorage.getItem(LS.EXP), i=localStorage.getItem(LS.ID), s=localStorage.getItem(LS.STK);
-    if(e) expenses=JSON.parse(e);
+    const e=localStorage.getItem(LS.EXP), i=localStorage.getItem(LS.ID), s=localStorage.getItem(LS.STK), sh=localStorage.getItem(LS.SHOP);
+    if(e){ const p=JSON.parse(e); if(p && typeof p === 'object') allExpenses=p; }
     if(i) nextId=parseInt(i)||nextId;
-    if(s) STOCK=JSON.parse(s);
+    if(s){ const p=JSON.parse(s); if(Array.isArray(p)) STOCK=p; }
+    if(sh){ const p=JSON.parse(sh); if(p && typeof p === 'object') shopChecked=p; }
   }catch(e){}
+}
+
+// ══════════════════════════════════════════════
+// UTIL
+// ══════════════════════════════════════════════
+function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+function fmtDate(){
+  const d=new Date(), mm=String(d.getMonth()+1).padStart(2,'0'), dd=String(d.getDate()).padStart(2,'0');
+  return `${mm}/${dd}`;
 }
 
 // ══════════════════════════════════════════════
@@ -673,6 +873,7 @@ function switchPage(id, el){
     document.getElementById('overlay').classList.remove('open');
   }
   window.scrollTo(0,0);
+  if(id==='expense') setTimeout(()=>{ drawPie(); drawLine(); },60);
 }
 function toggleSidebar(){
   document.getElementById('sidebar').classList.toggle('open');
@@ -683,67 +884,279 @@ function toggleSidebar(){
 // DASHBOARD
 // ══════════════════════════════════════════════
 function renderDash(){
-  const now = new Date();
-  const weekday = now.getDay();
+  const now=new Date(), wd=now.getDay();
   document.getElementById('dashDate').textContent =
     now.toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
 
-  // Today meals
-  const meals = WEEK_MENU[weekday] || WEEK_MENU[0];
-  const mealIcons = {早:'🌅',午:'☀️',晚:'🌙'};
+  // meals
+  const meals=WEEK_MENU[wd]||WEEK_MENU[1];
+  const mealIcons={早:'🌅',午:'☀️',晚:'🌙'};
   document.getElementById('dashMeals').innerHTML = meals.map(m=>`
     <div class="dash-meal">
       <div class="dash-meal-lbl">${mealIcons[m.meal]||''} ${m.meal}餐</div>
-      <div class="dash-meal-name" onclick="jumpToRecipe('${m.name}')">${m.name} 🔗</div>
-      <div class="dash-meal-note">${m.note}</div>
+      <div class="dash-meal-name" onclick="jumpToRecipe('${escHtml(m.name)}')">${escHtml(m.name)} 🔗</div>
+      <div class="dash-meal-note">${escHtml(m.note)}</div>
     </div>`).join('');
 
-  // Stats
-  const total = expenses.reduce((s,e)=>s+e.amount,0);
+  // stats
+  const todayMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const exp = allExpenses[todayMonth]||[];
+  const total=exp.reduce((s,e)=>s+e.amount,0);
   const bc={};
-  expenses.forEach(e=>{bc[e.cat]=(bc[e.cat]||0)+e.amount});
-  const lowCount = STOCK.filter(s=>s.l==='l').length;
-  document.getElementById('dashStats').innerHTML = `
-    <div class="dash-card"><div class="dash-lbl">本月总支出</div><div class="dash-val c-gold">$${total.toFixed(2)}</div><div class="dash-sub">${expenses.length} 笔记录</div></div>
-    <div class="dash-card"><div class="dash-lbl">食材采购</div><div class="dash-val c-green">$${(bc.groceries||0).toFixed(2)}</div><div class="dash-sub">${expenses.filter(e=>e.cat==='groceries').length} 笔</div></div>
-    <div class="dash-card"><div class="dash-lbl">AI 订阅</div><div class="dash-val c-purple">$${(bc.ai||0).toFixed(2)}</div><div class="dash-sub">每月固定</div></div>
-    <div class="dash-card"><div class="dash-lbl" style="display:flex;align-items:center;gap:5px">库存预警 ${lowCount>0?`<span style="background:var(--red);color:#fff;font-size:9px;padding:1px 5px;border-radius:8px">${lowCount}</span>`:''}</div><div class="dash-val ${lowCount>0?'c-red':'c-green'}">${lowCount>0?lowCount+'项':'充足'}</div><div class="dash-sub">${STOCK.filter(s=>s.l==='m').length} 项适量</div></div>`;
+  exp.forEach(e=>{ bc[e.cat]=(bc[e.cat]||0)+e.amount; });
+  const lowCount=STOCK.filter(s=>s.l==='l').length;
+  document.getElementById('dashStats').innerHTML=`
+    <div class="dash-card"><div class="dash-lbl">本月总支出</div><div class="dash-val c-gold">$${total.toFixed(2)}</div><div class="dash-sub">${exp.length} 笔记录</div></div>
+    <div class="dash-card"><div class="dash-lbl">食材采购</div><div class="dash-val c-green">$${(bc.groceries||0).toFixed(2)}</div><div class="dash-sub">预算 $${CAT.groceries.budget}</div></div>
+    <div class="dash-card"><div class="dash-lbl">AI 订阅</div><div class="dash-val c-purple">$${(bc.ai||0).toFixed(2)}</div><div class="dash-sub">娱乐 $${((bc.entertainment||0)+(bc.dining||0)).toFixed(2)}</div></div>
+    <div class="dash-card"><div class="dash-lbl">库存预警 ${lowCount>0?`<span style="background:var(--red);color:#fff;font-size:9px;padding:1px 5px;border-radius:8px;margin-left:4px">${lowCount}</span>`:''}</div><div class="dash-val ${lowCount>0?'c-red':'c-green'}">${lowCount>0?lowCount+'项':'充足'}</div><div class="dash-sub">${STOCK.filter(s=>s.l==='m').length} 项适量</div></div>`;
 
-  // Low stock
-  const low = STOCK.filter(s=>s.l==='l');
-  if(low.length>0){
-    document.getElementById('dashWarn').innerHTML = `
-      <div class="warn-box" style="margin-bottom:22px">
-        <div class="warn-title">⚠️ 偏少食材，需要补货</div>
-        <div class="warn-items">${low.map(s=>`<span class="warn-tag">${s.n}</span>`).join('')}</div>
-      </div>`;
-  } else {
-    document.getElementById('dashWarn').innerHTML = '';
-  }
+  // budget bars
+  const budgetCats=['groceries','ai','entertainment','dining'];
+  document.getElementById('budgetBars').innerHTML = budgetCats.map(k=>{
+    const spent=bc[k]||0, budget=CAT[k].budget, pct=Math.min(100,(spent/budget)*100);
+    const cls = pct>=100?'over':pct>=80?'warn':'ok';
+    return `<div class="bbar">
+      <div class="bbar-top"><span class="bbar-name">${CAT[k].lbl}</span><span class="bbar-nums">$${spent.toFixed(2)} / $${budget}</span></div>
+      <div class="bbar-track"><div class="bbar-fill ${cls}" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
 
-  // Low stock grid
-  const med = STOCK.filter(s=>s.l==='m'||s.l==='l');
-  if(med.length>0){
-    document.getElementById('dashLowStock').innerHTML = med.map((s,i)=>`
-      <div class="sc">
-        <div class="sn"><span class="sdot dot-${s.l}"></span>${escHtml(s.n)}</div>
-        <div class="sq">${escHtml(s.q)}</div>
-      </div>`).join('');
-  } else {
-    document.getElementById('dashLowStock').innerHTML = `<div style="color:var(--text3);font-size:13px;padding:12px 0">🎉 所有食材库存充足！</div>`;
-  }
+  // warn
+  const low=STOCK.filter(s=>s.l==='l');
+  document.getElementById('dashWarn').innerHTML = low.length>0?`
+    <div class="warn-box">
+      <div class="warn-title">⚠️ 偏少食材，需要补货</div>
+      <div class="warn-items">${low.map(s=>`<span class="warn-tag">${escHtml(s.n)}</span>`).join('')}</div>
+    </div>`:''
 
-  // Low badge
-  const badge = document.getElementById('lowBadge');
-  badge.style.display = lowCount>0 ? 'inline' : 'none';
-  badge.textContent = lowCount>0 ? lowCount : '';
+  // low stock grid
+  const med=STOCK.filter(s=>s.l==='m'||s.l==='l');
+  document.getElementById('dashLowStock').innerHTML = med.length>0
+    ? med.map(s=>`<div class="sc"><div class="sn"><span class="sdot dot-${s.l}"></span><span>${escHtml(s.n)}</span></div><div class="sq">${escHtml(s.q)}</div></div>`).join('')
+    : `<div style="color:var(--text3);font-size:13px;padding:10px 0">🎉 所有食材库存充足！</div>`;
+
+  // badge
+  const badge=document.getElementById('lowBadge');
+  badge.style.display=lowCount>0?'inline':'none';
+  badge.textContent=lowCount>0?lowCount:'';
 }
 
 // ══════════════════════════════════════════════
-// JUMP / RECIPES
+// WEEKLY PLAN TABLE (dynamic, today-col highlight)
 // ══════════════════════════════════════════════
+function renderPlanTable(){
+  const today = new Date().getDay(); // 0-6
+  // highlight header
+  PLAN_COLS.forEach((wd)=>{
+    const th=document.getElementById('th-'+wd);
+    if(th) th.style.background = wd===today ? 'linear-gradient(180deg,#fff5e8,var(--bg2))' : '';
+  });
+
+  const rows = ['早','午','晚'];
+  let html='';
+  rows.forEach(meal=>{
+    html+=`<tr><td class="row-label">${meal}</td>`;
+    PLAN_COLS.forEach(wd=>{
+      const m = WEEK_MENU[wd]?.find(x=>x.meal===meal);
+      const isToday = wd===today;
+      if(m){
+        html+=`<td class="mc ${isToday?'today-col':''}" onclick="jumpToRecipe('${escHtml(m.name)}')">
+          <div class="mn">${escHtml(m.name)} 🔗</div>
+          <div class="mnt">${escHtml(m.note)}</div>
+          <span class="mbadge ${mealBadgeClass(m.name)}">${mealBadgeText(m.name)}</span>
+        </td>`;
+      } else {
+        html+=`<td class="${isToday?'today-col':''}"></td>`;
+      }
+    });
+    html+='</tr>';
+  });
+  document.getElementById('weekBody').innerHTML=html;
+}
+function mealBadgeClass(name){
+  const r=R[recipeMap[name]];
+  if(!r) return 'b-quick';
+  if(r.tags.includes('荤食')) return 'b-meat';
+  if(r.tags.includes('素食')) return 'b-veg';
+  if(r.tags.includes('面食')) return 'b-noodle';
+  return 'b-quick';
+}
+function mealBadgeText(name){
+  const r=R[recipeMap[name]];
+  if(!r) return '快手';
+  if(r.tags.includes('荤食')) return '荤食';
+  if(r.tags.includes('素食')) return '素食';
+  if(r.tags.includes('面食')) return '面食';
+  return '快手';
+}
+
+// ══════════════════════════════════════════════
+// CALENDAR (dynamic today)
+// ══════════════════════════════════════════════
+function renderCalendar(){
+  const today = new Date();
+  const todayDate = today.getDate();
+  const todayMonth = today.getMonth(); // 3 = April
+
+  const headers=['周六','周日','周一','周二','周三','周四','周五'];
+  document.getElementById('calHeaders').innerHTML =
+    headers.map(h=>`<div class="cal-hdr">${h}</div>`).join('');
+
+  // April 2026: starts on Wednesday (col index 4 in Sat-first grid)
+  // Sat=0, Sun=1, Mon=2, Tue=3, Wed=4, Thu=5, Fri=6
+  const calData = [
+    // row 1: Apr 1–5 (Wed-Fri, with Sat/Sun/Mon/Tue empty)
+    {empty:true},{empty:true},{empty:true},{empty:true},
+    {d:1},{d:2},{d:3},
+    // row 2
+    {d:4},{d:5},{d:6},{d:7},{d:8},{d:9},{d:10},
+    // row 3
+    {d:11},{d:12},{d:13},{d:14},{d:15},{d:16},{d:17},
+    // row 4
+    {d:18},{d:19},{d:20},{d:21},{d:22},{d:23},{d:24},
+    // row 5
+    {d:25},{d:26},{d:27},{d:28},{d:29},{d:30},{empty:true},
+  ];
+
+  const mealsByDate = {
+    12:[{t:'bf',lbl:'🛒 Coles到货'},{t:'lun',lbl:'🛒 中式超市'}],
+    13:[{t:'bf',lbl:'整理食材'},{t:'din',lbl:'备餐日'}],
+    14:[
+      {t:'bf',lbl:'🌅 燕麦粥',r:'燕麦粥'},
+      {t:'lun',lbl:'酸菜牛肉面',r:'酸菜牛肉面'},
+      {t:'din',lbl:'慢炖牛肉',r:'慢炖牛肉'}
+    ],
+    15:[
+      {t:'bf',lbl:'🌅 鸡蛋饼',r:'鸡蛋饼'},
+      {t:'lun',lbl:'猪肉酸菜饺子',r:'猪肉酸菜饺子'},
+      {t:'din',lbl:'麻婆豆腐',r:'麻婆豆腐'}
+    ],
+    16:[
+      {t:'bf',lbl:'🌅 燕麦粥',r:'燕麦粥'},
+      {t:'lun',lbl:'手打拉面',r:'手打拉面'},
+      {t:'din',lbl:'牛肉烤饭',r:'牛肉烤饭'}
+    ],
+    17:[
+      {t:'bf',lbl:'🌅 牛奶燕麦',r:'燕麦粥'},
+      {t:'lun',lbl:'酸菜牛肉面',r:'酸菜牛肉面'},
+      {t:'din',lbl:'蒜苔炒火腿',r:'蒜苔炒火腿猪肉'}
+    ],
+    18:[
+      {t:'bf',lbl:'🌅 煎蛋吐司',r:'煎蛋吐司'},
+      {t:'lun',lbl:'猪肉酸菜饺子',r:'猪肉酸菜饺子'},
+      {t:'din',lbl:'菠菜豆腐汤',r:'菠菜豆腐蛋花汤'}
+    ],
+    19:[
+      {t:'bf',lbl:'🌅 手抓饼',r:'手抓饼配排骨酱'},
+      {t:'lun',lbl:'手打拉面',r:'手打拉面'},
+      {t:'din',lbl:'慢炖牛肉(剩)',r:'慢炖牛肉'}
+    ],
+    20:[
+      {t:'bf',lbl:'🌅 手抓饼',r:'手抓饼配排骨酱'},
+      {t:'lun',lbl:'清冰箱炒饭',r:'清冰箱蛋炒饭'},
+      {t:'din',lbl:'白菜豆腐锅',r:'白菜豆腐锅'}
+    ],
+  };
+
+  let html='<div class="cal-wrap">';
+  calData.forEach(cell=>{
+    if(cell.empty){
+      html+='<div class="cal-cell empty"></div>';
+      return;
+    }
+    const isToday = (todayMonth===3 && cell.d===todayDate);
+    html+=`<div class="cal-cell${isToday?' today':''}"><div class="cal-n">${cell.d}</div>`;
+    const meals=mealsByDate[cell.d]||[];
+    meals.forEach(m=>{
+      if(m.r){
+        html+=`<div class="cal-m ${m.t} link" onclick="jumpToRecipe('${escHtml(m.r)}')">${escHtml(m.lbl)}</div>`;
+      } else {
+        html+=`<div class="cal-m ${m.t}">${escHtml(m.lbl)}</div>`;
+      }
+    });
+    html+='</div>';
+  });
+  html+='</div>';
+  document.getElementById('calGrid').innerHTML=html;
+}
+
+// ══════════════════════════════════════════════
+// RECIPES
+// ══════════════════════════════════════════════
+let recipeTagFilter = 'all';
+function renderRecipes(){
+  // build tag list
+  const allTags = new Set();
+  R.forEach(r=>r.tags.forEach(t=>allTags.add(t)));
+  const tagArr=['all',...allTags];
+  document.getElementById('recipeFilter').innerHTML = tagArr.map(t=>`
+    <button class="rfbtn ${recipeTagFilter===t?'active':''}" onclick="setRecipeTag('${t}')">${t==='all'?'全部':t}</button>`).join('');
+
+  const q = document.querySelector('.recipe-search')?.value?.toLowerCase()||'';
+  document.getElementById('recipeGrid').innerHTML = R.map((r,i)=>{
+    const matchTag = recipeTagFilter==='all' || r.tags.includes(recipeTagFilter);
+    const matchQ = !q || r.name.includes(q) || r.ing.some(x=>x.n.includes(q));
+    const hidden = (!matchTag||!matchQ)?'hidden':'';
+    return `<div class="rc ${hidden}" onclick="openRecipe(${i})">
+      <div class="rc-head">
+        <div>
+          <div class="rc-name">${escHtml(r.name)}</div>
+          <div class="rc-meta"><span>⏱ ${r.time}</span><span>👤 ${r.servings}</span><span>📊 ${r.diff}</span></div>
+        </div>
+        <div class="rc-emoji">${r.emoji}</div>
+      </div>
+      <div class="rc-body">
+        <div class="rc-preview">${r.ing.slice(0,5).map(x=>`<span style="color:var(--text1)">${escHtml(x.n)}</span>`).join('<span style="color:var(--line2);margin:0 3px">·</span>')}${r.ing.length>5?'<span style="color:var(--text3)"> …</span>':''}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function setRecipeTag(t){ recipeTagFilter=t; renderRecipes(); }
+function filterRecipes(){ renderRecipes(); }
+
+// low-stock name set
+function lowStockNames(){
+  return new Set(STOCK.filter(s=>s.l==='l'||s.l==='m').map(s=>s.n.toLowerCase()));
+}
+
+function openRecipe(idx){
+  const r=R[idx];
+  const low=lowStockNames();
+  document.getElementById('m-emoji').textContent=r.emoji;
+  document.getElementById('m-title').textContent=r.name;
+  document.getElementById('m-meta').innerHTML=`<span>⏱ ${r.time}</span><span>👤 ${r.servings}</span><span>📊 ${r.diff}</span>`;
+
+  // ingredients with stock warning
+  document.getElementById('m-ing').innerHTML=r.ing.map(x=>{
+    const isLow = [...low].some(l=>x.n.toLowerCase().includes(l)||l.includes(x.n.toLowerCase().split('（')[0].split(' ')[0]));
+    return `<div class="ing-row">
+      <span class="ing-name">${escHtml(x.n)}${isLow?'<span class="ing-warn" title="库存偏少"></span>':''}</span>
+      <span class="ing-qty">${escHtml(x.q)}</span>
+    </div>`;
+  }).join('');
+
+  // steps with timers
+  document.getElementById('m-steps').innerHTML=r.steps.map((s,n)=>{
+    const timerHtml = s.timer ? `<br><span class="step-timer" id="st-${idx}-${n}" data-secs="${s.timer}" onclick="startTimer(this,${s.timer},'${escHtml(s.t)}')">⏱ ${formatTime(s.timer)} 计时</span>` : '';
+    return `<li class="step"><div class="snum">${n+1}</div><div class="step-txt">${escHtml(s.d)}${timerHtml}</div></li>`;
+  }).join('');
+
+  document.getElementById('m-tip-wrap').innerHTML=r.tip?`<div class="m-sec"><div class="m-tip"><strong>💡 小贴士 · </strong>${escHtml(r.tip)}</div></div>`:'';
+  document.getElementById('recipeModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('recipeModal').classList.remove('open');
+  document.body.style.overflow='';
+  // clear all timers
+  Object.keys(timerHandles).forEach(k=>{ clearInterval(timerHandles[k]); delete timerHandles[k]; });
+}
+function modalBgClick(e){ if(e.target===document.getElementById('recipeModal')) closeModal(); }
+
+// ── JUMP ──
 function jumpToRecipe(name){
-  const idx = recipeMap[name];
+  const idx=recipeMap[name];
   if(idx===undefined) return;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -756,159 +1169,197 @@ function jumpToRecipe(name){
   window.scrollTo(0,0);
   setTimeout(()=>openRecipe(idx),260);
 }
-function renderRecipes(){
-  document.getElementById('recipeGrid').innerHTML = R.map((r,i)=>`
-    <div class="rc" onclick="openRecipe(${i})">
-      <div class="rc-head">
-        <div>
-          <div class="rc-name">${r.name}</div>
-          <div class="rc-meta"><span>⏱ ${r.time}</span><span>👤 ${r.servings}</span><span>📊 ${r.diff}</span></div>
-        </div>
-        <div class="rc-emoji">${r.emoji}</div>
-      </div>
-      <div class="rc-body">
-        <div class="rc-preview">${r.ing.slice(0,5).map(x=>`<span style="color:var(--text1)">${x.n}</span>`).join('<span style="color:var(--line2);margin:0 3px">·</span>')}${r.ing.length>5?'<span style="color:var(--text3)"> …</span>':''}</div>
-      </div>
-    </div>`).join('');
-}
-function openRecipe(idx){
-  const r=R[idx];
-  document.getElementById('m-emoji').textContent=r.emoji;
-  document.getElementById('m-title').textContent=r.name;
-  document.getElementById('m-meta').innerHTML=`<span>⏱ ${r.time}</span><span>👤 ${r.servings}</span><span>📊 ${r.diff}</span>`;
-  document.getElementById('m-ing').innerHTML=r.ing.map(x=>`<div class="ing-row"><span class="ing-name">${x.n}</span><span class="ing-qty">${x.q}</span></div>`).join('');
-  document.getElementById('m-steps').innerHTML=r.steps.map((s,n)=>`<li class="step"><div class="snum">${n+1}</div><div class="step-txt">${s}</div></li>`).join('');
-  document.getElementById('m-tip-wrap').innerHTML=r.tip?`<div class="m-sec"><div class="m-tip"><strong>💡 小贴士 · </strong>${r.tip}</div></div>`:'';
-  document.getElementById('recipeModal').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-function closeModal(){ document.getElementById('recipeModal').classList.remove('open'); document.body.style.overflow=''; }
-function modalBgClick(e){ if(e.target===document.getElementById('recipeModal')) closeModal(); }
 
 // ══════════════════════════════════════════════
-// CHARTS (pure canvas, no library)
+// TIMERS
 // ══════════════════════════════════════════════
-function drawPie(){
-  const canvas = document.getElementById('pieChart');
-  if(!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const W = canvas.offsetWidth || 200;
-  canvas.width = W; canvas.height = 180;
-  const bc={};
-  expenses.forEach(e=>{bc[e.cat]=(bc[e.cat]||0)+e.amount});
-  const entries = Object.entries(bc).filter(([k,v])=>v>0);
-  if(!entries.length) return;
-  const total = entries.reduce((s,[k,v])=>s+v,0);
-  const cx=W/2, cy=85, r=72;
-  let angle = -Math.PI/2;
-  const legend = document.getElementById('pieLegend');
-  legend.innerHTML='';
-  entries.forEach(([k,v])=>{
-    const slice = (v/total)*2*Math.PI;
-    ctx.beginPath();
-    ctx.moveTo(cx,cy);
-    ctx.arc(cx,cy,r,angle,angle+slice);
-    ctx.closePath();
-    ctx.fillStyle = CAT[k]?.color || '#aaa';
-    ctx.fill();
-    ctx.strokeStyle='#fff';
-    ctx.lineWidth=2;
-    ctx.stroke();
-    angle+=slice;
-    const pct = ((v/total)*100).toFixed(1);
-    legend.innerHTML+=`<div class="pie-leg-item"><div class="pie-leg-dot" style="background:${CAT[k]?.color||'#aaa'}"></div><span>${CAT[k]?.lbl||k}</span><span style="margin-left:auto;font-family:var(--mono);color:var(--text3)">${pct}%</span></div>`;
-  });
-  // center hole
-  ctx.beginPath();
-  ctx.arc(cx,cy,r*0.44,0,2*Math.PI);
-  ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--bg1').trim()||'#fff9f3';
-  ctx.fill();
-  ctx.fillStyle='#4a3520';
-  ctx.font=`700 13px 'Noto Serif SC',serif`;
-  ctx.textAlign='center';
-  ctx.textBaseline='middle';
-  ctx.fillText('$'+total.toFixed(0),cx,cy);
+const timerHandles={};
+function formatTime(secs){
+  const m=Math.floor(secs/60), s=secs%60;
+  return m>0 ? `${m}分${s>0?s+'秒':''}` : `${s}秒`;
 }
-
-function drawLine(){
-  const canvas = document.getElementById('lineChart');
-  if(!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const W = canvas.offsetWidth || 200;
-  canvas.width = W; canvas.height = 180;
-  // group by date
-  const byDate = {};
-  expenses.forEach(e=>{
-    const d = e.date||'00/00';
-    byDate[d] = (byDate[d]||0)+e.amount;
-  });
-  const dates = Object.keys(byDate).sort();
-  if(dates.length < 2){ ctx.fillStyle='#a8906f'; ctx.font='12px sans-serif'; ctx.textAlign='center'; ctx.fillText('数据不足，添加更多记录后显示趋势',W/2,90); return; }
-  const vals = dates.map(d=>byDate[d]);
-  const maxV = Math.max(...vals);
-  const pad = {l:40,r:14,t:14,b:28};
-  const gW = W-pad.l-pad.r, gH = 180-pad.t-pad.b;
-  // grid lines
-  ctx.strokeStyle='rgba(0,0,0,0.05)'; ctx.lineWidth=1;
-  for(let i=0;i<=4;i++){
-    const y = pad.t + gH - (gH*i/4);
-    ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y); ctx.stroke();
-    ctx.fillStyle='#a8906f'; ctx.font='10px sans-serif'; ctx.textAlign='right';
-    ctx.fillText('$'+(maxV*i/4).toFixed(0),pad.l-4,y+3);
+function startTimer(el, totalSecs, label){
+  const key=el.id;
+  if(timerHandles[key]){
+    clearInterval(timerHandles[key]);
+    delete timerHandles[key];
+    el.classList.remove('running','done');
+    el.textContent=`⏱ ${formatTime(totalSecs)} 计时`;
+    return;
   }
-  // line
-  ctx.beginPath();
-  ctx.strokeStyle='#c08040'; ctx.lineWidth=2.5; ctx.lineJoin='round';
-  dates.forEach((d,i)=>{
-    const x = pad.l + (gW/(dates.length-1||1))*i;
-    const y = pad.t + gH - (gH*(vals[i]/maxV||0));
-    i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  let rem=totalSecs;
+  el.classList.add('running');
+  el.textContent=`⏸ ${formatTime(rem)} 剩余`;
+  timerHandles[key]=setInterval(()=>{
+    rem--;
+    if(rem<=0){
+      clearInterval(timerHandles[key]);
+      delete timerHandles[key];
+      el.classList.remove('running');
+      el.classList.add('done');
+      el.textContent=`✓ ${label} 完成！`;
+      showToast(`⏰ ${label} 计时结束！`);
+    } else {
+      el.textContent=`⏸ ${formatTime(rem)} 剩余`;
+    }
+  },1000);
+}
+
+// ══════════════════════════════════════════════
+// SHOPPING LIST
+// ══════════════════════════════════════════════
+function generateShopList(){
+  // gather all recipe ingredients for the week
+  const needed={}; // name -> recipes list
+  Object.values(WEEK_MENU).forEach(meals=>{
+    meals.forEach(m=>{
+      const r=R[recipeMap[m.name]];
+      if(!r) return;
+      r.ing.forEach(ing=>{
+        const key=ing.n;
+        if(!needed[key]) needed[key]={qty:ing.q,recipes:new Set()};
+        needed[key].recipes.add(m.name);
+      });
+    });
   });
-  ctx.stroke();
-  // dots + labels
-  dates.forEach((d,i)=>{
-    const x = pad.l + (gW/(dates.length-1||1))*i;
-    const y = pad.t + gH - (gH*(vals[i]/maxV||0));
-    ctx.beginPath(); ctx.arc(x,y,4,0,2*Math.PI);
-    ctx.fillStyle='#c08040'; ctx.fill();
-    ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.stroke();
-    if(i%Math.max(1,Math.floor(dates.length/6))===0 || i===dates.length-1){
-      ctx.fillStyle='#a8906f'; ctx.font='9px sans-serif'; ctx.textAlign='center';
-      ctx.fillText(d,x,180-6);
+
+  // compare vs stock (l or m = need to buy)
+  const stockMap={};
+  STOCK.forEach(s=>{ stockMap[s.n.toLowerCase()]=s; });
+
+  const toBuy=[];
+  const sufficient=[];
+  Object.entries(needed).forEach(([name,info])=>{
+    const sKey=Object.keys(stockMap).find(k=>name.toLowerCase().includes(k)||k.includes(name.toLowerCase().split('（')[0].split(' ')[0]));
+    const s=sKey?stockMap[sKey]:null;
+    if(!s || s.l==='l'){
+      toBuy.push({name,qty:info.qty,recipes:[...info.recipes],status:'none'});
+    } else if(s.l==='m'){
+      toBuy.push({name,qty:info.qty,recipes:[...info.recipes],status:'low'});
+    } else {
+      sufficient.push(name);
     }
   });
+
+  const shopEl=document.getElementById('shopList');
+  const emptyEl=document.getElementById('shopEmpty');
+
+  if(toBuy.length===0){
+    shopEl.classList.add('hidden');
+    emptyEl.style.display='block';
+    return;
+  }
+
+  emptyEl.style.display='none';
+  shopEl.classList.remove('hidden');
+
+  // group by "need to buy" vs "running low"
+  const mustBuy=toBuy.filter(x=>x.status==='none');
+  const runLow=toBuy.filter(x=>x.status==='low');
+
+  let html='';
+  if(mustBuy.length>0){
+    html+=`<div class="shop-section">
+      <div class="shop-sec-name">📋 需要购买（库存无）</div>
+      <div class="shop-items">${mustBuy.map((x,i)=>shopItem(x,'nb'+i)).join('')}</div>
+    </div>`;
+  }
+  if(runLow.length>0){
+    html+=`<div class="shop-section">
+      <div class="shop-sec-name">⚠️ 建议补货（库存偏少）</div>
+      <div class="shop-items">${runLow.map((x,i)=>shopItem(x,'rl'+i)).join('')}</div>
+    </div>`;
+  }
+
+  // by store
+  const coles=toBuy.filter(x=>isColesItem(x.name));
+  const chinese=toBuy.filter(x=>!isColesItem(x.name));
+  if(coles.length>0){
+    html+=`<div class="shop-section" style="margin-top:16px">
+      <div class="shop-sec-name">🏪 Coles 优先</div>
+      <div class="shop-items">${coles.map((x,i)=>shopItem(x,'co'+i)).join('')}</div>
+    </div>`;
+  }
+  if(chinese.length>0){
+    html+=`<div class="shop-section">
+      <div class="shop-sec-name">🏮 中式超市</div>
+      <div class="shop-items">${chinese.map((x,i)=>shopItem(x,'ch'+i)).join('')}</div>
+    </div>`;
+  }
+
+  shopEl.innerHTML=html;
+}
+function shopItem(x, id){
+  const checked=shopChecked[id]?'checked':'';
+  return `<div class="shop-item ${checked}" id="si-${id}" onclick="toggleShopItem('${id}')">
+    <div class="shop-cb">${shopChecked[id]?'✓':''}</div>
+    <div class="shop-item-name">${escHtml(x.name)}</div>
+    <div class="shop-item-note">${escHtml(x.qty)}</div>
+  </div>`;
+}
+function toggleShopItem(id){
+  shopChecked[id]=!shopChecked[id];
+  const el=document.getElementById('si-'+id);
+  if(el){
+    el.classList.toggle('checked',!!shopChecked[id]);
+    el.querySelector('.shop-cb').textContent=shopChecked[id]?'✓':'';
+  }
+  save();
+}
+function isColesItem(name){
+  const colesItems=['牛肉','鸡蛋','牛奶','芹菜','蘑菇','蓝莓','生菜','土豆','苹果','生姜','胡萝卜','白菜','菠菜','豆腐','番茄','酸奶','燕麦'];
+  return colesItems.some(c=>name.includes(c));
 }
 
 // ══════════════════════════════════════════════
 // EXPENSE
 // ══════════════════════════════════════════════
+function changeMonth(delta){
+  const [y,m]=viewMonth.split('-').map(Number);
+  let nm=m+delta, ny=y;
+  if(nm>12){nm=1;ny++;}
+  if(nm<1){nm=12;ny--;}
+  viewMonth=`${ny}-${String(nm).padStart(2,'0')}`;
+  if(!allExpenses[viewMonth]) allExpenses[viewMonth]=[];
+  renderAllExp();
+}
+function monthLabelStr(){
+  const [y,m]=viewMonth.split('-').map(Number);
+  const now=new Date();
+  const isNow=(y===now.getFullYear()&&m===now.getMonth()+1);
+  const months=['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+  return `${y}年 ${months[m-1]}${isNow?' (本月)':''}`;
+}
+
 function renderStats(){
-  const total = expenses.reduce((s,e)=>s+e.amount,0);
+  document.getElementById('monthLabel').textContent=monthLabelStr();
+  const exp=curExp();
+  const total=exp.reduce((s,e)=>s+e.amount,0);
   const bc={};
-  expenses.forEach(e=>{bc[e.cat]=(bc[e.cat]||0)+e.amount});
-  document.getElementById('statsRow').innerHTML = `
-    <div class="stat-card"><div class="stat-lbl">本月总支出</div><div class="stat-val c-gold">$${total.toFixed(2)}</div><div class="stat-sub">全部分类</div></div>
-    <div class="stat-card"><div class="stat-lbl">食材采购</div><div class="stat-val c-green">$${(bc.groceries||0).toFixed(2)}</div><div class="stat-sub">${expenses.filter(e=>e.cat==='groceries').length} 笔</div></div>
-    <div class="stat-card"><div class="stat-lbl">AI 订阅</div><div class="stat-val c-purple">$${(bc.ai||0).toFixed(2)}</div><div class="stat-sub">${expenses.filter(e=>e.cat==='ai').length} 笔</div></div>
-    <div class="stat-card"><div class="stat-lbl">娱乐 & 餐饮</div><div class="stat-val c-blue">$${((bc.entertainment||0)+(bc.dining||0)).toFixed(2)}</div><div class="stat-sub">${expenses.filter(e=>['entertainment','dining'].includes(e.cat)).length} 笔</div></div>`;
+  exp.forEach(e=>{ bc[e.cat]=(bc[e.cat]||0)+e.amount; });
+  document.getElementById('statsRow').innerHTML=`
+    <div class="stat-card"><div class="stat-lbl">总支出</div><div class="stat-val c-gold">$${total.toFixed(2)}</div><div class="stat-sub">${exp.length} 笔记录</div></div>
+    <div class="stat-card"><div class="stat-lbl">食材采购</div><div class="stat-val c-green">$${(bc.groceries||0).toFixed(2)}</div><div class="stat-sub">预算 $${CAT.groceries.budget}</div></div>
+    <div class="stat-card"><div class="stat-lbl">AI 订阅</div><div class="stat-val c-purple">$${(bc.ai||0).toFixed(2)}</div><div class="stat-sub">${exp.filter(e=>e.cat==='ai').length} 笔</div></div>
+    <div class="stat-card"><div class="stat-lbl">娱乐 & 餐饮</div><div class="stat-val c-blue">$${((bc.entertainment||0)+(bc.dining||0)).toFixed(2)}</div><div class="stat-sub">${exp.filter(e=>['entertainment','dining'].includes(e.cat)).length} 笔</div></div>`;
   drawPie(); drawLine();
 }
+
 function renderCatTabs(){
-  const cnt={};
-  expenses.forEach(e=>{cnt[e.cat]=(cnt[e.cat]||0)+1});
-  let h=`<div class="ctab ${activeCat==='all'?'active':''}" onclick="filterCat('all')">全部 (${expenses.length})</div>`;
-  Object.entries(CAT).forEach(([k,v])=>{if(cnt[k]>0) h+=`<div class="ctab ${activeCat===k?'active':''}" onclick="filterCat('${k}')">${v.lbl} (${cnt[k]})</div>`;});
+  const exp=curExp(), cnt={};
+  exp.forEach(e=>{ cnt[e.cat]=(cnt[e.cat]||0)+1; });
+  let h=`<div class="ctab ${activeCat==='all'?'active':''}" onclick="filterCat('all')">全部 (${exp.length})</div>`;
+  Object.entries(CAT).forEach(([k,v])=>{ if(cnt[k]>0) h+=`<div class="ctab ${activeCat===k?'active':''}" onclick="filterCat('${k}')">${v.lbl} (${cnt[k]})</div>`; });
   document.getElementById('catTabs').innerHTML=h;
 }
 function filterCat(cat){ activeCat=cat; renderCatTabs(); renderExpList(); }
 
-function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
 function renderExpList(){
-  const list = activeCat==='all' ? expenses : expenses.filter(e=>e.cat===activeCat);
+  const exp=curExp();
+  const list=activeCat==='all'?exp:exp.filter(e=>e.cat===activeCat);
   if(!list.length){ document.getElementById('expList').innerHTML=`<div style="padding:28px;text-align:center;color:var(--text3);font-size:14px">暂无记录</div>`; return; }
   const grp={};
-  list.forEach(e=>{(grp[e.cat]=grp[e.cat]||[]).push(e)});
+  list.forEach(e=>{ (grp[e.cat]=grp[e.cat]||[]).push(e); });
   let h='';
   Object.entries(grp).forEach(([cat,items])=>{
     const cfg=CAT[cat];
@@ -916,12 +1367,12 @@ function renderExpList(){
     items.forEach(e=>{
       h+=`<div class="exp-row">
         <div style="min-width:0">
-          <div class="exp-name" id="en-${e.id}" onclick="editField(${e.id},'name')" title="点击编辑名称">${escHtml(e.name)}</div>
-          <div class="exp-note" id="eno-${e.id}" onclick="editField(${e.id},'note')" title="点击编辑备注">${e.note?escHtml(e.note):'<span style="font-style:italic;color:var(--text3)">添加备注</span>'}</div>
+          <div class="exp-name" id="en-${e.id}" onclick="editField(${e.id},'name')">${escHtml(e.name)}</div>
+          <div class="exp-note" id="eno-${e.id}" onclick="editField(${e.id},'note')">${e.note?escHtml(e.note):'<span style="font-style:italic;color:var(--text3)">添加备注</span>'}</div>
         </div>
         <div class="exp-date">${e.date||''}</div>
-        <div class="exp-cat-badge" style="background:${cfg.color}20;color:${cfg.color};border:1px solid ${cfg.color}40" onclick="cycleExpCat(${e.id})" title="点击切换分类">${cfg.lbl}</div>
-        <div class="exp-amt ${cfg.cls}" id="ea-${e.id}" onclick="editField(${e.id},'amount')" title="点击编辑金额">$${e.amount.toFixed(2)}</div>
+        <div class="exp-cat-badge" style="background:${cfg.color}20;color:${cfg.color};border-color:${cfg.color}40" onclick="cycleExpCat(${e.id})">${cfg.lbl}</div>
+        <div class="exp-amt ${cfg.cls}" id="ea-${e.id}" onclick="editField(${e.id},'amount')">$${e.amount.toFixed(2)}</div>
         <button class="del-btn" onclick="delExp(${e.id})">×</button>
       </div>`;
     });
@@ -930,33 +1381,32 @@ function renderExpList(){
   document.getElementById('expList').innerHTML=h;
 }
 
-function editField(id, field){
-  const e=expenses.find(x=>x.id===id); if(!e) return;
-  const elId = field==='name'?`en-${id}`:field==='note'?`eno-${id}`:`ea-${id}`;
+function editField(id,field){
+  const exp=curExp(), e=exp.find(x=>x.id===id); if(!e) return;
+  const elId=field==='name'?`en-${id}`:field==='note'?`eno-${id}`:`ea-${id}`;
   const el=document.getElementById(elId);
   if(!el||el.querySelector('input')) return;
-  const cur = field==='amount' ? e.amount : (e[field]||'');
+  const cur=field==='amount'?e.amount:(e[field]||'');
   el.innerHTML=`<input id="ei-${id}" type="${field==='amount'?'number':'text'}" value="${field==='amount'?cur:escHtml(String(cur))}"
-    placeholder="${field==='name'?'项目名称':field==='note'?'备注':'金额'}" step="0.01" min="0"
+    step="0.01" min="0"
     style="width:100%;background:var(--bg1);border:1px solid var(--gold-l);border-radius:5px;padding:3px 8px;font-family:inherit;font-size:12px;color:var(--text0);outline:none"
     onblur="commitField(${id},'${field}')"
-    onkeydown="if(event.key==='Enter')this.blur();if(event.key==='Escape'){renderExpList()}">`;
+    onkeydown="if(event.key==='Enter')this.blur();if(event.key==='Escape')renderExpList()">`;
   const inp=document.getElementById(`ei-${id}`);
-  inp.focus(); inp.select();
+  if(inp){ inp.focus(); inp.select(); }
 }
-function commitField(id, field){
-  const e=expenses.find(x=>x.id===id); if(!e) return;
+function commitField(id,field){
+  const exp=curExp(), e=exp.find(x=>x.id===id); if(!e) return;
   const inp=document.getElementById(`ei-${id}`); if(!inp) return;
   const val=inp.value.trim();
-  if(field==='amount'){ const n=parseFloat(val); if(!isNaN(n)&&n>0) e.amount=n; }
-  else if(field==='name'){ if(val) e.name=val; }
-  else { e.note=val; }
+  if(field==='amount'){const n=parseFloat(val);if(!isNaN(n)&&n>0)e.amount=n;}
+  else if(field==='name'){if(val)e.name=val;}
+  else{e.note=val;}
   save(); renderAllExp();
 }
 function cycleExpCat(id){
-  const e=expenses.find(x=>x.id===id); if(!e) return;
-  const cats=Object.keys(CAT);
-  const i=cats.indexOf(e.cat);
+  const exp=curExp(), e=exp.find(x=>x.id===id); if(!e) return;
+  const cats=Object.keys(CAT), i=cats.indexOf(e.cat);
   e.cat=cats[(i+1)%cats.length];
   save(); renderAllExp();
 }
@@ -972,94 +1422,235 @@ function addExpense(){
   ne.style.borderColor=''; ae.style.borderColor='';
   if(!name){ne.style.borderColor='var(--red)';ne.focus();return;}
   if(!raw||isNaN(amount)||amount<=0){ae.style.borderColor='var(--red)';ae.focus();return;}
-  const d=new Date(), date=`${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
-  expenses.push({id:nextId++,name,cat:ce.value,amount,note:nte.value.trim(),date});
+  const now=new Date();
+  const date=`${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}`;
+  const curM=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  if(!allExpenses[curM]) allExpenses[curM]=[];
+  allExpenses[curM].push({id:nextId++,name,cat:ce.value,amount,note:nte.value.trim(),date});
   ne.value=''; ae.value=''; nte.value='';
-  ne.style.borderColor=''; ae.style.borderColor='';
   document.getElementById('addPanel').classList.remove('open');
-  save(); renderAllExp();
+  viewMonth=curM;
+  save(); renderAllExp(); renderDash();
+  showToast('✓ 已记录 $'+amount.toFixed(2));
 }
-function delExp(id){ expenses=expenses.filter(e=>e.id!==id); save(); renderAllExp(); }
-function renderAllExp(){ renderStats(); renderCatTabs(); renderExpList(); renderDash(); }
+function delExp(id){
+  const exp=curExp();
+  allExpenses[viewMonth]=exp.filter(e=>e.id!==id);
+  save(); renderAllExp(); renderDash();
+}
+function renderAllExp(){ renderStats(); renderCatTabs(); renderExpList(); }
+
+function exportCSV(){
+  const exp=curExp();
+  if(!exp.length){showToast('本月暂无记录');return;}
+  const rows=[['日期','名称','分类','金额','备注'],...exp.map(e=>[e.date,e.name,CAT[e.cat]?.lbl||e.cat,e.amount.toFixed(2),e.note||''])];
+  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=`Ryan账单_${viewMonth}.csv`; a.click();
+  URL.revokeObjectURL(url);
+  showToast('📥 CSV 已下载');
+}
+
+// ══════════════════════════════════════════════
+// CHARTS
+// ══════════════════════════════════════════════
+function drawPie(){
+  const canvas=document.getElementById('pieChart'); if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.parentElement?.offsetWidth||300;
+  canvas.width=W; canvas.height=180;
+  const bc={};
+  curExp().forEach(e=>{bc[e.cat]=(bc[e.cat]||0)+e.amount;});
+  const entries=Object.entries(bc).filter(([k,v])=>v>0);
+  if(!entries.length){ctx.fillStyle='var(--text3)';ctx.font='12px sans-serif';ctx.textAlign='center';ctx.fillText('暂无数据',W/2,90);return;}
+  const total=entries.reduce((s,[k,v])=>s+v,0);
+  const cx=W/2,cy=85,r=70;
+  let angle=-Math.PI/2;
+  const legend=document.getElementById('pieLegend');
+  legend.innerHTML='';
+  entries.forEach(([k,v])=>{
+    const slice=(v/total)*2*Math.PI;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,angle,angle+slice);ctx.closePath();
+    ctx.fillStyle=CAT[k]?.color||'#aaa';ctx.fill();
+    ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+    angle+=slice;
+    const pct=((v/total)*100).toFixed(1);
+    legend.innerHTML+=`<div class="pie-leg-item"><div class="pie-leg-dot" style="background:${CAT[k]?.color||'#aaa'}"></div><span>${CAT[k]?.lbl||k}</span><span style="margin-left:auto;font-family:'DM Mono',monospace;color:var(--text3)">$${v.toFixed(2)} · ${pct}%</span></div>`;
+  });
+  ctx.beginPath();ctx.arc(cx,cy,r*0.42,0,2*Math.PI);
+  ctx.fillStyle='#fff9f3';ctx.fill();
+  ctx.fillStyle='#4a3520';ctx.font=`700 13px 'Noto Serif SC',serif`;
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('$'+total.toFixed(0),cx,cy);
+}
+function drawLine(){
+  const canvas=document.getElementById('lineChart'); if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.parentElement?.offsetWidth||300;
+  canvas.width=W; canvas.height=180;
+  const byDate={};
+  curExp().forEach(e=>{ const d=e.date||'00/00'; byDate[d]=(byDate[d]||0)+e.amount; });
+  const dates=Object.keys(byDate).sort();
+  if(dates.length<2){
+    ctx.fillStyle='#a8906f';ctx.font='12px sans-serif';ctx.textAlign='center';
+    ctx.fillText('记录更多数据后显示趋势',W/2,90);return;
+  }
+  const vals=dates.map(d=>byDate[d]);
+  const maxV=Math.max(...vals)||1;
+  const pad={l:44,r:14,t:14,b:28};
+  const gW=W-pad.l-pad.r,gH=180-pad.t-pad.b;
+  ctx.strokeStyle='rgba(0,0,0,0.04)';ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){
+    const y=pad.t+gH-(gH*i/4);
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();
+    ctx.fillStyle='#a8906f';ctx.font='10px sans-serif';ctx.textAlign='right';
+    ctx.fillText('$'+(maxV*i/4).toFixed(0),pad.l-4,y+3);
+  }
+  // area fill
+  ctx.beginPath();
+  dates.forEach((d,i)=>{
+    const x=pad.l+(gW/(dates.length-1||1))*i;
+    const y=pad.t+gH-(gH*(vals[i]/maxV));
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  const lastX=pad.l+gW;
+  ctx.lineTo(lastX,pad.t+gH);ctx.lineTo(pad.l,pad.t+gH);ctx.closePath();
+  ctx.fillStyle='rgba(192,128,64,0.07)';ctx.fill();
+  // line
+  ctx.beginPath();ctx.strokeStyle='#c08040';ctx.lineWidth=2.5;ctx.lineJoin='round';
+  dates.forEach((d,i)=>{
+    const x=pad.l+(gW/(dates.length-1||1))*i;
+    const y=pad.t+gH-(gH*(vals[i]/maxV));
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+  // dots
+  dates.forEach((d,i)=>{
+    const x=pad.l+(gW/(dates.length-1||1))*i;
+    const y=pad.t+gH-(gH*(vals[i]/maxV));
+    ctx.beginPath();ctx.arc(x,y,4,0,2*Math.PI);
+    ctx.fillStyle='#c08040';ctx.fill();
+    ctx.strokeStyle='#fff9f3';ctx.lineWidth=1.5;ctx.stroke();
+    if(i%Math.max(1,Math.floor(dates.length/6))===0||i===dates.length-1){
+      ctx.fillStyle='#a8906f';ctx.font='9px sans-serif';ctx.textAlign='center';
+      ctx.fillText(d,x,180-5);
+    }
+  });
+}
 
 // ══════════════════════════════════════════════
 // STOCK
 // ══════════════════════════════════════════════
 function renderStock(){
-  document.getElementById('stockGrid').innerHTML = STOCK.map((s,i)=>`
+  document.getElementById('stockGrid').innerHTML=STOCK.map((s,i)=>`
     <div class="sc" id="sc-${i}">
-      <button class="sc-del" onclick="delStock(${i})" title="用完了，删除">✕</button>
+      <button class="sc-del" onclick="delStock(${i})">✕</button>
       <div class="sn">
         <span class="sdot dot-${s.l}" onclick="cycleLevel(${i})" title="点击切换状态"></span>
-        <span onclick="editStk(${i},'n')" title="点击编辑">${escHtml(s.n)}</span>
+        <span id="sn-name-${i}" onclick="editStk(${i},'n')">${escHtml(s.n)}</span>
       </div>
-      <div class="sq" id="sq-${i}" onclick="editStk(${i},'q')" title="点击编辑数量">${escHtml(s.q)}</div>
+      <div class="sq" id="sn-qty-${i}" onclick="editStk(${i},'q')">${escHtml(s.q)}</div>
     </div>`).join('');
 }
 function cycleLevel(i){
-  const levels=['h','m','l'];
-  STOCK[i].l=levels[(levels.indexOf(STOCK[i].l)+1)%3];
+  const lvls=['h','m','l'];
+  STOCK[i].l=lvls[(lvls.indexOf(STOCK[i].l)+1)%3];
   save(); renderStock(); renderDash();
 }
-function delStock(i){
-  STOCK.splice(i,1);
-  save(); renderStock(); renderDash();
-}
-function editStk(i, field){
-  const elId=field==='n'?`sc-${i} .sn span:last-child`:`sq-${i}`;
-  let el;
-  if(field==='n'){
-    // find the name span
-    const sc=document.getElementById(`sc-${i}`);
-    const spans=sc.querySelectorAll('.sn span:not(.sdot)');
-    el=spans[0];
-  } else {
-    el=document.getElementById(elId);
-  }
+function delStock(i){ STOCK.splice(i,1); save(); renderStock(); renderDash(); }
+function editStk(i,field){
+  const el=document.getElementById(field==='n'?`sn-name-${i}`:`sn-qty-${i}`);
   if(!el||el.querySelector('input')) return;
   const cur=STOCK[i][field];
-  el.innerHTML=`<input id="si-${i}" type="text" value="${escHtml(cur)}"
+  el.innerHTML=`<input id="si-${i}-${field}" type="text" value="${escHtml(cur)}"
     style="width:100%;background:var(--bg1);border:1px solid var(--gold-l);border-radius:5px;padding:2px 6px;font-family:inherit;font-size:11px;color:var(--text0);outline:none"
     onblur="commitStk(${i},'${field}')"
     onkeydown="if(event.key==='Enter')this.blur();if(event.key==='Escape')renderStock()">`;
-  const inp=document.getElementById(`si-${i}`);
-  inp.focus(); inp.select();
+  const inp=document.getElementById(`si-${i}-${field}`);
+  if(inp){inp.focus();inp.select();}
 }
-function commitStk(i, field){
-  const inp=document.getElementById(`si-${i}`); if(!inp) return;
+function commitStk(i,field){
+  const inp=document.getElementById(`si-${i}-${field}`); if(!inp) return;
   const val=inp.value.trim();
   if(val) STOCK[i][field]=val;
   save(); renderStock(); renderDash();
 }
 function addStockItem(){
-  const name=prompt('食材名称：');
-  if(!name||!name.trim()) return;
+  const name=prompt('食材名称：'); if(!name||!name.trim()) return;
   const qty=prompt('数量/状态：')||'适量';
   STOCK.push({n:name.trim(),q:qty.trim(),l:'h'});
   save(); renderStock(); renderDash();
 }
 function resetStock(){
-  if(!confirm('重置为默认食材列表？当前修改会清除')) return;
-  STOCK=[...DEFAULT_STOCK.map(s=>({...s}))];
+  if(!confirm('重置为默认食材列表？当前修改会清除。')) return;
+  STOCK=DEFAULT_STOCK.map(s=>({...s}));
   save(); renderStock(); renderDash();
+}
+
+// ══════════════════════════════════════════════
+// QUICK ADD EXPENSE (FAB)
+// ══════════════════════════════════════════════
+function openQA(){
+  document.getElementById('qaBackdrop').classList.add('open');
+  document.body.style.overflow='hidden';
+  setTimeout(()=>document.getElementById('qa-name').focus(),100);
+}
+function closeQA(){ document.getElementById('qaBackdrop').classList.remove('open'); document.body.style.overflow=''; }
+function qaBackdropClick(e){ if(e.target===document.getElementById('qaBackdrop')) closeQA(); }
+function submitQA(){
+  const n=document.getElementById('qa-name'), a=document.getElementById('qa-amount');
+  const c=document.getElementById('qa-cat'), nt=document.getElementById('qa-note');
+  const name=n.value.trim(), amount=parseFloat(a.value.trim());
+  n.style.borderColor=''; a.style.borderColor='';
+  if(!name){n.style.borderColor='var(--red)';n.focus();return;}
+  if(!a.value.trim()||isNaN(amount)||amount<=0){a.style.borderColor='var(--red)';a.focus();return;}
+  const now=new Date();
+  const date=`${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}`;
+  const curM=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  if(!allExpenses[curM]) allExpenses[curM]=[];
+  allExpenses[curM].push({id:nextId++,name,cat:c.value,amount,note:nt.value.trim(),date});
+  n.value=''; a.value=''; nt.value='';
+  viewMonth=curM;
+  closeQA();
+  save(); renderAllExp(); renderDash();
+  showToast(`✓ 已记录 ${CAT[c.value]?.lbl||''} $${amount.toFixed(2)}`);
 }
 
 // ══════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════
 load();
+const now=new Date();
 document.getElementById('sidebarDate').textContent =
-  new Date().toLocaleDateString('zh-CN',{month:'long',day:'numeric',weekday:'short'});
+  now.toLocaleDateString('zh-CN',{month:'long',day:'numeric',weekday:'short'});
+
 renderRecipes();
+renderPlanTable();
+renderCalendar();
 renderAllExp();
 renderStock();
 renderDash();
+generateShopList();
 
-// Redraw charts on resize
+// redraw charts on resize (debounced)
 let resizeTimer;
 window.addEventListener('resize',()=>{
   clearTimeout(resizeTimer);
-  resizeTimer=setTimeout(()=>{ drawPie(); drawLine(); },200);
+  resizeTimer=setTimeout(()=>{
+    if(document.getElementById('page-expense').classList.contains('active')){
+      drawPie(); drawLine();
+    }
+  },220);
+});
+
+// keyboard: Esc to close modals
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(document.getElementById('recipeModal').classList.contains('open')) closeModal();
+    if(document.getElementById('qaBackdrop').classList.contains('open')) closeQA();
+  }
 });
 </script>
 </body>
