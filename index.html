@@ -69,7 +69,7 @@ body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text
 .dash-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600}
 .dash-val{font-family:'Noto Serif SC',serif;font-size:28px;font-weight:700;line-height:1;margin-bottom:3px}
 .dash-sub{font-size:11px;color:var(--text3)}
-.dash-meals{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:24px}
+.dash-meals{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:24px;align-items:start}
 .dash-meal{background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);transition:all var(--trans)}
 .dash-meal:hover{border-color:var(--gold-l);box-shadow:var(--shadow-lg)}
 .dash-meal-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600;display:flex;align-items:center;gap:5px}
@@ -406,8 +406,8 @@ canvas{max-width:100%}
 <!-- ══ 饮食计划 ══ -->
 <div class="page" id="page-plan">
   <div class="page-header">
-    <div class="page-title">下周<span>饮食</span>规划</div>
-    <div class="page-desc">4月14日—4月20日 · 点击餐名查看菜谱 · 当天列高亮显示</div>
+    <div class="page-title">本周<span>饮食</span>规划</div>
+    <div class="page-desc">4月13日—4月19日 · 点击餐名查看菜谱 · 今天列金色高亮</div>
   </div>
   <div class="sec-label">三餐总览</div>
   <div class="card" style="margin-bottom:20px">
@@ -415,20 +415,20 @@ canvas{max-width:100%}
       <table class="week-table" id="weekTable">
         <thead><tr id="weekHead">
           <th></th>
-          <th id="th-1"><span class="dh">14<span class="wd">周一</span></span></th>
-          <th id="th-2"><span class="dh">15<span class="wd">周二</span></span></th>
-          <th id="th-3"><span class="dh">16<span class="wd">周三</span></span></th>
-          <th id="th-4"><span class="dh">17<span class="wd">周四</span></span></th>
-          <th id="th-5"><span class="dh">18<span class="wd">周五</span></span></th>
-          <th id="th-6"><span class="dh">19<span class="wd">周六</span></span></th>
-          <th id="th-0"><span class="dh">20<span class="wd">周日</span></span></th>
+          <th id="th-1"><span class="dh">13<span class="wd">周一</span></span></th>
+          <th id="th-2"><span class="dh">14<span class="wd">周二</span></span></th>
+          <th id="th-3"><span class="dh">15<span class="wd">周三</span></span></th>
+          <th id="th-4"><span class="dh">16<span class="wd">周四</span></span></th>
+          <th id="th-5"><span class="dh">17<span class="wd">周五</span></span></th>
+          <th id="th-6"><span class="dh">18<span class="wd">周六</span></span></th>
+          <th id="th-0"><span class="dh">19<span class="wd">周日</span></span></th>
         </tr></thead>
         <tbody id="weekBody"></tbody>
       </table>
     </div>
   </div>
   <div style="background:linear-gradient(135deg,#fffbf0,#fff5e0);border:1px solid rgba(192,128,64,0.2);border-left:3px solid var(--gold);border-radius:0 var(--radius) var(--radius) 0;padding:14px 18px;font-size:13px;color:var(--text2);line-height:1.9">
-    💡 <strong style="color:var(--gold)">提示：</strong>所有餐名可点击查看菜谱。慢炖牛肉周一下午提前炖好，周六加热即可。牛肉烤饭腌制时间越长越好。
+    💡 <strong style="color:var(--gold)">提示：</strong>所有餐名可点击查看菜谱。慢炖牛肉今天（13日周一）下午提前炖，周六(18日)加热即可。牛肉烤饭(15日)可提前一晚腌好放冰箱。
   </div>
 </div>
 
@@ -743,7 +743,7 @@ const WEEK_MENU = {
 
 // plan data (col order: Mon-Sun = 1..6,0)
 const PLAN_COLS = [1,2,3,4,5,6,0];
-const PLAN_LABELS = ['14\n周一','15\n周二','16\n周三','17\n周四','18\n周五','19\n周六','20\n周日'];
+const PLAN_LABELS = ['13\n周一','14\n周二','15\n周三','16\n周四','17\n周五','18\n周六','19\n周日'];
 
 // ── CAT config ──
 const CAT = {
@@ -891,12 +891,18 @@ function renderDash(){
   // meals
   const meals=WEEK_MENU[wd]||WEEK_MENU[1];
   const mealIcons={早:'🌅',午:'☀️',晚:'🌙'};
+
+  // Defrost reminder: if tomorrow has beef/frozen items, remind today
+  const DEFROST_DAYS = {1:'明天炖牛肉——今晚把牛肉烤肉块移到冷藏解冻',2:'明天吃牛肉烤饭——今晚记得腌肉！',4:'明天吃饺子——如有需要提前确认冰箱备货'};
+  const defrostTip = DEFROST_DAYS[wd];
+
   document.getElementById('dashMeals').innerHTML = meals.map(m=>`
     <div class="dash-meal">
       <div class="dash-meal-lbl">${mealIcons[m.meal]||''} ${m.meal}餐</div>
       <div class="dash-meal-name" onclick="jumpToRecipe('${escHtml(m.name)}')">${escHtml(m.name)} 🔗</div>
       <div class="dash-meal-note">${escHtml(m.note)}</div>
-    </div>`).join('');
+    </div>`).join('')
+    + (defrostTip ? `<div style="grid-column:1/-1;background:linear-gradient(135deg,rgba(192,128,64,0.08),rgba(192,128,64,0.03));border:1px solid rgba(192,128,64,0.25);border-left:3px solid var(--gold);border-radius:0 var(--radius) var(--radius) 0;padding:10px 14px;font-size:12px;color:var(--text2)">❄️ <strong style="color:var(--gold)">今日提醒：</strong>${defrostTip}</div>` : '');
 
   // stats
   const todayMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
@@ -1020,39 +1026,38 @@ function renderCalendar(){
   ];
 
   const mealsByDate = {
-    12:[{t:'bf',lbl:'🛒 Coles到货'},{t:'lun',lbl:'🛒 中式超市'}],
-    13:[{t:'bf',lbl:'整理食材'},{t:'din',lbl:'备餐日'}],
-    14:[
+    12:[{t:'bf',lbl:'🛒 Coles到货'},{t:'lun',lbl:'🛒 中式超市采购'}],
+    13:[
       {t:'bf',lbl:'🌅 燕麦粥',r:'燕麦粥'},
       {t:'lun',lbl:'酸菜牛肉面',r:'酸菜牛肉面'},
-      {t:'din',lbl:'慢炖牛肉',r:'慢炖牛肉'}
+      {t:'din',lbl:'慢炖牛肉🍲今日炖',r:'慢炖牛肉'}
     ],
-    15:[
+    14:[
       {t:'bf',lbl:'🌅 鸡蛋饼',r:'鸡蛋饼'},
       {t:'lun',lbl:'猪肉酸菜饺子',r:'猪肉酸菜饺子'},
       {t:'din',lbl:'麻婆豆腐',r:'麻婆豆腐'}
     ],
-    16:[
+    15:[
       {t:'bf',lbl:'🌅 燕麦粥',r:'燕麦粥'},
       {t:'lun',lbl:'手打拉面',r:'手打拉面'},
-      {t:'din',lbl:'牛肉烤饭',r:'牛肉烤饭'}
+      {t:'din',lbl:'牛肉烤饭🥩',r:'牛肉烤饭'}
     ],
-    17:[
+    16:[
       {t:'bf',lbl:'🌅 牛奶燕麦',r:'燕麦粥'},
       {t:'lun',lbl:'酸菜牛肉面',r:'酸菜牛肉面'},
       {t:'din',lbl:'蒜苔炒火腿',r:'蒜苔炒火腿猪肉'}
     ],
-    18:[
+    17:[
       {t:'bf',lbl:'🌅 煎蛋吐司',r:'煎蛋吐司'},
       {t:'lun',lbl:'猪肉酸菜饺子',r:'猪肉酸菜饺子'},
       {t:'din',lbl:'菠菜豆腐汤',r:'菠菜豆腐蛋花汤'}
     ],
-    19:[
+    18:[
       {t:'bf',lbl:'🌅 手抓饼',r:'手抓饼配排骨酱'},
       {t:'lun',lbl:'手打拉面',r:'手打拉面'},
-      {t:'din',lbl:'慢炖牛肉(剩)',r:'慢炖牛肉'}
+      {t:'din',lbl:'慢炖牛肉(周一剩)',r:'慢炖牛肉'}
     ],
-    20:[
+    19:[
       {t:'bf',lbl:'🌅 手抓饼',r:'手抓饼配排骨酱'},
       {t:'lun',lbl:'清冰箱炒饭',r:'清冰箱蛋炒饭'},
       {t:'din',lbl:'白菜豆腐锅',r:'白菜豆腐锅'}
@@ -1065,7 +1070,8 @@ function renderCalendar(){
       html+='<div class="cal-cell empty"></div>';
       return;
     }
-    const isToday = (todayMonth===3 && cell.d===todayDate);
+    // Dynamic: works regardless of when the page is opened
+    const isToday = (today.getFullYear()===2026 && today.getMonth()===3 && cell.d===todayDate);
     html+=`<div class="cal-cell${isToday?' today':''}"><div class="cal-n">${cell.d}</div>`;
     const meals=mealsByDate[cell.d]||[];
     meals.forEach(m=>{
@@ -1261,13 +1267,13 @@ function generateShopList(){
   if(mustBuy.length>0){
     html+=`<div class="shop-section">
       <div class="shop-sec-name">📋 需要购买（库存无）</div>
-      <div class="shop-items">${mustBuy.map((x,i)=>shopItem(x,'nb'+i)).join('')}</div>
+      <div class="shop-items">${mustBuy.map(x=>shopItem(x)).join('')}</div>
     </div>`;
   }
   if(runLow.length>0){
     html+=`<div class="shop-section">
       <div class="shop-sec-name">⚠️ 建议补货（库存偏少）</div>
-      <div class="shop-items">${runLow.map((x,i)=>shopItem(x,'rl'+i)).join('')}</div>
+      <div class="shop-items">${runLow.map(x=>shopItem(x)).join('')}</div>
     </div>`;
   }
 
@@ -1277,19 +1283,21 @@ function generateShopList(){
   if(coles.length>0){
     html+=`<div class="shop-section" style="margin-top:16px">
       <div class="shop-sec-name">🏪 Coles 优先</div>
-      <div class="shop-items">${coles.map((x,i)=>shopItem(x,'co'+i)).join('')}</div>
+      <div class="shop-items">${coles.map(x=>shopItem(x)).join('')}</div>
     </div>`;
   }
   if(chinese.length>0){
     html+=`<div class="shop-section">
       <div class="shop-sec-name">🏮 中式超市</div>
-      <div class="shop-items">${chinese.map((x,i)=>shopItem(x,'ch'+i)).join('')}</div>
+      <div class="shop-items">${chinese.map(x=>shopItem(x)).join('')}</div>
     </div>`;
   }
 
   shopEl.innerHTML=html;
 }
-function shopItem(x, id){
+function shopItem(x){
+  // Use item name as stable key so checked state persists across regenerates
+  const id = 'shop_' + x.name.replace(/[^a-z0-9\u4e00-\u9fa5]/gi,'_');
   const checked=shopChecked[id]?'checked':'';
   return `<div class="shop-item ${checked}" id="si-${id}" onclick="toggleShopItem('${id}')">
     <div class="shop-cb">${shopChecked[id]?'✓':''}</div>
