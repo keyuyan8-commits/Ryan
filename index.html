@@ -1,666 +1,747 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>我的食谱</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Ryan 生活助手</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0f0e0c;
-    --card: #1a1916;
-    --card2: #201e1b;
-    --accent: #e8a830;
-    --accent2: #c4763a;
-    --text: #f0ebe2;
-    --muted: #8a8070;
-    --border: #2e2b26;
-    --tag-bg: #2a2620;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Noto Sans SC', sans-serif;
-    min-height: 100vh;
-    padding: 0 0 60px;
-  }
-
-  /* Header */
-  .header {
-    background: linear-gradient(135deg, #1a1510 0%, #0f0e0c 60%);
-    border-bottom: 1px solid var(--border);
-    padding: 36px 24px 28px;
-    position: relative;
-    overflow: hidden;
-  }
-  .header::before {
-    content: '食';
-    position: absolute;
-    right: -10px;
-    top: -20px;
-    font-family: 'Noto Serif SC', serif;
-    font-size: 160px;
-    color: rgba(232,168,48,0.05);
-    line-height: 1;
-    pointer-events: none;
-  }
-  .header h1 {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--accent);
-    letter-spacing: 2px;
-  }
-  .header p {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 6px;
-    letter-spacing: 1px;
-  }
-
-  /* Category tabs */
-  .tabs {
-    display: flex;
-    gap: 8px;
-    padding: 16px 20px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    background: var(--bg);
-    z-index: 10;
-  }
-  .tabs::-webkit-scrollbar { display: none; }
-  .tab {
-    padding: 7px 16px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    white-space: nowrap;
-    border: 1px solid var(--border);
-    background: var(--card);
-    color: var(--muted);
-    transition: all 0.2s;
-  }
-  .tab.active, .tab:hover {
-    background: var(--accent);
-    color: #000;
-    border-color: var(--accent);
-  }
-
-  /* Recipe grid */
-  .grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1px;
-    background: var(--border);
-    margin-top: 1px;
-  }
-
-  /* Recipe card */
-  .recipe {
-    background: var(--card);
-    padding: 0;
-    cursor: pointer;
-    transition: background 0.15s;
-    display: none;
-  }
-  .recipe.visible { display: block; }
-  .recipe:hover { background: var(--card2); }
-
-  .recipe-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 20px 0;
-  }
-  .recipe-title {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .recipe-emoji { font-size: 22px; }
-  .recipe-meta {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-  .tag {
-    font-size: 11px;
-    padding: 3px 9px;
-    border-radius: 10px;
-    background: var(--tag-bg);
-    color: var(--muted);
-    border: 1px solid var(--border);
-  }
-  .tag.time { color: var(--accent); border-color: rgba(232,168,48,0.3); }
-  .chevron {
-    color: var(--muted);
-    font-size: 16px;
-    transition: transform 0.25s;
-  }
-  .recipe.open .chevron { transform: rotate(90deg); }
-
-  .recipe-summary {
-    padding: 8px 20px 16px;
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.5;
-  }
-
-  /* Expanded content */
-  .recipe-body {
-    display: none;
-    padding: 0 20px 24px;
-    border-top: 1px solid var(--border);
-  }
-  .recipe.open .recipe-body { display: block; }
-
-  .section-label {
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: var(--accent2);
-    text-transform: uppercase;
-    margin: 18px 0 10px;
-    font-weight: 500;
-  }
-
-  .ingredients {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 4px;
-  }
-  .ingredient {
-    font-size: 13px;
-    padding: 5px 12px;
-    border-radius: 6px;
-    background: var(--tag-bg);
-    border: 1px solid var(--border);
-    color: var(--text);
-  }
-  .ingredient span {
-    color: var(--muted);
-    font-size: 11px;
-    margin-left: 4px;
-  }
-
-  .steps { counter-reset: step; }
-  .step {
-    display: flex;
-    gap: 14px;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border);
-    align-items: flex-start;
-  }
-  .step:last-child { border-bottom: none; }
-  .step-num {
-    min-width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: rgba(232,168,48,0.15);
-    border: 1px solid rgba(232,168,48,0.3);
-    color: var(--accent);
-    font-size: 12px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 1px;
-  }
-  .step-text {
-    font-size: 14px;
-    line-height: 1.7;
-    color: var(--text);
-  }
-  .step-text em {
-    color: var(--accent);
-    font-style: normal;
-    font-weight: 500;
-  }
-
-  .tip {
-    margin-top: 14px;
-    padding: 12px 14px;
-    background: rgba(232,168,48,0.07);
-    border-left: 3px solid var(--accent);
-    border-radius: 0 6px 6px 0;
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.6;
-  }
-  .tip strong { color: var(--accent); }
-
-  .divider {
-    height: 1px;
-    background: var(--border);
-  }
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px;scroll-behavior:smooth}
+:root{
+  --bg:#faf6f0;--bg1:#fff9f3;--bg2:#f5ede1;--bg3:#ede0cf;
+  --line:#e8d9c4;--line2:#d9c5a8;
+  --text0:#2c1f0e;--text1:#4a3520;--text2:#7a6148;--text3:#a8906f;
+  --gold:#c08040;--gold-l:#e8a050;
+  --gold-faint:rgba(192,128,64,0.10);--gold-glow:rgba(192,128,64,0.18);
+  --red:#b85040;--red-faint:rgba(184,80,64,0.10);
+  --green:#4a7a50;--green-faint:rgba(74,122,80,0.10);
+  --blue:#3a6890;--blue-faint:rgba(58,104,144,0.10);
+  --purple:#7a5898;--purple-faint:rgba(122,88,152,0.10);
+  --orange:#c07030;--orange-faint:rgba(192,112,48,0.10);
+  --teal:#3a8888;--teal-faint:rgba(58,136,136,0.10);
+  --radius:14px;--radius-sm:9px;--trans:0.2s ease;
+  --shadow:0 4px 20px rgba(100,60,20,0.10);--shadow-lg:0 12px 40px rgba(100,60,20,0.15);
+}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:4px}
+body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text1);min-height:100vh;}
+.app{display:flex;min-height:100vh}
+.sidebar{width:230px;flex-shrink:0;background:var(--bg1);border-right:1px solid var(--line);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:50;transition:transform var(--trans);box-shadow:2px 0 12px rgba(100,60,20,0.06)}
+.sidebar-logo{padding:28px 24px 20px;border-bottom:1px solid var(--line);background:linear-gradient(160deg,#fff5ea,var(--bg1))}
+.logo-icon{font-size:28px;margin-bottom:6px}
+.logo-title{font-family:'Noto Serif SC',serif;font-size:19px;font-weight:700;color:var(--text0);line-height:1.2;letter-spacing:1px}
+.logo-sub{font-size:11px;color:var(--text3);margin-top:3px;letter-spacing:2px}
+.sidebar-nav{flex:1;padding:16px 10px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
+.nav-item{display:flex;align-items:center;gap:11px;padding:11px 14px;border-radius:10px;cursor:pointer;transition:all var(--trans);color:var(--text2);font-size:13.5px;font-weight:400;user-select:none;position:relative}
+.nav-item:hover{background:var(--bg2);color:var(--text0)}
+.nav-item.active{background:linear-gradient(135deg,var(--gold-faint),rgba(192,128,64,0.06));color:var(--gold);font-weight:600;border:1px solid rgba(192,128,64,0.25)}
+.nav-icon{font-size:17px;width:22px;text-align:center;flex-shrink:0}
+.sidebar-footer{padding:16px 20px 22px;border-top:1px solid var(--line);font-size:11px;color:var(--text3);letter-spacing:1px;line-height:1.7}
+.topbar{display:none;position:fixed;top:0;left:0;right:0;height:54px;background:var(--bg1);border-bottom:1px solid var(--line);z-index:60;align-items:center;padding:0 16px;gap:12px;box-shadow:0 2px 8px rgba(100,60,20,0.08)}
+.topbar-logo{display:flex;align-items:center;gap:8px;flex:1}
+.topbar-icon{font-size:20px}
+.topbar-title{font-family:'Noto Serif SC',serif;font-size:16px;font-weight:700;color:var(--text0)}
+.menu-btn{background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer;padding:4px;line-height:1}
+.overlay{display:none;position:fixed;inset:0;background:rgba(60,30,10,0.35);z-index:40;backdrop-filter:blur(2px)}
+.overlay.open{display:block}
+.main{margin-left:230px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.page{display:none;padding:36px 36px 64px;animation:fadeUp 0.3s ease}
+.page.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.page-header{margin-bottom:32px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.page-title{font-family:'Noto Serif SC',serif;font-size:34px;font-weight:700;color:var(--text0);line-height:1.1;letter-spacing:1px}
+.page-title span{color:var(--gold)}
+.page-desc{font-size:13px;color:var(--text3);margin-top:7px}
+.sec-label{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--text3);font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.sec-label::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--line),transparent)}
+.card{background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+/* meal table */
+.week-scroller{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.week-table{width:100%;border-collapse:separate;border-spacing:0;min-width:680px}
+.week-table th{background:var(--bg2);padding:14px 10px;text-align:center;font-size:11px;letter-spacing:2px;color:var(--text3);border-bottom:1px solid var(--line);font-weight:500}
+.week-table th.dh{font-family:'Noto Serif SC',serif;font-size:20px;font-weight:600;color:var(--text0);letter-spacing:0}
+.week-table th .wd{font-family:'Noto Sans SC',sans-serif;font-size:10px;letter-spacing:2px;color:var(--text3);display:block;margin-top:2px;font-weight:400}
+.week-table td{padding:11px 10px;vertical-align:top;border-bottom:1px solid var(--line);border-right:1px solid var(--line);background:var(--bg1);transition:background var(--trans);min-width:96px}
+.week-table td.row-label{background:var(--bg2);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);text-align:center;font-weight:600;width:52px;min-width:52px;vertical-align:middle}
+.week-table td:last-child{border-right:none}
+.week-table tr:last-child td{border-bottom:none}
+.week-table tbody tr:hover td:not(.row-label){background:#fffaf4}
+.mc{cursor:pointer}
+.mc:hover .mn{color:var(--gold);text-decoration:underline;text-decoration-color:var(--gold-l)}
+.mn{font-size:12.5px;font-weight:600;color:var(--text0);line-height:1.4;margin-bottom:3px;transition:color var(--trans)}
+.mnt{font-size:11px;color:var(--text3);line-height:1.4;margin-bottom:4px}
+.mbadge{display:inline-block;font-size:9px;padding:2px 7px;border-radius:20px;letter-spacing:1px;font-weight:600}
+.b-meat{background:var(--red-faint);color:var(--red);border:1px solid rgba(184,80,64,0.2)}
+.b-veg{background:var(--green-faint);color:var(--green);border:1px solid rgba(74,122,80,0.2)}
+.b-noodle{background:var(--orange-faint);color:var(--orange);border:1px solid rgba(192,112,48,0.2)}
+.b-quick{background:var(--blue-faint);color:var(--blue);border:1px solid rgba(58,104,144,0.2)}
+/* recipes */
+.recipe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+.rc{background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all 0.22s ease;box-shadow:var(--shadow)}
+.rc:hover{border-color:var(--gold-l);transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.rc-head{padding:18px 20px 14px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,#fffaf4,var(--bg1));display:flex;justify-content:space-between;align-items:flex-start}
+.rc-emoji{font-size:34px;line-height:1}
+.rc-name{font-family:'Noto Serif SC',serif;font-size:20px;font-weight:700;color:var(--text0);margin-bottom:5px;line-height:1.2}
+.rc-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.rc-meta span{font-size:10px;color:var(--text3)}
+.rc-body{padding:14px 20px 16px}
+.rc-preview{font-size:12px;color:var(--text2);line-height:1.8}
+/* modal */
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(60,30,10,0.55);z-index:200;justify-content:center;align-items:flex-start;padding:24px 16px;overflow-y:auto;backdrop-filter:blur(5px)}
+.modal-backdrop.open{display:flex}
+.modal{background:var(--bg1);border:1px solid var(--line);border-radius:18px;width:100%;max-width:620px;overflow:hidden;animation:modalIn 0.3s cubic-bezier(.34,1.5,.64,1);box-shadow:0 24px 80px rgba(60,30,10,0.2)}
+@keyframes modalIn{from{opacity:0;transform:scale(0.93)}to{opacity:1;transform:scale(1)}}
+.m-head{padding:26px 28px 20px;border-bottom:1px solid var(--line);background:linear-gradient(160deg,#fffaf3,var(--bg1));display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+.m-emoji{font-size:36px;margin-bottom:6px}
+.m-title{font-family:'Noto Serif SC',serif;font-size:28px;font-weight:700;color:var(--text0);line-height:1.2}
+.m-meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}
+.m-meta span{font-size:11px;color:var(--text3)}
+.m-close{background:var(--bg2);border:1px solid var(--line);color:var(--text2);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:15px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all var(--trans)}
+.m-close:hover{background:var(--bg3);color:var(--text0)}
+.m-body{padding:26px 28px}
+.m-sec{margin-bottom:24px}
+.m-sec:last-child{margin-bottom:0}
+.m-sec-title{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--line);font-weight:700}
+.ing-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.ing-row{display:flex;justify-content:space-between;padding:8px 10px;background:var(--bg);border-radius:5px;font-size:13px}
+.ing-row:nth-child(odd){background:var(--bg2)}
+.ing-name{color:var(--text1)}
+.ing-qty{color:var(--text3);font-family:'DM Mono',monospace;font-size:12px}
+.steps{list-style:none}
+.step{display:flex;gap:13px;padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;line-height:1.75;color:var(--text1)}
+.step:last-child{border-bottom:none}
+.snum{flex-shrink:0;width:27px;height:27px;background:linear-gradient(135deg,#ffecd8,#ffd4a8);border:1px solid var(--gold-l);color:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-top:1px}
+.step-txt{flex:1}
+.m-tip{background:linear-gradient(135deg,#fffaed,#fff3d8);border:1px solid rgba(192,128,64,0.25);border-left:3px solid var(--gold);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:13px 16px;font-size:13px;color:var(--text2);line-height:1.65}
+.m-tip strong{color:var(--gold);font-weight:600}
+/* calendar */
+.cal-wrap{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.cal-hdr{text-align:center;font-size:10px;letter-spacing:3px;color:var(--text3);text-transform:uppercase;padding:8px 0;font-weight:600}
+.cal-cell{background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius-sm);padding:10px;min-height:88px;box-shadow:0 2px 6px rgba(100,60,20,0.05)}
+.cal-cell.today{border-color:var(--gold);background:linear-gradient(160deg,#fffbf3,var(--bg1));box-shadow:0 2px 12px var(--gold-faint)}
+.cal-cell.today .cal-n{color:var(--gold)}
+.cal-cell.empty{background:transparent;border-color:transparent;box-shadow:none}
+.cal-n{font-family:'Noto Serif SC',serif;font-size:18px;font-weight:700;color:var(--text1);margin-bottom:5px;line-height:1}
+.cal-m{font-size:10px;color:var(--text2);line-height:1.5;padding:2px 6px;border-radius:4px;margin-bottom:2px;background:var(--bg2)}
+.cal-m.link{cursor:pointer;transition:background var(--trans)}
+.cal-m.link:hover{background:var(--bg3)}
+.cal-m.bf{border-left:2px solid var(--blue)}
+.cal-m.lun{border-left:2px solid var(--green)}
+.cal-m.din{border-left:2px solid var(--gold)}
+/* expense */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat-card{background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);transition:all var(--trans)}
+.stat-card:hover{box-shadow:var(--shadow-lg);border-color:var(--line2)}
+.stat-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-bottom:7px;font-weight:600}
+.stat-val{font-family:'Noto Serif SC',serif;font-size:26px;font-weight:700;line-height:1;margin-bottom:4px}
+.stat-sub{font-size:11px;color:var(--text3)}
+.c-gold{color:var(--gold)}.c-green{color:var(--green)}.c-purple{color:var(--purple)}
+.c-blue{color:var(--blue)}.c-red{color:var(--red)}.c-orange{color:var(--orange)}.c-teal{color:var(--teal)}
+.cat-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.ctab{padding:7px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--text2);transition:all var(--trans);font-family:'Noto Sans SC',sans-serif}
+.ctab:hover{border-color:var(--line2);color:var(--text0);background:var(--bg2)}
+.ctab.active{background:var(--gold-faint);border-color:rgba(192,128,64,0.35);color:var(--gold);font-weight:600}
+.exp-controls{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.btn-add{display:flex;align-items:center;gap:7px;padding:9px 18px;background:linear-gradient(135deg,#fff3e0,#ffe8c0);border:1px solid var(--gold-l);color:var(--gold);border-radius:var(--radius-sm);font-family:'Noto Sans SC',sans-serif;font-size:13px;cursor:pointer;transition:all var(--trans);font-weight:600;box-shadow:0 2px 8px var(--gold-faint)}
+.btn-add:hover{background:linear-gradient(135deg,#ffe8c0,#ffd89a)}
+.add-panel{display:none;background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:18px}
+.add-panel.open{display:block}
+.fg{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:12px;align-items:end}
+.ff label{display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:600}
+.ff input,.ff select{width:100%;background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius-sm);padding:9px 13px;font-family:'Noto Sans SC',sans-serif;font-size:13px;color:var(--text0);outline:none;transition:border-color var(--trans)}
+.ff input:focus,.ff select:focus{border-color:var(--gold-l)}
+.btn-sub{padding:10px 22px;background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#fff;border:none;border-radius:var(--radius-sm);font-family:'Noto Sans SC',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:opacity var(--trans);white-space:nowrap}
+.btn-sub:hover{opacity:.88}
+.exp-list{display:flex;flex-direction:column;gap:2px}
+.exp-div{padding:10px 16px 4px;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;gap:10px;font-weight:600}
+.exp-div::after{content:'';flex:1;height:1px;background:var(--line)}
+.exp-row{display:grid;grid-template-columns:1fr auto auto auto;gap:14px;align-items:center;padding:12px 16px;background:var(--bg1);border-radius:var(--radius-sm);border:1px solid transparent;transition:all var(--trans)}
+.exp-row:hover{background:var(--bg2);border-color:var(--line)}
+.exp-name{font-size:13.5px;color:var(--text1)}
+.exp-note{font-size:11px;color:var(--text3);margin-top:2px}
+.exp-date{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
+.exp-amt{font-family:'DM Mono',monospace;font-size:14px;text-align:right;white-space:nowrap}
+.del-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:15px;padding:2px 4px;border-radius:4px;transition:color var(--trans);line-height:1}
+.del-btn:hover{color:var(--red)}
+.subtotal-row{text-align:right;padding:5px 16px 2px;font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
+/* stock */
+.stock-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}
+.sc{background:var(--bg1);border:1px solid var(--line);border-radius:var(--radius-sm);padding:13px 15px;transition:all var(--trans)}
+.sc:hover{border-color:var(--line2);box-shadow:var(--shadow)}
+.sdot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:7px}
+.dot-h{background:#5aaa65;box-shadow:0 0 5px rgba(90,170,100,0.4)}
+.dot-m{background:var(--gold);box-shadow:0 0 5px rgba(192,128,64,0.3)}
+.dot-l{background:var(--red);box-shadow:0 0 5px rgba(184,80,64,0.4)}
+.sn{font-size:13px;color:var(--text0);margin-bottom:4px;font-weight:500}
+.sq{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
+/* mobile */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .topbar{display:flex}
+  .main{margin-left:0;padding-top:54px}
+  .page{padding:20px 14px 52px}
+  .page-title{font-size:26px}
+  .stats-row{grid-template-columns:1fr 1fr;gap:8px}
+  .stat-card{padding:13px 14px}
+  .stat-val{font-size:20px}
+  .fg{grid-template-columns:1fr 1fr;gap:10px}
+  .fg .btn-sub{grid-column:1/-1;width:100%;margin-top:4px}
+  .recipe-grid{grid-template-columns:1fr}
+  .cal-wrap{gap:4px}
+  .cal-cell{padding:6px;min-height:70px}
+  .cal-n{font-size:14px}
+  .cal-m{font-size:9px;padding:2px 4px}
+  .exp-row{grid-template-columns:1fr auto auto;gap:8px}
+  .exp-date{display:none}
+  .m-head{padding:18px 18px 14px}
+  .m-title{font-size:22px}
+  .m-body{padding:18px}
+  .ing-grid{grid-template-columns:1fr}
+  .week-table{font-size:11px}
+  .week-table td{padding:8px 6px;min-width:80px}
+}
+@media(max-width:480px){
+  .stats-row{grid-template-columns:1fr}
+  .ctab{padding:6px 10px;font-size:11px}
+}
 </style>
 </head>
 <body>
-
-<div class="header">
-  <h1>🍳 我的食谱</h1>
-  <p>简单 · 健康 · 肠胃友好</p>
+ 
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🏠</div>
+    <div class="logo-title">Ryan 生活助手</div>
+    <div class="logo-sub">My Life · 我的生活</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-item active" onclick="switchPage('plan',this)"><span class="nav-icon">📅</span> 饮食计划</div>
+    <div class="nav-item" onclick="switchPage('calendar',this)"><span class="nav-icon">🗓</span> 日历视图</div>
+    <div class="nav-item" onclick="switchPage('recipes',this)"><span class="nav-icon">📖</span> 菜谱详情</div>
+    <div class="nav-item" onclick="switchPage('expense',this)"><span class="nav-icon">💰</span> 账单记录</div>
+    <div class="nav-item" onclick="switchPage('stock',this)"><span class="nav-icon">🥬</span> 食材库存</div>
+  </nav>
+  <div class="sidebar-footer">
+    <div>Ryan · Melbourne 🇦🇺</div>
+    <div id="sidebarDate" style="margin-top:3px"></div>
+  </div>
+</aside>
+ 
+<div class="topbar">
+  <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+  <div class="topbar-logo">
+    <div class="topbar-icon">🏠</div>
+    <div class="topbar-title">Ryan 生活助手</div>
+  </div>
 </div>
-
-<div class="tabs">
-  <div class="tab active" onclick="filter('all')">全部</div>
-  <div class="tab" onclick="filter('主食')">主食/面</div>
-  <div class="tab" onclick="filter('牛肉')">牛肉菜</div>
-  <div class="tab" onclick="filter('蔬菜')">蔬菜</div>
-  <div class="tab" onclick="filter('汤')">汤</div>
-  <div class="tab" onclick="filter('早餐')">早餐</div>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+ 
+<main class="main">
+ 
+<!-- ══ 饮食计划 ══ -->
+<div class="page active" id="page-plan">
+  <div class="page-header">
+    <div class="page-title">下周<span>饮食</span>规划</div>
+    <div class="page-desc">4月14日—4月20日 · 所有餐名均可点击 🔗 跳转查看详细菜谱</div>
+  </div>
+  <div class="sec-label">三餐总览</div>
+  <div class="card" style="margin-bottom:24px">
+    <div class="week-scroller">
+      <table class="week-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th><span class="dh">14<span class="wd">周一</span></span></th>
+            <th><span class="dh">15<span class="wd">周二</span></span></th>
+            <th><span class="dh">16<span class="wd">周三</span></span></th>
+            <th><span class="dh">17<span class="wd">周四</span></span></th>
+            <th><span class="dh">18<span class="wd">周五</span></span></th>
+            <th><span class="dh">19<span class="wd">周六</span></span></th>
+            <th><span class="dh">20<span class="wd">周日</span></span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-label">早</td>
+            <td class="mc" onclick="jumpToRecipe('燕麦粥')"><div class="mn">燕麦粥 🔗</div><div class="mnt">蓝莓＋牛奶</div><span class="mbadge b-veg">素食</span></td>
+            <td class="mc" onclick="jumpToRecipe('鸡蛋饼')"><div class="mn">鸡蛋饼 🔗</div><div class="mnt">酸奶＋苹果</div><span class="mbadge b-quick">快手</span></td>
+            <td class="mc" onclick="jumpToRecipe('燕麦粥')"><div class="mn">燕麦粥 🔗</div><div class="mnt">蓝莓＋煮蛋</div><span class="mbadge b-veg">素食</span></td>
+            <td class="mc" onclick="jumpToRecipe('燕麦粥')"><div class="mn">牛奶燕麦 🔗</div><div class="mnt">苹果</div><span class="mbadge b-quick">快手</span></td>
+            <td class="mc" onclick="jumpToRecipe('煎蛋吐司')"><div class="mn">煎蛋吐司 🔗</div><div class="mnt">牛奶</div><span class="mbadge b-quick">快手</span></td>
+            <td class="mc" onclick="jumpToRecipe('手抓饼配排骨酱')"><div class="mn">手抓饼 🔗</div><div class="mnt">鸡蛋＋排骨酱</div><span class="mbadge b-meat">荤食</span></td>
+            <td class="mc" onclick="jumpToRecipe('手抓饼配排骨酱')"><div class="mn">手抓饼 🔗</div><div class="mnt">火腿肠＋排骨酱</div><span class="mbadge b-meat">荤食</span></td>
+          </tr>
+          <tr>
+            <td class="row-label">午</td>
+            <td class="mc" onclick="jumpToRecipe('酸菜牛肉面')"><div class="mn">酸菜牛肉面 🔗</div><div class="mnt">＋蒜苔</div><span class="mbadge b-noodle">面食</span></td>
+            <td class="mc" onclick="jumpToRecipe('猪肉酸菜饺子')"><div class="mn">猪肉酸菜饺子 🔗</div><div class="mnt">番茄蛋汤</div><span class="mbadge b-meat">荤食</span></td>
+            <td class="mc" onclick="jumpToRecipe('手打拉面')"><div class="mn">手打拉面 🔗</div><div class="mnt">胡萝卜＋菠菜</div><span class="mbadge b-noodle">面食</span></td>
+            <td class="mc" onclick="jumpToRecipe('酸菜牛肉面')"><div class="mn">酸菜牛肉面 🔗</div><div class="mnt">蒜苔炒蛋</div><span class="mbadge b-noodle">面食</span></td>
+            <td class="mc" onclick="jumpToRecipe('猪肉酸菜饺子')"><div class="mn">猪肉酸菜饺子 🔗</div><div class="mnt">白菜汤</div><span class="mbadge b-meat">荤食</span></td>
+            <td class="mc" onclick="jumpToRecipe('手打拉面')"><div class="mn">手打拉面 🔗</div><div class="mnt">火腿肉＋蘑菇</div><span class="mbadge b-noodle">面食</span></td>
+            <td class="mc" onclick="jumpToRecipe('清冰箱蛋炒饭')"><div class="mn">清冰箱炒饭 🔗</div><div class="mnt">鸡蛋＋剩菜</div><span class="mbadge b-quick">快手</span></td>
+          </tr>
+          <tr>
+            <td class="row-label">晚</td>
+            <td class="mc" onclick="jumpToRecipe('慢炖牛肉')"><div class="mn">慢炖牛肉 🔗</div><div class="mnt">胡萝卜土豆芹菜</div><span class="mbadge b-meat">荤食</span></td>
+            <td class="mc" onclick="jumpToRecipe('麻婆豆腐')"><div class="mn">麻婆豆腐 🔗</div><div class="mnt">豆腐＋火腿丁</div><span class="mbadge b-veg">素食</span></td>
+            <td class="mc" onclick="jumpToRecipe('牛肉烤饭')"><div class="mn">牛肉烤饭 🔗</div><div class="mnt">烤肉块＋大白菜</div><span class="mbadge b-meat">荤食</span></td>
+            <td class="mc" onclick="jumpToRecipe('蒜苔炒火腿猪肉')"><div class="mn">蒜苔炒火腿 🔗</div><div class="mnt">蒸蛋＋白米饭</div><span class="mbadge b-meat">荤食</span></td>
+            <td class="mc" onclick="jumpToRecipe('菠菜豆腐蛋花汤')"><div class="mn">菠菜豆腐汤 🔗</div><div class="mnt">蘑菇炒蛋</div><span class="mbadge b-veg">素食</span></td>
+            <td class="mc" onclick="jumpToRecipe('慢炖牛肉')"><div class="mn">慢炖牛肉 🔗</div><div class="mnt">周一剩菜加热</div><span class="mbadge b-meat">荤食</span></td>
+            <td class="mc" onclick="jumpToRecipe('白菜豆腐锅')"><div class="mn">白菜豆腐锅 🔗</div><div class="mnt">白米饭</div><span class="mbadge b-veg">素食</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div style="background:linear-gradient(135deg,#fffbf0,#fff5e0);border:1px solid rgba(192,128,64,0.2);border-left:3px solid var(--gold);border-radius:0 var(--radius) var(--radius) 0;padding:16px 20px;font-size:13px;color:var(--text2);line-height:1.9">
+    💡 <strong style="color:var(--gold)">提示：</strong>表格里<strong style="color:var(--text1)">所有餐名</strong>均可点击直接跳转查看详细菜谱和单人份做法。慢炖牛肉建议周一下午提前炖，周六直接加热即可。
+  </div>
 </div>
-
-<div class="grid" id="grid">
-
-  <!-- 番茄牛肉炖 -->
-  <div class="recipe visible" data-cat="牛肉" onclick="toggle(this)">
-    <div class="recipe-header">
-      <div class="recipe-title"><span class="recipe-emoji">🥩</span>番茄牛肉炖</div>
-      <div class="recipe-meta"><span class="tag time">⏱ 30分钟</span><span class="chevron">›</span></div>
+ 
+<!-- ══ 日历 ══ -->
+<div class="page" id="page-calendar">
+  <div class="page-header">
+    <div class="page-title">日历<span>视图</span></div>
+    <div class="page-desc">2026年4月 · 点击任意餐名跳转菜谱</div>
+  </div>
+  <div class="cal-wrap" style="margin-bottom:8px">
+    <div class="cal-hdr">周六</div><div class="cal-hdr">周日</div>
+    <div class="cal-hdr">周一</div><div class="cal-hdr">周二</div>
+    <div class="cal-hdr">周三</div><div class="cal-hdr">周四</div>
+    <div class="cal-hdr">周五</div>
+  </div>
+  <div class="cal-wrap">
+    <div class="cal-cell today">
+      <div class="cal-n">12</div>
+      <div class="cal-m bf">🛒 Coles到货</div>
+      <div class="cal-m lun">🛒 中式超市</div>
     </div>
-    <div class="recipe-summary">下饭神菜，牛肉软烂，汤汁拌饭绝了</div>
-    <div class="recipe-body">
-      <div class="section-label">食材</div>
-      <div class="ingredients">
-        <div class="ingredient">牛肉<span>300g</span></div>
-        <div class="ingredient">番茄<span>2个</span></div>
-        <div class="ingredient">姜<span>3片</span></div>
-        <div class="ingredient">生抽<span>1勺</span></div>
-        <div class="ingredient">淀粉<span>少许</span></div>
-        <div class="ingredient">盐<span>适量</span></div>
-      </div>
-      <div class="section-label">步骤</div>
-      <div class="steps">
-        <div class="step"><div class="step-num">1</div><div class="step-text">牛肉切薄片，加<em>生抽+淀粉+少许盐</em>抓匀，腌10分钟</div></div>
-        <div class="step"><div class="step-num">2</div><div class="step-text">番茄切块，锅热后加油，放姜片爆香</div></div>
-        <div class="step"><div class="step-num">3</div><div class="step-text">放番茄翻炒出汁，加<em>半碗水</em>，大火煮开</div></div>
-        <div class="step"><div class="step-num">4</div><div class="step-text">放入腌好的牛肉，<em>用筷子快速拨散</em>，变色后加盐调味，2分钟出锅</div></div>
-      </div>
-      <div class="tip"><strong>💡 技巧：</strong>牛肉变色就可以出锅，炒太久会变老；番茄多放汤汁更多更好喝</div>
+    <div class="cal-cell">
+      <div class="cal-n">13</div>
+      <div class="cal-m bf">整理食材</div>
+      <div class="cal-m din">备餐日</div>
+    </div>
+    <div class="cal-cell">
+      <div class="cal-n">14</div>
+      <div class="cal-m bf link" onclick="jumpToRecipe('燕麦粥')">🌅 燕麦粥</div>
+      <div class="cal-m lun link" onclick="jumpToRecipe('酸菜牛肉面')">酸菜牛肉面</div>
+      <div class="cal-m din link" onclick="jumpToRecipe('慢炖牛肉')">慢炖牛肉</div>
+    </div>
+    <div class="cal-cell">
+      <div class="cal-n">15</div>
+      <div class="cal-m bf link" onclick="jumpToRecipe('鸡蛋饼')">🌅 鸡蛋饼</div>
+      <div class="cal-m lun link" onclick="jumpToRecipe('猪肉酸菜饺子')">猪肉酸菜饺子</div>
+      <div class="cal-m din link" onclick="jumpToRecipe('麻婆豆腐')">麻婆豆腐</div>
+    </div>
+    <div class="cal-cell">
+      <div class="cal-n">16</div>
+      <div class="cal-m bf link" onclick="jumpToRecipe('燕麦粥')">🌅 燕麦粥</div>
+      <div class="cal-m lun link" onclick="jumpToRecipe('手打拉面')">手打拉面</div>
+      <div class="cal-m din link" onclick="jumpToRecipe('牛肉烤饭')">牛肉烤饭</div>
+    </div>
+    <div class="cal-cell">
+      <div class="cal-n">17</div>
+      <div class="cal-m bf link" onclick="jumpToRecipe('燕麦粥')">🌅 牛奶燕麦</div>
+      <div class="cal-m lun link" onclick="jumpToRecipe('酸菜牛肉面')">酸菜牛肉面</div>
+      <div class="cal-m din link" onclick="jumpToRecipe('蒜苔炒火腿猪肉')">蒜苔炒火腿</div>
+    </div>
+    <div class="cal-cell">
+      <div class="cal-n">18</div>
+      <div class="cal-m bf link" onclick="jumpToRecipe('煎蛋吐司')">🌅 煎蛋吐司</div>
+      <div class="cal-m lun link" onclick="jumpToRecipe('猪肉酸菜饺子')">猪肉酸菜饺子</div>
+      <div class="cal-m din link" onclick="jumpToRecipe('菠菜豆腐蛋花汤')">菠菜豆腐汤</div>
     </div>
   </div>
-
-  <!-- 牛肉炒菠菜 -->
-  <div class="recipe visible" data-cat="牛肉" onclick="toggle(this)">
-    <div class="recipe-header">
-      <div class="recipe-title"><span class="recipe-emoji">🥬</span>牛肉炒菠菜</div>
-      <div class="recipe-meta"><span class="tag time">⏱ 15分钟</span><span class="chevron">›</span></div>
+  <div class="cal-wrap" style="margin-top:8px">
+    <div class="cal-cell">
+      <div class="cal-n">19</div>
+      <div class="cal-m bf link" onclick="jumpToRecipe('手抓饼配排骨酱')">🌅 手抓饼+排骨酱</div>
+      <div class="cal-m lun link" onclick="jumpToRecipe('手打拉面')">手打拉面</div>
+      <div class="cal-m din link" onclick="jumpToRecipe('慢炖牛肉')">慢炖牛肉(剩)</div>
     </div>
-    <div class="recipe-summary">高蛋白低脂，健身必备，超级简单</div>
-    <div class="recipe-body">
-      <div class="section-label">食材</div>
-      <div class="ingredients">
-        <div class="ingredient">牛肉<span>200g</span></div>
-        <div class="ingredient">菠菜<span>1把</span></div>
-        <div class="ingredient">姜<span>2片</span></div>
-        <div class="ingredient">生抽<span>1勺</span></div>
-        <div class="ingredient">淀粉<span>少许</span></div>
-        <div class="ingredient">盐<span>适量</span></div>
+    <div class="cal-cell">
+      <div class="cal-n">20</div>
+      <div class="cal-m bf link" onclick="jumpToRecipe('手抓饼配排骨酱')">🌅 手抓饼+排骨酱</div>
+      <div class="cal-m lun link" onclick="jumpToRecipe('清冰箱蛋炒饭')">清冰箱炒饭</div>
+      <div class="cal-m din link" onclick="jumpToRecipe('白菜豆腐锅')">白菜豆腐锅</div>
+    </div>
+    <div class="cal-cell empty"></div><div class="cal-cell empty"></div>
+    <div class="cal-cell empty"></div><div class="cal-cell empty"></div>
+    <div class="cal-cell empty"></div>
+  </div>
+  <div style="display:flex;gap:18px;margin-top:14px;font-size:11px;color:var(--text3)">
+    <span><span style="display:inline-block;width:12px;height:3px;background:var(--blue);border-radius:2px;vertical-align:middle;margin-right:6px"></span>早餐</span>
+    <span><span style="display:inline-block;width:12px;height:3px;background:var(--green);border-radius:2px;vertical-align:middle;margin-right:6px"></span>午餐</span>
+    <span><span style="display:inline-block;width:12px;height:3px;background:var(--gold);border-radius:2px;vertical-align:middle;margin-right:6px"></span>晚餐</span>
+    <span>· 点击任意餐名跳转菜谱</span>
+  </div>
+</div>
+ 
+<!-- ══ 菜谱 ══ -->
+<div class="page" id="page-recipes">
+  <div class="page-header">
+    <div class="page-title">本周<span>菜谱</span></div>
+    <div class="page-desc">全部单人份 · 点击卡片查看完整步骤和技巧</div>
+  </div>
+  <div class="recipe-grid" id="recipeGrid"></div>
+</div>
+ 
+<!-- ══ 账单 ══ -->
+<div class="page" id="page-expense">
+  <div class="page-header">
+    <div class="page-title">账单<span>记录</span></div>
+    <div class="page-desc">食材采购 · AI订阅 · 娱乐 · 餐饮 · 水电 · 交通</div>
+  </div>
+  <div class="stats-row" id="statsRow"></div>
+  <div class="sec-label">分类筛选</div>
+  <div class="cat-tabs" id="catTabs"></div>
+  <div class="exp-controls">
+    <button class="btn-add" onclick="toggleAddForm()">＋ 添加记录</button>
+  </div>
+  <div class="add-panel" id="addPanel">
+    <div class="fg">
+      <div class="ff"><label>项目名称</label><input type="text" id="fi-name" placeholder="如：Claude Pro 订阅"></div>
+      <div class="ff"><label>金额 ($)</label><input type="number" id="fi-amount" placeholder="0.00" step="0.01" min="0"></div>
+      <div class="ff">
+        <label>分类</label>
+        <select id="fi-cat">
+          <option value="groceries">🛒 食材采购</option>
+          <option value="ai">🤖 AI订阅</option>
+          <option value="entertainment">🎮 娱乐</option>
+          <option value="dining">🍜 餐饮外出</option>
+          <option value="bills">💡 账单水电</option>
+          <option value="transport">🚗 交通</option>
+          <option value="other">📦 其他</option>
+        </select>
       </div>
-      <div class="section-label">步骤</div>
-      <div class="steps">
-        <div class="step"><div class="step-num">1</div><div class="step-text">牛肉切薄片，加生抽+淀粉腌5分钟</div></div>
-        <div class="step"><div class="step-num">2</div><div class="step-text">菠菜洗净切段，锅热油，姜片爆香</div></div>
-        <div class="step"><div class="step-num">3</div><div class="step-text">先下牛肉大火翻炒，变色后推到锅边</div></div>
-        <div class="step"><div class="step-num">4</div><div class="step-text">下菠菜翻炒30秒，与牛肉混合，加盐出锅</div></div>
-      </div>
-      <div class="tip"><strong>💡 技巧：</strong>菠菜容易出水，大火快炒，不要盖锅盖</div>
+      <div class="ff"><label>备注（可选）</label><input type="text" id="fi-note" placeholder="如：Coles"></div>
+      <button class="btn-sub" onclick="addExpense()">添加</button>
     </div>
   </div>
-
-  <!-- 白菜炖牛肉 -->
-  <div class="recipe visible" data-cat="牛肉" onclick="toggle(this)">
-    <div class="recipe-header">
-      <div class="recipe-title"><span class="recipe-emoji">🥩</span>白菜炖牛肉</div>
-      <div class="recipe-meta"><span class="tag time">⏱ 35分钟</span><span class="chevron">›</span></div>
-    </div>
-    <div class="recipe-summary">暖胃又好消化，汤鲜味美</div>
-    <div class="recipe-body">
-      <div class="section-label">食材</div>
-      <div class="ingredients">
-        <div class="ingredient">牛肉<span>300g</span></div>
-        <div class="ingredient">白菜<span>半颗</span></div>
-        <div class="ingredient">姜<span>3片</span></div>
-        <div class="ingredient">生抽<span>1勺</span></div>
-        <div class="ingredient">盐<span>适量</span></div>
-      </div>
-      <div class="section-label">步骤</div>
-      <div class="steps">
-        <div class="step"><div class="step-num">1</div><div class="step-text">牛肉切块，冷水下锅焯水，水开后撇去浮沫，捞出备用</div></div>
-        <div class="step"><div class="step-num">2</div><div class="step-text">锅中加油，姜片爆香，放牛肉翻炒1分钟</div></div>
-        <div class="step"><div class="step-num">3</div><div class="step-text">加<em>足量热水</em>，生抽，大火烧开后转小火炖<em>20分钟</em></div></div>
-        <div class="step"><div class="step-num">4</div><div class="step-text">放白菜，继续炖5分钟至软，加盐出锅</div></div>
-      </div>
-      <div class="tip"><strong>💡 技巧：</strong>焯水步骤不能省，去腥味；加热水炖汤更白更鲜</div>
-    </div>
+  <div class="exp-list" id="expList"></div>
+</div>
+ 
+<!-- ══ 库存 ══ -->
+<div class="page" id="page-stock">
+  <div class="page-header">
+    <div class="page-title">食材<span>库存</span></div>
+    <div class="page-desc">冰箱与储物柜当前状态</div>
   </div>
-
-  <!-- 胡萝卜炖牛肉 -->
-  <div class="recipe visible" data-cat="牛肉" onclick="toggle(this)">
-    <div class="recipe-header">
-      <div class="recipe-title"><span class="recipe-emoji">🥕</span>胡萝卜炖牛肉</div>
-      <div class="recipe-meta"><span class="tag time">⏱ 40分钟</span><span class="chevron">›</span></div>
-    </div>
-    <div class="recipe-summary">护胃暖身，牛肉软烂入味</div>
-    <div class="recipe-body">
-      <div class="section-label">食材</div>
-      <div class="ingredients">
-        <div class="ingredient">牛肉<span>300g</span></div>
-        <div class="ingredient">胡萝卜<span>1根</span></div>
-        <div class="ingredient">土豆<span>1个（可选）</span></div>
-        <div class="ingredient">姜<span>3片</span></div>
-        <div class="ingredient">生抽<span>2勺</span></div>
-        <div class="ingredient">盐<span>适量</span></div>
-      </div>
-      <div class="section-label">步骤</div>
-      <div class="steps">
-        <div class="step"><div class="step-num">1</div><div class="step-text">牛肉切块焯水，胡萝卜/土豆切滚刀块</div></div>
-        <div class="step"><div class="step-num">2</div><div class="step-text">热锅加油，姜片爆香，下牛肉翻炒上色</div></div>
-        <div class="step"><div class="step-num">3</div><div class="step-text">加热水没过食材，生抽，大火烧开转小火炖<em>20分钟</em></div></div>
-        <div class="step"><div class="step-num">4</div><div class="step-text">放胡萝卜和土豆，继续炖10分钟至熟软，加盐出锅</div></div>
-      </div>
-      <div class="tip"><strong>💡 技巧：</strong>喜欢更软烂的口感可以再多炖10分钟，胡萝卜炖久了更甜</div>
-    </div>
+  <div style="display:flex;gap:18px;margin-bottom:18px;font-size:12px;color:var(--text2)">
+    <span><span class="sdot dot-h" style="margin-right:6px"></span>充足</span>
+    <span><span class="sdot dot-m" style="margin-right:6px"></span>适量</span>
+    <span><span class="sdot dot-l" style="margin-right:6px"></span>偏少</span>
   </div>
-
-  <!-- 蒜苔炒牛肉 -->
-  <div class="recipe visible" data-cat="牛肉" onclick="toggle(this)">
-    <div class="recipe-header">
-      <div class="recipe-title"><span class="recipe-emoji">🌿</span>蒜苔炒牛肉</div>
-      <div class="recipe-meta"><span class="tag time">⏱ 15分钟</span><span class="chevron">›</span></div>
+  <div class="stock-grid" id="stockGrid"></div>
+</div>
+ 
+</main>
+ 
+<!-- ══ MODAL ══ -->
+<div class="modal-backdrop" id="recipeModal" onclick="modalBgClick(event)">
+  <div class="modal" id="modalBox">
+    <div class="m-head">
+      <div>
+        <div id="m-emoji" class="m-emoji"></div>
+        <div class="m-title" id="m-title"></div>
+        <div class="m-meta" id="m-meta"></div>
+      </div>
+      <button class="m-close" onclick="closeModal()">✕</button>
     </div>
-    <div class="recipe-summary">香气十足，超级下饭，周末最爱</div>
-    <div class="recipe-body">
-      <div class="section-label">食材</div>
-      <div class="ingredients">
-        <div class="ingredient">牛肉<span>200g</span></div>
-        <div class="ingredient">蒜苔<span>1把</span></div>
-        <div class="ingredient">姜<span>2片</span></div>
-        <div class="ingredient">生抽<span>1勺</span></div>
-        <div class="ingredient">淀粉<span>少许</span></div>
-        <div class="ingredient">盐<span>适量</span></div>
-      </div>
-      <div class="section-label">步骤</div>
-      <div class="steps">
-        <div class="step"><div class="step-num">1</div><div class="step-text">牛肉切薄片，加生抽+淀粉腌10分钟；蒜苔切段</div></div>
-        <div class="step"><div class="step-num">2</div><div class="step-text">热锅热油，先下蒜苔大火翻炒<em>2分钟</em>，炒到有点焦边，盛出</div></div>
-        <div class="step"><div class="step-num">3</div><div class="step-text">同锅下牛肉，大火炒至变色</div></div>
-        <div class="step"><div class="step-num">4</div><div class="step-text">倒入蒜苔，加盐翻炒均匀，出锅</div></div>
-      </div>
-      <div class="tip"><strong>💡 技巧：</strong>蒜苔要先炒，炒出焦香味更好吃；胃不好的话蒜苔炒软一点</div>
-    </div>
-  </div>
-
-  <!-- 芹菜炒牛肉 -->
-  <div class="recipe visible" data-cat="牛肉" onclick="toggle(this)">
-    <div class="recipe-header">
-      <div class="recipe-title"><span class="recipe-emoji">🌱</span>芹菜炒牛肉</div>
-      <div class="recipe-meta"><span class="tag time">⏱ 15分钟</span><span class="chevron">›</span></div>
-    </div>
-    <div class="recipe-summary">清香爽口，补铁高蛋白</div>
-    <div class="recipe-body">
-      <div class="section-label">食材</div>
-      <div class="ingredients">
-        <div class="ingredient">牛肉<span>200g</span></div>
-        <div class="ingredient">芹菜<span>2根</span></div>
-        <div class="ingredient">姜<span>2片</span></div>
-        <div class="ingredient">生抽<span>1勺</span></div>
-        <div class="ingredient">淀粉<span>少许</span></div>
-        <div class="ingredient">盐<span>适量</span></div>
-      </div>
-      <div class="section-label">步骤</div>
-      <div class="steps">
-        <div class="step"><div class="step-num">1</div><div class="step-text">牛肉切薄片腌制；芹菜去叶切斜段</div></div>
-        <div class="step"><div class="step-num">2</div><div class="step-text">热锅热油，姜片爆香，下牛肉大火炒至变色盛出</div></div>
-        <div class="step"><div class="step-num">3</div><div class="step-text">同锅下芹菜，大火翻炒<em>1-2分钟</em></div></div>
-        <div class="step"><div class="step-num">4</div><div class="step-text">倒入牛肉，加盐、生抽翻炒均匀出锅</div></div>
-      </div>
-      <div class="tip"><strong>💡 技巧：</strong>芹菜不要炒太久，保持脆感；胃不好的话可以先焯水30秒再炒</div>
-    </div>
-  </div>
-
-  <!-- 蚝油生菜 -->
-  <div class="recipe visible" data-cat="蔬菜" onclick="toggle(this)">
-    <div class="recipe-header">
-      <div class="recipe-title"><span class="recipe-emoji">🥗</span>蚝油生菜</div>
-      <div class="recipe-meta"><span class="tag time">⏱ 8分钟</span><span class="chevron">›</span></div>
-    </div>
-    <div class="recipe-summary">最简单的一道菜，5分钟搞定，鲜嫩好吃</div>
-    <div class="recipe-body">
-      <div class="section-label">食材</div>
-      <div class="ingredients">
-        <div class="ingredient">生菜<span>1颗</span></div>
-        <div class="ingredient">蚝油<span>2勺</span></div>
-        <div class="ingredient">生抽<span>1勺</span></div>
-        <div class="ingredient">蒜<span>2瓣（可选）</span></div>
-        <div class="ingredient">香油<span>几滴</span></div>
-      </div>
-      <div class="section-label">步骤</div>
-      <div class="steps">
-        <div class="step"><div class="step-num">1</div><div class="step-text">生菜洗净掰开，锅中烧水加盐，水开后放生菜<em>焯30秒</em>捞出摆盘</div></div>
-        <div class="step"><div class="step-num">2</div><div class="step-text">调酱汁：蚝油+生抽+少许热水混合</div></div>
-        <div class="step"><div class="step-num">3</div><div class="step-text">小锅热油，蒜末爆香（没有蒜直接用热油），浇在生菜上</div></div>
-        <div class="step"><div class="step-num">4</div><div class="step-text">淋上酱汁+几滴香油，完成</div></div>
-      </div>
-      <div class="tip"><strong>💡 技巧：</strong>生菜焯水时间不能超过1分钟，太软就不好吃了</div>
-    </div>
-  </div>
-
-  <!-- 豆腐白菜汤 -->
-  <div class="recipe visible" data-cat="汤" onclick="toggle(this)">
-    <div class="recipe-header">
-      <div class="recipe-title"><span class="recipe-emoji">🍲</span>豆腐白菜汤</div>
-      <div class="recipe-meta"><span class="tag time">⏱ 15分钟</span><span class="chevron">›</span></div>
-    </div>
-    <div class="recipe-summary">清淡暖胃，特别适合肠胃不好的时候</div>
-    <div class="recipe-body">
-      <div class="section-label">食材</div>
-      <div class="ingredients">
-        <div class="ingredient">豆腐<span>1块</span></div>
-        <div class="ingredient">白菜<span>几片</span></div>
-        <div class="ingredient">姜<span>2片</span></div>
-        <div class="ingredient">盐<span>适量</span></div>
-        <div class="ingredient">香油<span>几滴</span></div>
-      </div>
-      <div class="section-label">步骤</div>
-      <div class="steps">
-        <div class="step"><div class="step-num">1</div><div class="step-text">豆腐切块，白菜切片</div></div>
-        <div class="step"><div class="step-num">2</div><div class="step-text">锅中加水烧开，放姜片、白菜，煮3分钟</div></div>
-        <div class="step"><div class="step-num">3</div><div class="step-text">放入豆腐，继续煮<em>3-5分钟</em></div></div>
-        <div class="step"><div class="step-num">4</div><div class="step-text">加盐调味，滴几滴香油出锅</div></div>
-      </div>
-      <div class="tip"><strong>💡 技巧：</strong>豆腐选嫩豆腐更好消化；汤里加一个鸡蛋打散下去也很好</div>
-    </div>
-  </div>
-
-  <!-- 番茄蛋花汤 -->
-  <div class="recipe visible" data-cat="汤" onclick="toggle(this)">
-    <div class="recipe-header">
-      <div class="recipe-title"><span class="recipe-emoji">🍅</span>番茄蛋花汤</div>
-      <div class="recipe-meta"><span class="tag time">⏱ 10分钟</span><span class="chevron">›</span></div>
-    </div>
-    <div class="recipe-summary">酸甜开胃，简单零失败</div>
-    <div class="recipe-body">
-      <div class="section-label">食材</div>
-      <div class="ingredients">
-        <div class="ingredient">番茄<span>2个</span></div>
-        <div class="ingredient">鸡蛋<span>2个</span></div>
-        <div class="ingredient">盐<span>适量</span></div>
-        <div class="ingredient">香油<span>几滴</span></div>
-        <div class="ingredient">葱花<span>可选</span></div>
-      </div>
-      <div class="section-label">步骤</div>
-      <div class="steps">
-        <div class="step"><div class="step-num">1</div><div class="step-text">番茄切块，鸡蛋打散备用</div></div>
-        <div class="step"><div class="step-num">2</div><div class="step-text">锅热油，番茄翻炒出汁，加<em>两碗水</em>大火烧开</div></div>
-        <div class="step"><div class="step-num">3</div><div class="step-text">转小火，<em>边搅汤边缓缓倒入蛋液</em>，形成蛋花</div></div>
-        <div class="step"><div class="step-num">4</div><div class="step-text">加盐、香油，出锅</div></div>
-      </div>
-      <div class="tip"><strong>💡 技巧：</strong>倒蛋液时要用勺子搅动汤，这样蛋花才好看；喜欢酸一点可以多放番茄</div>
-    </div>
-  </div>
-
-  <!-- 番茄牛腩面 -->
-  <div class="recipe visible" data-cat="主食" onclick="toggle(this)">
-    <div class="recipe-header">
-      <div class="recipe-title"><span class="recipe-emoji">🍜</span>番茄牛腩面</div>
-      <div class="recipe-meta"><span class="tag time">⏱ 20分钟</span><span class="chevron">›</span></div>
-    </div>
-    <div class="recipe-summary">一碗满足，汤浓味鲜，午饭首选</div>
-    <div class="recipe-body">
-      <div class="section-label">食材</div>
-      <div class="ingredients">
-        <div class="ingredient">挂面<span>1把</span></div>
-        <div class="ingredient">番茄<span>2个</span></div>
-        <div class="ingredient">牛肉<span>200g</span></div>
-        <div class="ingredient">姜<span>2片</span></div>
-        <div class="ingredient">生抽<span>1勺</span></div>
-        <div class="ingredient">盐<span>适量</span></div>
-      </div>
-      <div class="section-label">步骤</div>
-      <div class="steps">
-        <div class="step"><div class="step-num">1</div><div class="step-text">牛肉切片腌制；番茄切块</div></div>
-        <div class="step"><div class="step-num">2</div><div class="step-text">热锅炒番茄出汁，加两碗水+生抽烧开，放牛肉煮熟，加盐调味做成汤底</div></div>
-        <div class="step"><div class="step-num">3</div><div class="step-text">另起锅煮面，水开下面，<em>煮3-4分钟</em>至熟，捞出放碗里</div></div>
-        <div class="step"><div class="step-num">4</div><div class="step-text">浇上番茄牛肉汤底，完成</div></div>
-      </div>
-      <div class="tip"><strong>💡 技巧：</strong>面和汤分开煮，面不会变糊；汤底可以多做一点，第二天还能用</div>
-    </div>
-  </div>
-
-  <!-- 番茄蛋花汤面 -->
-  <div class="recipe visible" data-cat="主食" onclick="toggle(this)">
-    <div class="recipe-header">
-      <div class="recipe-title"><span class="recipe-emoji">🍝</span>番茄蛋花汤面</div>
-      <div class="recipe-meta"><span class="tag time">⏱ 12分钟</span><span class="chevron">›</span></div>
-    </div>
-    <div class="recipe-summary">最快手的一碗面，忙碌时的救星</div>
-    <div class="recipe-body">
-      <div class="section-label">食材</div>
-      <div class="ingredients">
-        <div class="ingredient">挂面<span>1把</span></div>
-        <div class="ingredient">番茄<span>1个</span></div>
-        <div class="ingredient">鸡蛋<span>1个</span></div>
-        <div class="ingredient">盐<span>适量</span></div>
-        <div class="ingredient">香油<span>几滴</span></div>
-      </div>
-      <div class="section-label">步骤</div>
-      <div class="steps">
-        <div class="step"><div class="step-num">1</div><div class="step-text">锅中加水烧开，番茄切块下锅，煮2分钟</div></div>
-        <div class="step"><div class="step-num">2</div><div class="step-text">下挂面，煮3分钟</div></div>
-        <div class="step"><div class="step-num">3</div><div class="step-text">打入鸡蛋，<em>用筷子搅散</em>成蛋花</div></div>
-        <div class="step"><div class="step-num">4</div><div class="step-text">加盐、香油，出锅</div></div>
-      </div>
-      <div class="tip"><strong>💡 技巧：</strong>一锅到底，连碗都省了；想更有营养加把菠菜进去</div>
-    </div>
-  </div>
-
-  <!-- 煎鸡蛋 -->
-  <div class="recipe visible" data-cat="早餐" onclick="toggle(this)">
-    <div class="recipe-header">
-      <div class="recipe-title"><span class="recipe-emoji">🍳</span>煎鸡蛋</div>
-      <div class="recipe-meta"><span class="tag time">⏱ 5分钟</span><span class="chevron">›</span></div>
-    </div>
-    <div class="recipe-summary">早餐必备，简单但要煎好也有技巧</div>
-    <div class="recipe-body">
-      <div class="section-label">食材</div>
-      <div class="ingredients">
-        <div class="ingredient">鸡蛋<span>1-2个</span></div>
-        <div class="ingredient">油<span>少许</span></div>
-        <div class="ingredient">盐<span>少许</span></div>
-      </div>
-      <div class="section-label">步骤</div>
-      <div class="steps">
-        <div class="step"><div class="step-num">1</div><div class="step-text">锅烧热，加少许油，<em>转小火</em></div></div>
-        <div class="step"><div class="step-num">2</div><div class="step-text">磕入鸡蛋，撒少许盐</div></div>
-        <div class="step"><div class="step-num">3</div><div class="step-text">小火煎至蛋白凝固，喜欢全熟就翻面再煎30秒</div></div>
-      </div>
-      <div class="tip"><strong>💡 技巧：</strong>一定要小火，大火蛋白焦了蛋黄还生；锅里加几滴水盖盖子可以让蛋黄表面熟透</div>
-    </div>
-  </div>
-
-  <!-- 燕麦片 -->
-  <div class="recipe visible" data-cat="早餐" onclick="toggle(this)">
-    <div class="recipe-header">
-      <div class="recipe-title"><span class="recipe-emoji">🥣</span>燕麦片早餐</div>
-      <div class="recipe-meta"><span class="tag time">⏱ 5分钟</span><span class="chevron">›</span></div>
-    </div>
-    <div class="recipe-summary">高蛋白早餐，健身增肌好搭档</div>
-    <div class="recipe-body">
-      <div class="section-label">食材</div>
-      <div class="ingredients">
-        <div class="ingredient">燕麦片<span>50g</span></div>
-        <div class="ingredient">热水/热牛奶<span>适量</span></div>
-        <div class="ingredient">香蕉/蓝莓<span>适量</span></div>
-      </div>
-      <div class="section-label">步骤</div>
-      <div class="steps">
-        <div class="step"><div class="step-num">1</div><div class="step-text">燕麦片放碗里，倒入<em>热水或热牛奶</em>，稍微没过即可</div></div>
-        <div class="step"><div class="step-num">2</div><div class="step-text">等2分钟让燕麦吸水膨胀</div></div>
-        <div class="step"><div class="step-num">3</div><div class="step-text">放上香蕉片或蓝莓，搭配酸奶更好</div></div>
-      </div>
-      <div class="tip"><strong>💡 技巧：</strong>选即食燕麦片，不用煮；加酸奶一起吃蛋白质更高，对肠胃也好</div>
-    </div>
-  </div>
-<!-- 蘑菇炒牛肉 -->
-  <div class="recipe visible" data-cat="牛肉" onclick="toggle(this)">
-    <div class="recipe-header">
-      <div class="recipe-title"><span class="recipe-emoji">🍄</span>蘑菇炒牛肉</div>
-      <div class="recipe-meta"><span class="tag time">⏱ 15分钟</span><span class="chevron">›</span></div>
-    </div>
-    <div class="recipe-summary">香气十足，蘑菇鲜嫩，肠胃友好</div>
-    <div class="recipe-body">
-      <div class="section-label">食材</div>
-      <div class="ingredients">
-        <div class="ingredient">牛肉<span>200g</span></div>
-        <div class="ingredient">蘑菇<span>1盒</span></div>
-        <div class="ingredient">姜<span>2片</span></div>
-        <div class="ingredient">生抽<span>1勺</span></div>
-        <div class="ingredient">淀粉<span>少许</span></div>
-        <div class="ingredient">盐<span>适量</span></div>
-      </div>
-      <div class="section-label">步骤</div>
-      <div class="steps">
-        <div class="step"><div class="step-num">1</div><div class="step-text">牛肉切薄片，加生抽+淀粉腌10分钟；蘑菇撕成小块或切片</div></div>
-        <div class="step"><div class="step-num">2</div><div class="step-text">热锅热油，姜片爆香，下蘑菇大火翻炒<em>2分钟</em>至出水，盛出</div></div>
-        <div class="step"><div class="step-num">3</div><div class="step-text">同锅下牛肉，大火炒至变色</div></div>
-        <div class="step"><div class="step-num">4</div><div class="step-text">倒入蘑菇，加盐翻炒均匀，出锅</div></div>
-      </div>
-      <div class="tip"><strong>💡 技巧：</strong>蘑菇先炒出水再和牛肉合炒，不然会太湿；香菇比平蘑香味更浓</div>
+    <div class="m-body">
+      <div class="m-sec"><div class="m-sec-title">🧂 食材清单（单人份）</div><div class="ing-grid" id="m-ing"></div></div>
+      <div class="m-sec"><div class="m-sec-title">👨‍🍳 烹饪步骤</div><ol class="steps" id="m-steps"></ol></div>
+      <div id="m-tip-wrap"></div>
     </div>
   </div>
 </div>
-
+ 
 <script>
-  function toggle(el) {
-    el.classList.toggle('open');
+// ══════════════════════════════════════════════
+// 菜谱数据（全部单人份，按名字索引）
+// ══════════════════════════════════════════════
+const R = [
+  // 早餐
+  {name:"燕麦粥",emoji:"🥣",time:"5分钟",servings:"1人份",diff:"简单",
+   ing:[{n:"即食燕麦片",q:"50g"},{n:"牛奶",q:"200ml"},{n:"新鲜蓝莓",q:"一小把"},{n:"蜂蜜（可选）",q:"1茶匙"},{n:"鸡蛋（可选）",q:"1个，另煮溏心蛋"}],
+   steps:["锅中倒牛奶，中火加热至边缘冒小泡（约60°C，不要沸腾），倒入燕麦片。","转小火，不停搅拌2–3分钟至燕麦吸收牛奶变浓稠。","倒入碗中，铺上蓝莓，淋蜂蜜。","配溏心蛋做法：冷水下蛋，水开后计时7分钟捞出，过冷水1分钟再剥壳。"],
+   tip:"牛奶煮燕麦比清水香浓很多。不要大火以防溢锅。蓝莓也可换成香蕉片或苹果丁。"},
+ 
+  {name:"鸡蛋饼",emoji:"🍳",time:"8分钟",servings:"1人份",diff:"简单",
+   ing:[{n:"鸡蛋",q:"2个"},{n:"面粉",q:"3汤匙"},{n:"牛奶或清水",q:"2汤匙"},{n:"盐",q:"一小撮"},{n:"葱花（可选）",q:"少许"},{n:"食用油",q:"少量"}],
+   steps:["鸡蛋打入碗，加面粉、牛奶和盐，搅拌成无颗粒顺滑面糊，静置2分钟。","平底锅小火热锅，刷薄油。","倒入面糊，转动锅铺成圆饼，撒葱花。","中小火煎2分钟至底面金黄，翻面再煎1分钟，出锅搭配酸奶和苹果。"],
+   tip:"面糊要完全顺滑无颗粒，饼才嫩。火不要太大，中小火慢煎。加葱花香味更好。"},
+ 
+  {name:"煎蛋吐司",emoji:"🍞",time:"6分钟",servings:"1人份",diff:"简单",
+   ing:[{n:"吐司面包",q:"2片"},{n:"鸡蛋",q:"1个"},{n:"黄油或食用油",q:"少量"},{n:"盐/黑胡椒",q:"适量"},{n:"牛奶（搭配）",q:"1杯"}],
+   steps:["平底锅中火热锅，放小块黄油融化（或刷薄油）。","吐司放入锅中，两面各煎30秒至表面金黄酥脆，取出。","原锅打入鸡蛋，撒少量盐，中小火煎至蛋白凝固、蛋黄保持流心（约2分钟）。","煎蛋放在吐司上，撒黑胡椒，搭配一杯牛奶。"],
+   tip:"黄油煎出来香味更好。蛋黄流心口感最佳；不喜欢流心可加盖焖30秒让蛋黄凝固。"},
+ 
+  {name:"手抓饼配排骨酱",emoji:"🥞",time:"10分钟",servings:"1人份",diff:"简单",
+   ing:[{n:"思念手抓饼（冷冻）",q:"1片"},{n:"李锦记排骨酱",q:"1–1.5汤匙"},{n:"鸡蛋",q:"1个"},{n:"力诚火腿肠（可选）",q:"1/3根切片"},{n:"生菜（可选）",q:"1片"}],
+   steps:["平底锅不放油，中火预热1分钟，直接放入冷冻手抓饼（无需解冻）。","煎约90秒至底面金黄，翻面，用铲子从饼中心向外轻压，让层次自然蓬松分开。","在饼中央打入鸡蛋，轻戳蛋黄稍摊开，等蛋白凝固蛋黄仍流心时，将饼折叠包住鸡蛋。","出锅前用勺背在饼面薄薄涂一层排骨酱，可加火腿片和生菜叶，切段趁热食用。"],
+   tip:"排骨酱一层薄薄即可，太多会咸。蛋黄保持半流心最好吃。全程无需放油，干煎更香脆。"},
+ 
+  // 午餐
+  {name:"酸菜牛肉面",emoji:"🍜",time:"8分钟",servings:"1人份",diff:"简单",
+   ing:[{n:"康师傅酸菜牛肉面",q:"1包"},{n:"蒜苔",q:"2根切段"},{n:"鸡蛋",q:"1个"},{n:"葱花",q:"少许"},{n:"辣椒油（可选）",q:"少许"}],
+   steps:["锅中烧足量水，水开后下面饼，煮2分30秒（比包装少30秒，保持弹性）。","煮面同时，旁边煎一个荷包蛋：蛋白凝固、蛋黄流心最佳。","面条捞入碗，加全部调料包，倒适量热水调成汤底。","蒜苔段放入面汤烫10秒捞出，连同荷包蛋摆在面上，撒葱花。"],
+   tip:"少煮30秒口感更弹牙。蒜苔只烫10秒保持脆嫩翠绿。荷包蛋让这碗泡面颜值和营养都大升级。"},
+ 
+  {name:"猪肉酸菜饺子",emoji:"🥟",time:"12分钟",servings:"1人份（约12个）",diff:"简单",
+   ing:[{n:"我爱饺子猪肉酸菜饺子",q:"约12个（冷冻）"},{n:"生抽",q:"1汤匙"},{n:"香醋",q:"半汤匙"},{n:"辣椒油",q:"少许"},{n:"葱花",q:"少许"}],
+   steps:["锅中加足量水烧开，加少许盐，冷冻饺子直接下锅（不用解冻）。","用木勺轻推防止粘底，保持水沸腾状态。","水再次大开后加入半碗冷水（「点水」），重复此步骤共3次。","饺子全部浮起、皮透亮时捞出，调蘸汁：生抽+香醋+辣椒油+葱花。"],
+   tip:"「点水」3次是让饺子皮熟透不破皮的秘诀。冷冻饺子不要解冻直接煮，否则皮会黏连。"},
+ 
+  {name:"手打拉面",emoji:"🍝",time:"10分钟",servings:"1人份",diff:"简单",
+   ing:[{n:"今麦郎手打拉面",q:"约100g"},{n:"梅林火腿猪肉",q:"2–3片"},{n:"蘑菇片",q:"一小把"},{n:"菠菜",q:"一小把"},{n:"鸡蛋",q:"1个"},{n:"生抽",q:"半汤匙"},{n:"盐",q:"适量"},{n:"香油",q:"几滴"}],
+   steps:["锅中加约500ml水烧开，放入蘑菇片中火煮2分钟出鲜味。","加生抽和盐调成汤底，放入面条大火煮3分钟。","加入菠菜，煮30秒变软后关火（不要久煮）。","面和汤盛入碗，打入一个生蛋（热汤烫至半熟），铺上火腿猪肉片，滴几滴香油。"],
+   tip:"蘑菇先煮出鲜味比直接用清水好很多。菠菜只煮30秒，久煮变黄失去营养。"},
+ 
+  {name:"清冰箱蛋炒饭",emoji:"🍚",time:"10分钟",servings:"1人份",diff:"简单",
+   ing:[{n:"隔夜米饭",q:"1碗（约200g）"},{n:"鸡蛋",q:"2个"},{n:"冰箱剩余蔬菜",q:"随意"},{n:"火腿肠或火腿肉",q:"少量切丁"},{n:"生抽",q:"1汤匙"},{n:"盐/白胡椒",q:"适量"},{n:"葱花",q:"少许"},{n:"食用油",q:"适量"}],
+   steps:["隔夜米饭提前用手抓散，蔬菜切丁，鸡蛋打散备用。","热锅多放一点油，油热后倒蛋液，用筷子快速搅散炒成嫩碎蛋，盛出备用。","原锅加少许油，大火炒蔬菜丁和火腿丁2分钟。","倒入米饭，铲子压散，大火翻炒2分钟让每粒米裹上油脂。","倒入鸡蛋翻炒均匀，沿锅边淋生抽，加盐和白胡椒，撒葱花出锅。"],
+   tip:"隔夜冷藏米饭水分少，炒出来粒粒分明。鸡蛋先炒好再回锅保持嫩滑。全程大火快炒是炒饭关键。"},
+ 
+  // 晚餐
+  {name:"慢炖牛肉",emoji:"🥩",time:"3小时",servings:"1人份（建议多做存冰箱）",diff:"中等",
+   ing:[{n:"Coles慢炖牛肉块",q:"200g"},{n:"胡萝卜",q:"半根"},{n:"金薯仔",q:"1个"},{n:"芹菜",q:"半根"},{n:"生姜",q:"2片"},{n:"酱油",q:"1汤匙"},{n:"料酒",q:"1汤匙"},{n:"八角",q:"1颗"},{n:"盐",q:"适量"}],
+   steps:["牛肉切3–4cm块，冷水下锅加姜片和少许料酒，大火烧开撇去浮沫，焯水2分钟捞出用温水冲洗。","热锅少量油，中大火炒牛肉至表面金黄（约4分钟），沿锅边淋料酒，加酱油翻炒，放入八角。","加热水没过牛肉约3cm，大火烧开后转最小火，盖盖慢炖1.5–2小时。","加入切块的胡萝卜和土豆，加盐调味，继续炖30分钟至筷子能轻松穿透。","揭盖大火收汁3分钟至汤汁浓稠，出锅配米饭。"],
+   tip:"建议多做几份存冰箱，第二天加热味道更浓郁。没有八角可用老抽替代增色。"},
+ 
+  {name:"麻婆豆腐",emoji:"🍲",time:"18分钟",servings:"1人份",diff:"简单",
+   ing:[{n:"Pureland嫩豆腐",q:"半盒（约200g）"},{n:"力诚火腿肠",q:"1/3根切小丁"},{n:"郫县豆瓣酱",q:"半汤匙"},{n:"生姜末",q:"半茶匙"},{n:"蒜末",q:"半茶匙"},{n:"生抽",q:"半汤匙"},{n:"水淀粉",q:"半茶匙淀粉+1汤匙水"},{n:"葱花",q:"少许"}],
+   steps:["豆腐切2cm小块，盐水（500ml水+半茶匙盐）浸泡5分钟，沥干备用。","锅中少量油，中小火加入豆瓣酱炒出红油（约1分钟），注意不要糊锅。","加姜蒜末爆香30秒，加火腿丁翻炒2分钟出香气。","加生抽和80ml清水烧开，将豆腐轻推入锅（不要用铲子翻），中火炖3分钟。","淋入水淀粉轻推至汤汁浓稠裹住豆腐，出锅撒葱花。"],
+   tip:"嫩豆腐口感更滑。推锅代替翻炒可保持豆腐完整不碎。豆瓣酱已有盐分，通常不需额外加盐。"},
+ 
+  {name:"牛肉烤饭",emoji:"🍖",time:"50分钟",servings:"1人份",diff:"中等",
+   ing:[{n:"Coles牛肉烤肉块",q:"约150–200g"},{n:"大白菜",q:"约1/8颗"},{n:"蘑菇片",q:"一小把"},{n:"生抽",q:"1汤匙"},{n:"蚝油",q:"半汤匙"},{n:"黑胡椒",q:"半茶匙"},{n:"橄榄油",q:"半汤匙"},{n:"蒜末",q:"1瓣"},{n:"白米饭",q:"1碗"}],
+   steps:["牛肉切3cm块，用生抽、蚝油、黑胡椒、蒜末、橄榄油抓匀，腌制至少20分钟。","烤箱预热至200°C（上下火）。","大白菜切大块铺在小烤盘底部撒少许盐，蘑菇散放其上。","腌好牛肉均匀铺在蔬菜上，将剩余腌汁淋上。","放入烤箱烤25分钟，取出翻面，继续烤10分钟至表面焦香。","出炉静置3分钟，配米饭，将烤盘中肉汁淋在饭上。"],
+   tip:"白菜垫底吸收肉汁非常入味。腌制时间越长越好。出炉静置让肉汁回流，切开不流失。"},
+ 
+  {name:"蒜苔炒火腿猪肉",emoji:"🥬",time:"12分钟",servings:"1人份",diff:"简单",
+   ing:[{n:"蒜苔",q:"约80g（小把）"},{n:"梅林火腿猪肉",q:"约80g切薄片"},{n:"生姜",q:"2片"},{n:"生抽",q:"半汤匙"},{n:"料酒",q:"半茶匙"},{n:"食用油",q:"少量"}],
+   steps:["蒜苔洗净斜切5cm段，开水加盐焯烫1分钟，捞出立刻放冷水过凉沥干。","火腿猪肉切5mm厚薄片备用。","热锅少量油，中火爆香姜片1分钟后捞出。","转大火，放火腿猪肉片煎至两面微焦香（约2分钟）。","加入蒜苔大火翻炒2分钟，沿锅边淋料酒，加生抽炒匀出锅。"],
+   tip:"蒜苔焯水过凉是关键，保持脆绿不发黄。火腿肉本身够咸，不需加盐。大火快炒保留香气。"},
+ 
+  {name:"菠菜豆腐蛋花汤",emoji:"🥗",time:"12分钟",servings:"1人份",diff:"简单",
+   ing:[{n:"菠菜",q:"约80g"},{n:"Pureland豆腐",q:"1/4盒"},{n:"蘑菇片",q:"一小把"},{n:"鸡蛋",q:"1个"},{n:"生姜",q:"1片"},{n:"盐",q:"适量"},{n:"白胡椒粉",q:"少许"},{n:"香油",q:"几滴"}],
+   steps:["豆腐切小块，蘑菇备好，菠菜洗净切5cm段。","锅中加约400ml水，放姜片大火烧开，加蘑菇中火煮3分钟出鲜味。","放入豆腐，加盐调味，继续煮2分钟。","加入菠菜，大火烧滚1分钟（不要久煮）。","鸡蛋打散，沿顺时针缓缓细流淋入，等5秒后轻划圈形成蛋花，加白胡椒和香油出锅。"],
+   tip:"菠菜只煮1分钟，久煮发黄失去营养。鸡蛋液细流缓慢淋入才能形成漂亮蛋花。"},
+ 
+  {name:"白菜豆腐锅",emoji:"🫕",time:"20分钟",servings:"1人份",diff:"简单",
+   ing:[{n:"大白菜",q:"约1/8颗"},{n:"Pureland豆腐",q:"1/4盒"},{n:"力诚火腿肠",q:"1/3根切片"},{n:"生姜",q:"2片"},{n:"生抽",q:"半汤匙"},{n:"盐",q:"适量"},{n:"白米饭",q:"1碗"}],
+   steps:["大白菜切3–4cm宽块，豆腐切大块，火腿肠切斜片备用。","锅中少量油，爆香姜片，加入火腿片略炒至微焦出香气。","加入白菜翻炒2分钟至略变软，加入约300ml热水。","大火烧开后加入豆腐，加生抽和盐调味，转中小火炖8–10分钟。","白菜软烂、豆腐吸满汤汁即可，配白米饭。"],
+   tip:"白菜先炒软再加水，甜味更容易出来。豆腐多炖一会儿充分吸收汤汁，非常鲜美。"},
+];
+ 
+// 按名字建立索引
+const recipeMap = {};
+R.forEach((r, i) => { recipeMap[r.name] = i; });
+ 
+// ══════════════════════════════════════════════
+// 账单分类
+// ══════════════════════════════════════════════
+const CAT = {
+  groceries:{lbl:"🛒 食材采购",cls:"c-green"},
+  ai:       {lbl:"🤖 AI订阅",  cls:"c-purple"},
+  entertainment:{lbl:"🎮 娱乐",cls:"c-blue"},
+  dining:   {lbl:"🍜 餐饮外出",cls:"c-orange"},
+  bills:    {lbl:"💡 账单水电",cls:"c-teal"},
+  transport:{lbl:"🚗 交通",    cls:"c-gold"},
+  other:    {lbl:"📦 其他",    cls:"c-red"},
+};
+ 
+let expenses = [
+  {id:1, name:"梅林火腿猪肉 340g",       cat:"groceries",amount:4.49, note:"中式超市",date:"04/12"},
+  {id:2, name:"力诚火腿肠 600g",          cat:"groceries",amount:6.89, note:"中式超市",date:"04/12"},
+  {id:3, name:"李锦记排骨酱 397g",        cat:"groceries",amount:8.89, note:"中式超市",date:"04/12"},
+  {id:4, name:"思念手抓饼 450g",          cat:"groceries",amount:4.49, note:"中式超市",date:"04/12"},
+  {id:5, name:"康师傅酸菜牛肉面 ×5",     cat:"groceries",amount:7.49, note:"中式超市",date:"04/12"},
+  {id:6, name:"猪肉酸菜饺子 480g",        cat:"groceries",amount:7.49, note:"中式超市",date:"04/12"},
+  {id:7, name:"蒜苔 1捆",                cat:"groceries",amount:2.29, note:"中式超市",date:"04/12"},
+  {id:8, name:"今麦郎手打拉面 1kg",       cat:"groceries",amount:2.89, note:"中式超市",date:"04/12"},
+  {id:9, name:"Coles 散养鸡蛋 12个",     cat:"groceries",amount:5.70, note:"Coles",   date:"04/12"},
+  {id:10,name:"a2全脂牛奶 UHT",          cat:"groceries",amount:3.90, note:"Coles",   date:"04/12"},
+  {id:11,name:"Coles 芹菜",              cat:"groceries",amount:4.10, note:"Coles",   date:"04/12"},
+  {id:12,name:"Coles 牛肉烤肉块",        cat:"groceries",amount:24.00,note:"Coles",   date:"04/12"},
+  {id:13,name:"Coles 慢炖牛肉",          cat:"groceries",amount:24.70,note:"Coles",   date:"04/12"},
+  {id:14,name:"Coles 蘑菇片",            cat:"groceries",amount:4.00, note:"Coles",   date:"04/12"},
+  {id:15,name:"Coles 蓝莓",              cat:"groceries",amount:6.00, note:"Coles",   date:"04/12"},
+  {id:16,name:"Coles 小宝石生菜",        cat:"groceries",amount:4.70, note:"Coles",   date:"04/12"},
+  {id:17,name:"Coles 金薯仔",            cat:"groceries",amount:1.59, note:"Coles",   date:"04/12"},
+  {id:18,name:"Coles 皇家嘎啦苹果 1kg", cat:"groceries",amount:7.90, note:"Coles",   date:"04/12"},
+  {id:19,name:"Coles 生姜",              cat:"groceries",amount:4.29, note:"Coles",   date:"04/12"},
+  {id:20,name:"Coles 胡萝卜",            cat:"groceries",amount:0.88, note:"Coles",   date:"04/12"},
+  {id:21,name:"Coles 大白菜半颗",        cat:"groceries",amount:4.20, note:"Coles",   date:"04/12"},
+  {id:22,name:"Coles 菠菜",              cat:"groceries",amount:3.00, note:"Coles",   date:"04/12"},
+  {id:23,name:"Pureland 豆腐",           cat:"groceries",amount:8.60, note:"Coles",   date:"04/12"},
+  {id:24,name:"Red Tractor 燕麦",        cat:"groceries",amount:5.00, note:"Coles",   date:"04/12"},
+  {id:25,name:"Coles 番茄",              cat:"groceries",amount:6.18, note:"Coles",   date:"04/12"},
+  {id:26,name:"Gippsland 芒果酸奶",      cat:"groceries",amount:3.00, note:"Coles",   date:"04/12"},
+  {id:27,name:"Coles Better Bags",       cat:"groceries",amount:1.50, note:"Coles",   date:"04/12"},
+  {id:28,name:"Claude Pro",              cat:"ai",        amount:20.00,note:"Anthropic",date:"04/01"},
+  {id:29,name:"Spotify Premium",         cat:"ai",        amount:11.99,note:"月付",   date:"04/05"},
+  {id:30,name:"Netflix",                 cat:"entertainment",amount:18.99,note:"月付",date:"04/03"},
+];
+let nextId = 31, activeCat = "all";
+ 
+const STOCK = [
+  {n:"慢炖牛肉",q:"约800g",l:"h"},{n:"牛肉烤肉块",q:"约400g",l:"h"},
+  {n:"猪肉酸菜饺子",q:"480g 冷冻",l:"h"},{n:"火腿猪肉罐头",q:"340g",l:"h"},
+  {n:"力诚火腿肠",q:"600g",l:"h"},{n:"手抓饼",q:"5片 冷冻",l:"h"},
+  {n:"手打拉面",q:"1kg",l:"h"},{n:"酸菜牛肉面",q:"5包",l:"h"},
+  {n:"豆腐",q:"1盒",l:"h"},{n:"鸡蛋",q:"12个",l:"h"},
+  {n:"牛奶 UHT",q:"1盒",l:"h"},{n:"酸奶",q:"1杯",l:"m"},
+  {n:"蒜苔",q:"1捆（新鲜）",l:"m"},{n:"蓝莓",q:"1盒",l:"m"},
+  {n:"苹果",q:"1kg",l:"h"},{n:"生菜",q:"1包",l:"m"},
+  {n:"胡萝卜",q:"少量",l:"m"},{n:"土豆",q:"少量",l:"m"},
+  {n:"大白菜",q:"半颗",l:"h"},{n:"菠菜",q:"1包",l:"h"},
+  {n:"蘑菇片",q:"1包",l:"h"},{n:"番茄",q:"一盒",l:"h"},
+  {n:"芹菜",q:"1棵",l:"h"},{n:"生姜",q:"适量",l:"h"},
+  {n:"燕麦",q:"1袋",l:"h"},{n:"排骨酱",q:"397g 刚开",l:"h"},
+];
+ 
+// ══ 导航 ══
+function switchPage(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (el) el.classList.add('active');
+  if (window.innerWidth <= 768) {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
   }
-
-  function filter(cat) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
-
-    document.querySelectorAll('.recipe').forEach(r => {
-      if (cat === 'all' || r.dataset.cat === cat) {
-        r.classList.add('visible');
-      } else {
-        r.classList.remove('visible');
-        r.classList.remove('open');
-      }
-    });
+  window.scrollTo(0, 0);
+}
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+ 
+// ══ 跳转菜谱（从饮食计划/日历点击） ══
+function jumpToRecipe(name) {
+  const idx = recipeMap[name];
+  if (idx === undefined) { console.warn('菜谱未找到:', name); return; }
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-recipes').classList.add('active');
+  document.querySelectorAll('.nav-item')[2].classList.add('active');
+  if (window.innerWidth <= 768) {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
   }
+  window.scrollTo(0, 0);
+  setTimeout(() => openRecipe(idx), 260);
+}
+ 
+// ══ 菜谱渲染 ══
+function renderRecipes() {
+  document.getElementById('recipeGrid').innerHTML = R.map((r, i) => `
+    <div class="rc" onclick="openRecipe(${i})">
+      <div class="rc-head">
+        <div>
+          <div class="rc-name">${r.name}</div>
+          <div class="rc-meta"><span>⏱ ${r.time}</span><span>👤 ${r.servings}</span><span>📊 ${r.diff}</span></div>
+        </div>
+        <div class="rc-emoji">${r.emoji}</div>
+      </div>
+      <div class="rc-body">
+        <div class="rc-preview">${r.ing.slice(0,5).map(i=>`<span style="color:var(--text1)">${i.n}</span>`).join('<span style="color:var(--line2);margin:0 4px">·</span>')}${r.ing.length>5?'<span style="color:var(--text3)"> …</span>':''}</div>
+      </div>
+    </div>`).join('');
+}
+ 
+function openRecipe(idx) {
+  const r = R[idx];
+  document.getElementById('m-emoji').textContent = r.emoji;
+  document.getElementById('m-title').textContent = r.name;
+  document.getElementById('m-meta').innerHTML = `<span>⏱ ${r.time}</span><span>👤 ${r.servings}</span><span>📊 ${r.diff}</span>`;
+  document.getElementById('m-ing').innerHTML = r.ing.map(i=>`<div class="ing-row"><span class="ing-name">${i.n}</span><span class="ing-qty">${i.q}</span></div>`).join('');
+  document.getElementById('m-steps').innerHTML = r.steps.map((s,n)=>`<li class="step"><div class="snum">${n+1}</div><div class="step-txt">${s}</div></li>`).join('');
+  document.getElementById('m-tip-wrap').innerHTML = r.tip ? `<div class="m-sec"><div class="m-tip"><strong>💡 小贴士 · </strong>${r.tip}</div></div>` : '';
+  document.getElementById('recipeModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('recipeModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function modalBgClick(e) {
+  if (e.target === document.getElementById('recipeModal')) closeModal();
+}
+ 
+// ══ 账单 ══
+function renderStats() {
+  const total = expenses.reduce((s,e)=>s+e.amount,0);
+  const bc = {};
+  expenses.forEach(e=>{bc[e.cat]=(bc[e.cat]||0)+e.amount});
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat-card"><div class="stat-lbl">本月总支出</div><div class="stat-val c-gold">$${total.toFixed(2)}</div><div class="stat-sub">全部分类</div></div>
+    <div class="stat-card"><div class="stat-lbl">食材采购</div><div class="stat-val c-green">$${(bc.groceries||0).toFixed(2)}</div><div class="stat-sub">${expenses.filter(e=>e.cat==='groceries').length} 笔</div></div>
+    <div class="stat-card"><div class="stat-lbl">AI 订阅</div><div class="stat-val c-purple">$${(bc.ai||0).toFixed(2)}</div><div class="stat-sub">${expenses.filter(e=>e.cat==='ai').length} 笔</div></div>
+    <div class="stat-card"><div class="stat-lbl">娱乐 & 餐饮</div><div class="stat-val c-blue">$${((bc.entertainment||0)+(bc.dining||0)).toFixed(2)}</div><div class="stat-sub">${expenses.filter(e=>['entertainment','dining'].includes(e.cat)).length} 笔</div></div>`;
+}
+function renderCatTabs() {
+  const cnt = {};
+  expenses.forEach(e=>{cnt[e.cat]=(cnt[e.cat]||0)+1});
+  let h = `<div class="ctab ${activeCat==='all'?'active':''}" onclick="filterCat('all')">全部 (${expenses.length})</div>`;
+  Object.entries(CAT).forEach(([k,v])=>{ if(cnt[k]>0) h+=`<div class="ctab ${activeCat===k?'active':''}" onclick="filterCat('${k}')">${v.lbl} (${cnt[k]})</div>`; });
+  document.getElementById('catTabs').innerHTML = h;
+}
+function filterCat(cat) { activeCat=cat; renderCatTabs(); renderExpList(); }
+function renderExpList() {
+  const list = activeCat==='all' ? expenses : expenses.filter(e=>e.cat===activeCat);
+  if (!list.length) { document.getElementById('expList').innerHTML=`<div style="padding:32px;text-align:center;color:var(--text3);font-size:14px">暂无记录</div>`; return; }
+  const grp = {};
+  list.forEach(e=>{(grp[e.cat]=grp[e.cat]||[]).push(e)});
+  let h = '';
+  Object.entries(grp).forEach(([cat,items])=>{
+    const cfg = CAT[cat];
+    h += `<div class="exp-div">${cfg.lbl}</div>`;
+    items.forEach(e=>{ h+=`<div class="exp-row"><div><div class="exp-name">${e.name}</div>${e.note?`<div class="exp-note">${e.note}</div>`:''}</div><div class="exp-date">${e.date||''}</div><div class="exp-amt ${cfg.cls}">$${e.amount.toFixed(2)}</div><button class="del-btn" onclick="delExp(${e.id})">×</button></div>`; });
+    h += `<div class="subtotal-row">小计 $${items.reduce((s,e)=>s+e.amount,0).toFixed(2)}</div>`;
+  });
+  document.getElementById('expList').innerHTML = h;
+}
+function toggleAddForm() {
+  const p = document.getElementById('addPanel');
+  p.classList.toggle('open');
+  if (p.classList.contains('open')) setTimeout(()=>document.getElementById('fi-name').focus(),100);
+}
+function addExpense() {
+  const ne=document.getElementById('fi-name'), ae=document.getElementById('fi-amount');
+  const ce=document.getElementById('fi-cat'), nte=document.getElementById('fi-note');
+  const name=ne.value.trim(), raw=ae.value.trim(), amount=parseFloat(raw);
+  ne.style.borderColor=''; ae.style.borderColor='';
+  if (!name) { ne.style.borderColor='var(--red)'; ne.focus(); return; }
+  if (!raw||isNaN(amount)||amount<=0) { ae.style.borderColor='var(--red)'; ae.focus(); return; }
+  const d=new Date(), date=`${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+  expenses.push({id:nextId++,name,cat:ce.value,amount,note:nte.value.trim(),date});
+  ne.value=''; ae.value=''; nte.value='';
+  ne.style.borderColor=''; ae.style.borderColor='';
+  document.getElementById('addPanel').classList.remove('open');
+  renderAllExp();
+}
+function delExp(id) { expenses=expenses.filter(e=>e.id!==id); renderAllExp(); }
+function renderAllExp() { renderStats(); renderCatTabs(); renderExpList(); }
+ 
+// ══ 库存 ══
+function renderStock() {
+  document.getElementById('stockGrid').innerHTML = STOCK.map(s=>`<div class="sc"><div class="sn"><span class="sdot dot-${s.l}"></span>${s.n}</div><div class="sq">${s.q}</div></div>`).join('');
+}
+ 
+// ══ 初始化 ══
+document.getElementById('sidebarDate').textContent = new Date().toLocaleDateString('zh-CN',{month:'long',day:'numeric',weekday:'short'});
+renderRecipes();
+renderAllExp();
+renderStock();
 </script>
 </body>
 </html>
